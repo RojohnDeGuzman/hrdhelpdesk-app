@@ -67,9 +67,9 @@ function App() {
       'Employee Relations and Grievances': 'Report workplace issues, provide feedback, and request mediation',
       'Employee Data and Records': 'Update personal information, access records, and employment verification',
       'Recruitment and Onboarding': 'Track applications, submit referrals, and onboarding queries',
-      'Transfer of PODs, Department/Team': 'Request transfers to operations department',
+      'Employee Reassignment Form': 'Request employee reassignments and department transfers',
       'Policy and Compliance Inquiries': 'Get policy clarifications, report compliance issues, and request guidance',
-      'Equipment and Facilities Requests': 'Request office equipment, report maintenance issues, and workspace changes',
+      'Equipment and Facilities Request': 'Request office equipment, report maintenance issues, and workspace changes',
       'Exit and Offboarding': 'Submit resignation, schedule exit interviews, and final paycheck processing',
       'Other HR Service Request': 'Additional HR services and special requests',
       'Downloadable Forms': 'Access and download HR forms and documents',
@@ -91,9 +91,9 @@ function App() {
       'Employee Relations and Grievances': '🤝',
       'Employee Data and Records': '📋',
       'Recruitment and Onboarding': '👥',
-      'Transfer of PODs, Department/Team': '🔄',
+      'Employee Reassignment Form': '🔄',
       'Policy and Compliance Inquiries': '📜',
-      'Equipment and Facilities Requests': '🏢',
+      'Equipment and Facilities Request': '🏢',
       'Exit and Offboarding': '🚪',
       'Other HR Service Request': '📞',
       'Downloadable Forms': '📄',
@@ -115,9 +115,9 @@ function App() {
       'Employee Relations and Grievances': 'relations',
       'Employee Data and Records': 'records',
       'Recruitment and Onboarding': 'recruitment',
-      'Transfer of PODs, Department/Team': 'recruitment',
+      'Employee Reassignment Form': 'recruitment',
       'Policy and Compliance Inquiries': 'policy',
-      'Equipment and Facilities Requests': 'facilities',
+      'Equipment and Facilities Request': 'facilities',
       'Exit and Offboarding': 'offboarding',
       'Other HR Service Request': 'payroll',
       'Downloadable Forms': 'records',
@@ -180,10 +180,10 @@ function App() {
       { text: "Exit Interviews" },
       { text: "Final Paycheck and Benefits Processing" },
     ],
-    'Transfer of PODs, Department/Team': [
-      { text: "Transfer of Operations" },
+    'Employee Reassignment Form': [
+      { text: "Employee Reassignment Request" },
     ],
-    'Equipment and Facilities Requests': [
+    'Equipment and Facilities Request': [
       { text: "Requests for Office Equipment" },
       { text: "Maintenance Issues and Repairs" },
       { text: "Workspace Changes or Adjustments" },
@@ -351,8 +351,8 @@ function App() {
     'ComPsych Assistance': [
       { text: "ComPsych Assistance form" },
     ],
-    'Transfer of Operations': [
-      { text: "Transfer for Operations Department" },
+    'Employee Reassignment Request': [
+      { text: "Employee Reassignment Form" },
     ],
     'Timesheet Correction': [
       { text: "Timesheet Correction" },
@@ -444,18 +444,102 @@ function App() {
   // Event handlers (defined after handleNavigate)
   const handleMainButtonClick = useCallback((buttonText) => {
     console.log('Main button clicked:', buttonText);
-    handleNavigate([buttonText]);
+    
+    // Services that go directly to forms without sub/detail buttons
+    const directToFormServices = [
+      'Downloadable Forms',
+      'EO Branch Referral Slip', 
+      'ComPsych Assistance',
+      'Employee Reassignment Request',
+      'Timesheet Correction',
+      'Change of Approver',
+      'Other Concerns related to Worksched',
+      'SSS Calamity and Salary Loan',
+      'Pag-ibig and Salary Loan',
+      'RCBC Corporate Loan',
+      'SSS Contributions',
+      'PHILHEALTH Contributions',
+      'PAG-IBIG Contributions',
+      'Modified Pag-IBIG (MP2)',
+      'Government Statutory Benefits',
+      'Request for Lounge Space'
+    ];
+    
+    if (directToFormServices.includes(buttonText)) {
+      // Go directly to the form
+      setCurrentFormTitle(buttonText);
+      setFormVisible(true);
+      setButtonsVisible(false);
+      setSubButtonsVisible(false);
+      setDetailButtonsVisible(false);
+      setCurrentPath([buttonText]);
+    } else {
+      // Use normal navigation for services with sub-buttons
+      handleNavigate([buttonText]);
+    }
   }, [handleNavigate]);
 
   const handleSubButtonClick = useCallback((mainCategory, subButtonText) => {
-    handleNavigate([mainCategory, subButtonText]);
+    // Services that go directly to forms without detail buttons
+    const directToFormServices = [
+      'Downloadable Forms',
+      'EO Branch Referral Slip', 
+      'ComPsych Assistance',
+      'Employee Reassignment Request',
+      'Timesheet Correction',
+      'Change of Approver',
+      'Other Concerns related to Worksched',
+      'SSS Calamity and Salary Loan',
+      'Pag-ibig and Salary Loan',
+      'RCBC Corporate Loan',
+      'SSS Contributions',
+      'PHILHEALTH Contributions',
+      'PAG-IBIG Contributions',
+      'Modified Pag-IBIG (MP2)',
+      'Government Statutory Benefits',
+      'Request for Lounge Space'
+    ];
+    
+    if (directToFormServices.includes(subButtonText)) {
+      // Go directly to the form
+      setCurrentFormTitle(subButtonText);
+      setFormVisible(true);
+      setButtonsVisible(false);
+      setSubButtonsVisible(false);
+      setDetailButtonsVisible(false);
+      setCurrentPath([mainCategory, subButtonText]);
+    } else {
+      // Use normal navigation for services with detail buttons
+      handleNavigate([mainCategory, subButtonText]);
+    }
   }, [handleNavigate]);
 
   const handleDetailButtonClick = useCallback((text, component) => {
-    setCurrentFormTitle(text);
-    setFormVisible(true);
-    setDetailButtonsVisible(false);
-    setCurrentPath([...currentPath, text]);
+    // Services that go directly to forms from detail buttons
+    const directToFormDetailServices = [
+      'Request new hardware (e.g., laptops, monitors)',
+      'Replace faulty equipment',
+      'Report issues with office facilities (e.g., air conditioning)',
+      'Request workspace repairs or adjustments',
+      'Request ergonomic assessments',
+      'Request changes in seating arrangements or desk setups'
+    ];
+    
+    if (directToFormDetailServices.includes(text)) {
+      // Go directly to the form
+      setCurrentFormTitle(text);
+      setFormVisible(true);
+      setDetailButtonsVisible(false);
+      setButtonsVisible(false);
+      setSubButtonsVisible(false);
+      setCurrentPath([...currentPath, text]);
+    } else {
+      // Use normal form handling
+      setCurrentFormTitle(text);
+      setFormVisible(true);
+      setDetailButtonsVisible(false);
+      setCurrentPath([...currentPath, text]);
+    }
   }, [currentPath]);
 
   // Enhanced search functionality

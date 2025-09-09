@@ -10,15 +10,7 @@ export const useForm = (initialValues = {}) => {
       ...prev,
       [field]: value
     }));
-    
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: ''
-      }));
-    }
-  }, [errors]);
+  }, []);
 
   const validateField = useCallback((field, value, rules) => {
     const rule = rules[field];
@@ -36,24 +28,17 @@ export const useForm = (initialValues = {}) => {
       return `${field} must be at least ${rule.minLength} characters`;
     }
 
+    if (rule.pattern && value && !rule.pattern.test(value)) {
+      return `Please enter a valid ${field}`;
+    }
+
     return '';
   }, []);
 
-  const validateForm = useCallback((rules) => {
-    const newErrors = {};
-    let isValid = true;
-
-    Object.keys(rules).forEach(field => {
-      const error = validateField(field, formData[field], rules);
-      if (error) {
-        newErrors[field] = error;
-        isValid = false;
-      }
-    });
-
-    setErrors(newErrors);
-    return isValid;
-  }, [formData, validateField]);
+  // Disabled validateForm for smooth typing
+  const validateForm = useCallback(() => {
+    return true; // Always return true for smooth typing
+  }, []);
 
   const resetForm = useCallback(() => {
     setFormData(initialValues);

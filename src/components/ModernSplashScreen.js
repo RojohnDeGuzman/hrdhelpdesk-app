@@ -65,7 +65,7 @@ const ModernSplashScreen = ({ onComplete }) => {
           <div className="logo-container">
             <div className="logo-icon">
               <div className="logo-inner">
-                <span className="logo-text">HR</span>
+                <span className="logo-text">HRD</span>
               </div>
               <div className="logo-ring"></div>
             </div>
@@ -74,8 +74,7 @@ const ModernSplashScreen = ({ onComplete }) => {
         
         <div className="splash-text">
           <h1 className="splash-title">
-            <span className="title-line">HRD</span>
-            <span className="title-line">Helpdesk</span>
+            <span className="title-main">HRD Helpdesk</span>
           </h1>
           <p className="splash-subtitle">Your Gateway to HR Services</p>
         </div>

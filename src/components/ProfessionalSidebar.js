@@ -9,7 +9,7 @@ const ProfessionalSidebar = ({ onNavigate, currentPath }) => {
     { id: 'benefits', label: 'Benefits and Leave Management', icon: '🏥' },
     { id: 'policy', label: 'Policy and Compliance Inquiries', icon: '📜' },
     { id: 'relations', label: 'Employee Relations and Grievances', icon: '🤝' },
-    { id: 'transfer', label: 'Transfer of PODs, Department/Team', icon: '🔄' },
+    { id: 'transfer', label: 'Employee Reassignment Form', icon: '🔄' },
     { id: 'facilities', label: 'Equipment and Facilities Request', icon: '🏢' },
     { id: 'other', label: 'Other HR Service Request', icon: '📞' },
   ];

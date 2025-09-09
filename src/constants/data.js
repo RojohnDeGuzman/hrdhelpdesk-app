@@ -85,7 +85,7 @@ export const MAIN_BUTTONS = [
   { text: "Benefits and Leave Management", imageSrc: "benefits.gif", category: 'benefits' },
   { text: "Policy and Compliance Inquiries", imageSrc: "policy.gif", category: 'policy' },
   { text: "Employee Relations and Grievances", imageSrc: "employeerelations.gif", category: 'relations' },
-  { text: "Transfer of PODs, Department/Team", imageSrc: "transfer.gif", category: 'transfer' },
+  { text: "Employee Reassignment Form", imageSrc: "transfer.gif", category: 'transfer' },
   { text: "Equipment and Facilities Request", imageSrc: "facilities.gif", category: 'facilities' },
   { text: "Other HR Service Request", imageSrc: "otherrequest.gif", category: 'other' }
 ];
