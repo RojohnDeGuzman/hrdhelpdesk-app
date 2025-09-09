@@ -194,7 +194,7 @@ System: HRD Helpdesk Application
       if (attachments && attachments.length > 0) {
         mailOptions.attachments = attachments.map(attachment => ({
           filename: attachment.originalname,
-          content: attachment.buffer,
+          content: Buffer.from(attachment.buffer),
           contentType: attachment.mimetype
         }));
       }

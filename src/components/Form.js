@@ -449,7 +449,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
         attachments.push({
           originalname: attachment.name,
           mimetype: attachment.type,
-          buffer: Buffer.from(attachmentBuffer)
+          buffer: Array.from(new Uint8Array(attachmentBuffer))
         });
       }
 
@@ -461,7 +461,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
           attachments.push({
             originalname: picture.name,
             mimetype: picture.type,
-            buffer: Buffer.from(pictureBuffer)
+            buffer: Array.from(new Uint8Array(pictureBuffer))
           });
         }
 
@@ -471,7 +471,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
           attachments.push({
             originalname: signature.name,
             mimetype: signature.type,
-            buffer: Buffer.from(signatureBuffer)
+            buffer: Array.from(new Uint8Array(signatureBuffer))
           });
         }
       }
