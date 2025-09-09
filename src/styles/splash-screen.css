@@ -37,49 +37,39 @@
   display: inline-block;
 }
 
-.logo-icon {
-  width: 140px;
-  height: 140px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: logoFloat 3s ease-in-out infinite;
-}
 
-.logo-inner {
-  width: 100px;
-  height: 100px;
-  background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+.splash-logo-image {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  animation: logoFloat 3s ease-in-out infinite;
+  will-change: transform;
+  filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.4));
+  transition: all 0.3s ease;
   border-radius: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  display: block;
+  margin: 0 auto;
   position: relative;
   z-index: 2;
-  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.logo-text {
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: white;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 255, 255, 0.3);
-  letter-spacing: 0.1em;
-  font-family: 'Poppins', sans-serif;
+.splash-logo-image:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.4));
 }
 
 .logo-ring {
   position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 30px;
+  top: -30px;
+  left: -30px;
+  right: -30px;
+  bottom: -30px;
+  border: 5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 60px;
   animation: logoRing 2s ease-in-out infinite;
+  pointer-events: none;
 }
+
 
 .splash-text {
   margin-bottom: var(--space-8);
@@ -109,7 +99,7 @@
   bottom: -6px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
+  width: 80%;
   height: 3px;
   background: linear-gradient(90deg, #4ecdc4, #45b7d1, #96ceb4);
   border-radius: 2px;
@@ -388,36 +378,24 @@
 
 /* Splash screen is always dark theme - no overrides needed */
 
-[data-theme="dark"] .logo-glow {
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-}
-
-[data-theme="dark"] .bg-shape {
-  background: linear-gradient(45deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-}
-
-[data-theme="dark"] .splash-subtitle {
-  color: #e0e0e0;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .splash-content {
     padding: var(--space-6);
   }
   
-  .logo-icon {
-    width: 120px;
-    height: 120px;
+  
+  .logo-ring {
+    top: -24px;
+    left: -24px;
+    right: -24px;
+    bottom: -24px;
+    border-radius: 50px;
   }
   
-  .logo-inner {
-    width: 90px;
-    height: 90px;
-  }
-  
-  .logo-text {
-    font-size: 1.6rem;
+  .splash-logo-image {
+    width: 150px;
+    height: 150px;
   }
   
   .splash-title {
@@ -429,6 +407,7 @@
     bottom: -4px;
     left: 50%;
     transform: translateX(-50%);
+    width: 80%;
   }
   
   .splash-subtitle {
@@ -470,18 +449,18 @@
     padding: var(--space-4);
   }
   
-  .logo-icon {
-    width: 100px;
-    height: 100px;
+  
+  .logo-ring {
+    top: -18px;
+    left: -18px;
+    right: -18px;
+    bottom: -18px;
+    border-radius: 40px;
   }
   
-  .logo-inner {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .logo-text {
-    font-size: 1.4rem;
+  .splash-logo-image {
+    width: 120px;
+    height: 120px;
   }
   
   .splash-title {
@@ -493,6 +472,7 @@
     bottom: -3px;
     left: 50%;
     transform: translateX(-50%);
+    width: 80%;
   }
   
   .splash-features {

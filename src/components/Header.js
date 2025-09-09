@@ -6,14 +6,19 @@ const Header = ({ title = "HRD Helpdesk", showThemeToggle = true }) => {
 
   return (
     <header className="header">
-      <div className="header-content">
+      <div className="header-content" style={{ padding: '40px 40px', minHeight: '80px' }}>
         <div className="header-left">
           <div className="logo">
-            <img 
-              src="/hrdhelpdesksplashlogo.gif" 
-              alt="HRD Logo" 
-              className="logo-image"
-            />
+            <div className="logo-container">
+              <div className="logo-back-layer"></div>
+              <img 
+                src="/castologobg.png" 
+                alt="Casto Travel Logo" 
+                className="logo-image"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
             <h1 className="logo-text">{title}</h1>
           </div>
         </div>

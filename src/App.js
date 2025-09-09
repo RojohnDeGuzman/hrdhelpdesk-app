@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import ChatBot from './ChatBot';
 import Form from './components/Form';
 import DownloadableForms from './components/DownloadableForms';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -9,6 +8,7 @@ import ProfessionalSidebar from './components/ProfessionalSidebar';
 import ProfessionalServiceCard from './components/ProfessionalServiceCard';
 import ProfessionalBreadcrumb from './components/ProfessionalBreadcrumb';
 import ModernSplashScreen from './components/ModernSplashScreen';
+import FeedbackModal from './components/FeedbackModal';
 import { MAIN_BUTTONS } from './constants/data';
 import './App.css';
 import './components.css';
@@ -53,6 +53,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPath, setCurrentPath] = useState([]);
   const [quickAccessVisible, setQuickAccessVisible] = useState(false);
+  const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
 
   const handleSplashComplete = useCallback(() => {
       setLoading(false);
@@ -719,16 +720,12 @@ function App() {
               onHomeClick={handleBackToHome}
               onQuickAccessClick={handleQuickAccessClick}
             />
-            <div className="professional-main">
-              <ProfessionalSidebar 
-                onNavigate={handleNavigate}
-                currentPath={currentPath}
-              />
+            <div className="professional-main no-sidebar">
               <main className="professional-content">
                 <FormVisibleResult onBack={handleBackToHome} />
               </main>
-        </div>
-      </div>
+            </div>
+          </div>
         </ErrorBoundary>
       </ThemeProvider>
     );
@@ -866,7 +863,7 @@ function App() {
                     <Form 
                       title={currentFormTitle}
                       onBack={handleBackClick}
-                      onSuccess={handleFormSubmitSuccess}
+                      onSubmitSuccess={handleFormSubmitSuccess}
                     />
                   )}
                 </>
@@ -874,8 +871,15 @@ function App() {
             </main>
           </div>
           
-          <div className="chatbot-container">
-            <ChatBot />
+          {/* Suggestions and Feedback Button */}
+          <div className="suggestions-feedback-container">
+            <button 
+              className="suggestions-feedback-button"
+              onClick={() => setFeedbackModalVisible(true)}
+              title="Share your feedback and suggestions"
+            >
+              💬 Suggestions & Feedback
+            </button>
           </div>
           
           {/* Quick Access Dropdown */}
@@ -910,6 +914,12 @@ function App() {
             </div>
           )}
         </div>
+        
+        {/* Feedback Modal */}
+        <FeedbackModal 
+          isOpen={feedbackModalVisible}
+          onClose={() => setFeedbackModalVisible(false)}
+        />
       </ErrorBoundary>
     </ThemeProvider>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DIVISION_MANAGERS, EMAILJS_CONFIG, UPLOAD_SERVER_URL } from '../constants/data';
+import { DIVISION_MANAGERS, UPLOAD_SERVER_URL } from '../constants/data';
 import axios from 'axios';
 import '../styles/modern-forms.css';
 
@@ -20,6 +20,11 @@ const departments = ['Accounting SSD','Acendas - US Daytime','Admin','Accounting
 // Ultra-simple input components - defined outside component to prevent re-creation
 const EnhancedInput = ({ fieldName, label, type = "text", required = false, placeholder, options = null, formData, updateField, ...props }) => {
   const value = formData[fieldName] || '';
+  
+  // Check if this is an email field that needs @castotravel.ph validation
+  const isEmailField = fieldName === 'email';
+  const isValidEmail = isEmailField ? value.endsWith('@castotravel.ph') : true;
+  const showEmailError = isEmailField && value && !isValidEmail;
 
   return (
     <div className="modern-form-group">
@@ -51,13 +56,21 @@ const EnhancedInput = ({ fieldName, label, type = "text", required = false, plac
       ) : (
         <input
           type={type}
-          className="modern-form-input"
+          className={`modern-form-input ${showEmailError ? 'modern-form-input-error' : ''}`}
           value={value}
           onChange={(e) => updateField(fieldName, e.target.value)}
           placeholder={placeholder}
           required={required}
           {...props}
         />
+      )}
+      {showEmailError && (
+        <div className="modern-form-error">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Please enter a valid @castotravel.ph email address
+        </div>
       )}
     </div>
   );
@@ -70,6 +83,40 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
   const [medicalCertificate, setMedicalCertificate] = useState(null);
   const [supportingDocuments, setSupportingDocuments] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [errorModal, setErrorModal] = useState({ show: false, message: '', title: '', type: 'error' });
+
+  // Professional Error Modal Component
+  const ErrorModal = () => {
+    if (!errorModal.show) return null;
+    
+    return (
+      <div className="error-modal-overlay" onClick={() => setErrorModal({ show: false, message: '', title: '', type: 'error' })}>
+        <div className={`error-modal ${errorModal.type === 'success' ? 'success' : ''}`} onClick={(e) => e.stopPropagation()}>
+          <div className="error-modal-header">
+            <div className="error-modal-icon">{errorModal.type === 'success' ? '✅' : '⚠️'}</div>
+            <h3 className="error-modal-title">{errorModal.title}</h3>
+            <button 
+              className="error-modal-close" 
+              onClick={() => setErrorModal({ show: false, message: '', title: '', type: 'error' })}
+            >
+              ×
+            </button>
+          </div>
+          <div className="error-modal-body">
+            <p className="error-modal-message">{errorModal.message}</p>
+          </div>
+          <div className="error-modal-footer">
+            <button 
+              className="error-modal-button"
+              onClick={() => setErrorModal({ show: false, message: '', title: '', type: 'error' })}
+            >
+              {errorModal.type === 'success' ? 'Awesome!' : 'Got it!'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   // Direct form state management - no hooks, no validation
   const [formData, setFormData] = useState({
@@ -246,19 +293,136 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Only validate basic required fields
+    // Validate basic required fields
+    // Fun error messages for basic fields
+    const basicErrorMessages = [
+      "Hey there! You forgot to tell us your name! Did you read the form? 😊",
+      "Oops! Missing your name there. Are you sure you filled everything out? 🤷‍♀️",
+      "Hold on! We need to know who you are. Did you see the name field? 👤",
+      "Almost there! But you forgot to enter your name. Check again! 👀",
+      "Not quite ready! You need to fill in your name first. Take your time! ⏰"
+    ];
+
     if (!formData.name || formData.name.trim() === '') {
-      alert('Please enter your name');
+      const randomMessage = basicErrorMessages[Math.floor(Math.random() * basicErrorMessages.length)];
+      setErrorModal({ 
+        show: true, 
+        title: 'Missing Required Information', 
+        message: `${randomMessage}\n\nMissing: Your name` 
+      });
       return;
     }
     if (!formData.email || formData.email.trim() === '') {
-      alert('Please enter your email');
+      const randomMessage = basicErrorMessages[Math.floor(Math.random() * basicErrorMessages.length)];
+      setErrorModal({ 
+        show: true, 
+        title: 'Missing Required Information', 
+        message: `${randomMessage}\n\nMissing: Your email address` 
+      });
+      return;
+    }
+    // Fun error messages for email validation
+    const emailErrorMessages = [
+      "Hold up! That's not a Casto Travel email! Did you read the instructions? 🏢",
+      "Oops! Wrong email domain there. Are you sure you're using your work email? 💼",
+      "Not quite right! You need a @castotravel.ph email. Check your email address! 📧",
+      "Almost there! But that's not the right email format. Read the field label! 👀",
+      "Hey! That's not a company email. Did you see the @castotravel.ph requirement? 🤔",
+      "Hold on! You need to use your Casto Travel email address. Check again! 🔍"
+    ];
+
+    // Validate that email is from @castotravel.ph domain
+    if (!formData.email.endsWith('@castotravel.ph')) {
+      const randomMessage = emailErrorMessages[Math.floor(Math.random() * emailErrorMessages.length)];
+      setErrorModal({ 
+        show: true, 
+        title: 'Invalid Email Domain', 
+        message: `${randomMessage}\n\nRequired: @castotravel.ph email address` 
+      });
       return;
     }
     if (!formData.divisionmanager || formData.divisionmanager.trim() === '') {
-      alert('Please select your division manager');
+      setErrorModal({ 
+        show: true, 
+        title: 'Missing Required Information', 
+        message: 'Please select your division manager' 
+      });
       return;
     }
+
+    // Get form-specific required fields and validate them
+    const formSpecificFields = getFormSpecificFields();
+    const requiredFields = [];
+    
+    // Extract required field names from form configuration
+    formSpecificFields.forEach(field => {
+      if (field.props && field.props.required) {
+        requiredFields.push({
+          name: field.props.fieldName,
+          label: field.props.label
+        });
+      }
+    });
+
+    // Fun error messages for missing fields
+    const funErrorMessages = [
+      "Oops! Looks like you missed something. Did you really read the form properly? 😅",
+      "Hmm, seems like you skipped a step. Have you checked everything carefully? 🤔",
+      "Almost there! But you forgot something important. Take another look! 👀",
+      "Not quite ready yet! Did you read all the instructions properly? 📖",
+      "Missing something there! Are you sure you filled everything out? 🤷‍♀️",
+      "Hold up! You missed a required field. Double-check your work! 🔍",
+      "Almost got it! But there's still something missing. Read it again! 📝",
+      "Not so fast! You skipped something important. Take your time! ⏰"
+    ];
+
+    // Validate required fields
+    for (const field of requiredFields) {
+      const value = formData[field.name];
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
+        const randomMessage = funErrorMessages[Math.floor(Math.random() * funErrorMessages.length)];
+        setErrorModal({ 
+          show: true, 
+          title: 'Missing Required Information', 
+          message: `${randomMessage}\n\nMissing: ${field.label}` 
+        });
+        return;
+      }
+    }
+
+    // Fun error messages for file uploads
+    const fileErrorMessages = [
+      "Hey! You forgot to attach something important! Did you read the requirements? 📎",
+      "Oops! Missing an attachment there. Check what you need to upload! 📁",
+      "Hold on! You need to upload a file. Did you see the upload section? 📤",
+      "Almost there! But you're missing a required file. Look for the upload button! 🔍",
+      "Not quite ready! You forgot to attach something. Check the form again! 👀"
+    ];
+
+    // Validate required file uploads (only for forms that actually require them)
+    if (title === 'Request form for Company ID') {
+      if (!picture) {
+        const randomMessage = fileErrorMessages[Math.floor(Math.random() * fileErrorMessages.length)];
+        setErrorModal({ 
+          show: true, 
+          title: 'Missing Required Files', 
+          message: `${randomMessage}\n\nMissing: Picture upload` 
+        });
+        return;
+      }
+      if (!signature) {
+        const randomMessage = fileErrorMessages[Math.floor(Math.random() * fileErrorMessages.length)];
+        setErrorModal({ 
+          show: true, 
+          title: 'Missing Required Files', 
+          message: `${randomMessage}\n\nMissing: Signature upload` 
+        });
+        return;
+      }
+    }
+    
+    // Note: Other forms may have optional file uploads, so we don't validate them here
+    // Only validate file uploads for forms that explicitly require them
 
     setLoading(true);
 
@@ -268,9 +432,16 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
       signature: null
     };
 
+    let uploadedFileNames = {
+      attachment: null,
+      picture: null,
+      signature: null
+    };
+
     try {
       // Handle regular attachment upload
       if (attachment && attachment instanceof File && attachment.size > 0) {
+        console.log('📎 Uploading attachment:', attachment.name, 'Size:', attachment.size);
         const formData = new FormData();
         formData.append('file', attachment);
         try {
@@ -279,10 +450,19 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
           });
           if (uploadResponse.data.fileUrl) {
             uploadedFileUrls.attachment = uploadResponse.data.fileUrl;
+            uploadedFileNames.attachment = attachment.name;
           }
         } catch (uploadError) {
-          console.error('Error uploading attachment:', uploadError);
+          console.error('❌ Error uploading attachment:', uploadError);
+          setErrorModal({ 
+            show: true, 
+            title: 'Upload Failed', 
+            message: 'Failed to upload attachment. Please try again.' 
+          });
+          setLoading(false);
+          return;
         }
+      } else {
       }
 
       // Handle picture and signature uploads for Company ID form
@@ -296,6 +476,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
             });
             if (pictureResponse.data.fileUrl) {
               uploadedFileUrls.picture = pictureResponse.data.fileUrl;
+              uploadedFileNames.picture = picture.name;
             }
           } catch (uploadError) {
             console.error('Error uploading picture:', uploadError);
@@ -311,6 +492,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
             });
             if (signatureResponse.data.fileUrl) {
               uploadedFileUrls.signature = signatureResponse.data.fileUrl;
+              uploadedFileNames.signature = signature.name;
             }
           } catch (uploadError) {
             console.error('Error uploading signature:', uploadError);
@@ -318,71 +500,50 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
         }
       }
 
-      // Prepare the email data
-      const data = {
-        service_id: EMAILJS_CONFIG.serviceId,
-        template_id: EMAILJS_CONFIG.templateId,
-        user_id: EMAILJS_CONFIG.publicKey,
-        template_params: {
-          from_name: formData.name,
-          from_email: formData.email,
-          from_divisionmanager: `Division Manager: ${formData.divisionmanager}`,
-          to_name: 'HRD Helpdesk',
-          message: formData.description,
-          detail_title: title,
-          ...(uploadedFileUrls.attachment && {
-            attachment_url: uploadedFileUrls.attachment,
-            attachment_text: 'Download Attachment',
-          }),
-          ...(title === 'Request form for Company ID' && {
-            emergency_contact: `Emergency Contact: ${formData.emergencyContact}`,
-            contact_number: `Contact Number: ${formData.contactNumber}`,
-            address: `Address: ${formData.address}`,
-            ...(uploadedFileUrls.picture && {
-              picture_url: uploadedFileUrls.picture,
-              picture_text: 'Download Picture',
-            }),
-            ...(uploadedFileUrls.signature && {
-              signature_url: uploadedFileUrls.signature,
-              signature_text: 'Download Signature',
-            }),
-          }),
-          ...(title === 'Employee Reassignment Form' && {
-            agent_name: `Employee: ${formData.agentName}`,
-            from_dept: `From Department: ${formData.fromDept}`,
-            to_dept: `To Department: ${formData.toDept}`,
-          }),
-          ...(title === 'Kudos Submission Form' && {
-            agent_name: `Agent: ${formData.agentName}`,
-          }),
-          ...(title === 'Request for Lounge Space' && {
-            location: `Location of Reservation: ${formData.location}`,
-            ...(formData.ccEmail && { cc_email: formData.ccEmail }),
-            date_from: `Date from: ${formData.fromDate}`,
-            date_to: `Date to: ${formData.toDate}`,
-          }),
-          ...(title === 'Request Floating Status Request Form' && {
-            employee_Name: `Employee Name: ${formData.employeeName}`,
-            current_Dept: `Current Department: ${formData.currentDept}`,
-            effective_Date: `Effective Date: ${formData.effectiveDate}`,
-          }),
-          ...(title === 'Request Employee Information Access' && {
-            requested_Agent: `Employee Name: ${formData.requestedAgent}`,
-          }),
-          ...(title === 'Team Fund Request Form' && {
-            fund_department: `Fund Department: ${formData.funddepartment}`,
-          }),
+      // Send email using our backend service
+      const emailData = {
+        formData: {
+          ...formData, // Include ALL form fields
+          title: title,
         },
+        attachments: [
+          ...(uploadedFileUrls.attachment ? [{
+            filename: uploadedFileNames.attachment || 'attachment',
+            url: uploadedFileUrls.attachment,
+            type: 'attachment'
+          }] : []),
+          ...(uploadedFileUrls.picture ? [{
+            filename: uploadedFileNames.picture || 'picture',
+            url: uploadedFileUrls.picture,
+            type: 'picture'
+          }] : []),
+          ...(uploadedFileUrls.signature ? [{
+            filename: uploadedFileNames.signature || 'signature',
+            url: uploadedFileUrls.signature,
+            type: 'signature'
+          }] : []),
+        ]
       };
 
-      // Send email using EmailJS
-      const response = await axios.post("https://api.emailjs.com/api/v1.0/email/send", data);
-      console.log('Email Response:', response.data);
+      const response = await axios.post(`${UPLOAD_SERVER_URL}/send-email`, emailData);
 
+      if (onSubmitSuccess) {
       onSubmitSuccess();
+      } else {
+        setErrorModal({ 
+          show: true, 
+          title: 'Success!', 
+          message: 'Form submitted successfully! You will receive a confirmation email shortly.',
+          type: 'success'
+        });
+      }
     } catch (error) {
       console.error('Error:', error.response ? error.response.data : error.message);
-      alert('Failed to submit the form. Please try again later.');
+      setErrorModal({ 
+        show: true, 
+        title: 'Submission Failed', 
+        message: 'Failed to submit the form. Please try again later.' 
+      });
     } finally {
       setLoading(false);
     }
@@ -397,7 +558,18 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
   // Enhanced file upload component
   const EnhancedFileUpload = ({ fieldName, label, accept, required = false, multiple = false }) => {
     const [dragActive, setDragActive] = useState(false);
-    const [file, setFile] = useState(null);
+    
+    // Get the current file from the parent component's state
+    const getCurrentFile = () => {
+      if (fieldName === 'attachment') return attachment;
+      if (fieldName === 'picture') return picture;
+      if (fieldName === 'signature') return signature;
+      if (fieldName === 'medicalCertificate') return medicalCertificate;
+      if (fieldName === 'supportingDocuments') return supportingDocuments;
+      return null;
+    };
+    
+    const file = getCurrentFile();
 
     const handleDrag = (e) => {
       e.preventDefault();
@@ -416,24 +588,54 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
       
       if (e.dataTransfer.files && e.dataTransfer.files[0]) {
         const droppedFile = e.dataTransfer.files[0];
-        setFile(droppedFile);
-        if (fieldName === 'attachment') setAttachment(droppedFile);
-        if (fieldName === 'picture') setPicture(droppedFile);
-        if (fieldName === 'signature') setSignature(droppedFile);
-        if (fieldName === 'medicalCertificate') setMedicalCertificate(droppedFile);
-        if (fieldName === 'supportingDocuments') setSupportingDocuments(droppedFile);
+        console.log('📎 File dropped:', droppedFile.name, 'Size:', droppedFile.size, 'Type:', droppedFile.type);
+        if (fieldName === 'attachment') {
+          setAttachment(droppedFile);
+          console.log('📎 Attachment set:', droppedFile.name);
+        }
+        if (fieldName === 'picture') {
+          setPicture(droppedFile);
+          console.log('📎 Picture set:', droppedFile.name);
+        }
+        if (fieldName === 'signature') {
+          setSignature(droppedFile);
+          console.log('📎 Signature set:', droppedFile.name);
+        }
+        if (fieldName === 'medicalCertificate') {
+          setMedicalCertificate(droppedFile);
+          console.log('📎 Medical Certificate set:', droppedFile.name);
+        }
+        if (fieldName === 'supportingDocuments') {
+          setSupportingDocuments(droppedFile);
+          console.log('📎 Supporting Documents set:', droppedFile.name);
+        }
       }
     };
 
     const handleFileChange = (e) => {
       if (e.target.files && e.target.files[0]) {
         const selectedFile = e.target.files[0];
-        setFile(selectedFile);
-        if (fieldName === 'attachment') setAttachment(selectedFile);
-        if (fieldName === 'picture') setPicture(selectedFile);
-        if (fieldName === 'signature') setSignature(selectedFile);
-        if (fieldName === 'medicalCertificate') setMedicalCertificate(selectedFile);
-        if (fieldName === 'supportingDocuments') setSupportingDocuments(selectedFile);
+        console.log('📎 File selected:', selectedFile.name, 'Size:', selectedFile.size, 'Type:', selectedFile.type);
+        if (fieldName === 'attachment') {
+          setAttachment(selectedFile);
+          console.log('📎 Attachment set:', selectedFile.name);
+        }
+        if (fieldName === 'picture') {
+          setPicture(selectedFile);
+          console.log('📎 Picture set:', selectedFile.name);
+        }
+        if (fieldName === 'signature') {
+          setSignature(selectedFile);
+          console.log('📎 Signature set:', selectedFile.name);
+        }
+        if (fieldName === 'medicalCertificate') {
+          setMedicalCertificate(selectedFile);
+          console.log('📎 Medical Certificate set:', selectedFile.name);
+        }
+        if (fieldName === 'supportingDocuments') {
+          setSupportingDocuments(selectedFile);
+          console.log('📎 Supporting Documents set:', selectedFile.name);
+        }
       }
     };
 
@@ -442,7 +644,8 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
         <label className="modern-form-label">
           {label} {required && <span className="required">*</span>}
         </label>
-        <div 
+        <label 
+          htmlFor={`file-${fieldName}`}
           className={`modern-form-file-input ${dragActive ? 'drag-active' : ''}`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -458,22 +661,45 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
             style={{ display: 'none' }}
             id={`file-${fieldName}`}
           />
-          <label htmlFor={`file-${fieldName}`} className="modern-form-file-label">
             <div className="modern-form-file-text">
-              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-              </svg>
               {file ? (
-                <div>
-                  <strong>{file.name}</strong>
+              <div className="file-selected">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: '#10b981' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div className="file-info">
+                  <strong style={{ color: '#10b981' }}>✓ {file.name}</strong>
                   <span className="file-size">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
                 </div>
+                <button 
+                  type="button" 
+                  className="file-remove-btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('📎 Removing file:', file?.name);
+                    if (fieldName === 'attachment') setAttachment(null);
+                    if (fieldName === 'picture') setPicture(null);
+                    if (fieldName === 'signature') setSignature(null);
+                    if (fieldName === 'medicalCertificate') setMedicalCertificate(null);
+                    if (fieldName === 'supportingDocuments') setSupportingDocuments(null);
+                  }}
+                >
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                </div>
               ) : (
+              <div className="file-placeholder">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                </svg>
                 <span>Click to select file or drag and drop</span>
+              </div>
               )}
             </div>
           </label>
-        </div>
       </div>
     );
   };
@@ -615,7 +841,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
       'ComPsych Assistance': [
         <EnhancedInput formData={formData} updateField={updateField} key="assistanceType" fieldName="assistanceType" label="Type of Assistance Needed" type="select" options={['Counseling', 'Mental Health Support', 'Work-Life Balance', 'Stress Management', 'Other']} required />,
         <EnhancedInput formData={formData} updateField={updateField} key="urgency" fieldName="urgency" label="Urgency Level" type="select" options={['Low', 'Medium', 'High', 'Critical']} required />,
-        <EnhancedInput formData={formData} updateField={updateField} key="reason" fieldName="reason" label="Description of Need" type="textarea" required placeholder="Please describe what assistance you need" />
+        <EnhancedInput formData={formData} updateField={updateField} key="description" fieldName="description" label="Description of Need" type="textarea" required placeholder="Please describe what assistance you need" />
       ],
       'Employee Reassignment Request': [
         <EnhancedInput formData={formData} updateField={updateField} key="agentName" fieldName="agentName" label="Agent Name" required placeholder="Enter agent name" />,
@@ -935,7 +1161,158 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
   }
 
   return (
-    <div className="modern-form-container">
+    <div className="modern-form-container" style={{ position: 'relative' }}>
+      {loading && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          borderRadius: '8px',
+          backdropFilter: 'blur(4px)',
+          animation: 'fadeIn 0.3s ease-in-out'
+        }}>
+          <div style={{
+            backgroundColor: '#fff',
+            padding: '40px 35px',
+            borderRadius: '16px',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3), 0 8px 25px rgba(0, 0, 0, 0.2)',
+            textAlign: 'center',
+            maxWidth: '380px',
+            width: '90%',
+            position: 'relative',
+            animation: 'slideUp 0.4s ease-out'
+          }}>
+            {/* Animated background pattern */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '4px',
+              background: 'linear-gradient(90deg, #3498db, #2ecc71, #f39c12, #e74c3c, #9b59b6, #3498db)',
+              backgroundSize: '300% 100%',
+              animation: 'gradientShift 2s ease-in-out infinite',
+              borderRadius: '16px 16px 0 0'
+            }}></div>
+            
+            {/* Enhanced spinner */}
+            <div style={{
+              position: 'relative',
+              width: '60px',
+              height: '60px',
+              margin: '0 auto 25px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                border: '4px solid #f1f3f4',
+                borderTop: '4px solid #3498db',
+                borderRight: '4px solid #2ecc71',
+                borderRadius: '50%',
+                animation: 'spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite',
+                position: 'absolute'
+              }}></div>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                border: '3px solid #f1f3f4',
+                borderBottom: '3px solid #e74c3c',
+                borderLeft: '3px solid #f39c12',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite reverse',
+                position: 'absolute'
+              }}></div>
+              <div style={{
+                width: '20px',
+                height: '20px',
+                backgroundColor: '#9b59b6',
+                borderRadius: '50%',
+                animation: 'pulse 1.5s ease-in-out infinite',
+                position: 'absolute'
+              }}></div>
+            </div>
+
+            {/* Enhanced content */}
+            <h3 style={{ 
+              margin: '0 0 12px 0', 
+              color: '#2c3e50', 
+              fontSize: '20px',
+              fontWeight: '600',
+              letterSpacing: '0.5px'
+            }}>
+              Processing Your Request
+            </h3>
+            
+            <p style={{ 
+              margin: '0 0 20px 0', 
+              color: '#5a6c7d', 
+              fontSize: '15px',
+              lineHeight: '1.5',
+              fontWeight: '400'
+            }}>
+              Please wait while we securely process and submit your HRD request...
+            </p>
+
+            {/* Progress dots */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '20px'
+            }}>
+              {[0, 1, 2].map((i) => (
+                <div key={i} style={{
+                  width: '8px',
+                  height: '8px',
+                  backgroundColor: '#3498db',
+                  borderRadius: '50%',
+                  animation: `bounce 1.4s ease-in-out infinite both`,
+                  animationDelay: `${i * 0.16}s`
+                }}></div>
+              ))}
+            </div>
+
+            {/* Status message */}
+            <div style={{
+              backgroundColor: '#f8f9fa',
+              padding: '12px 16px',
+              borderRadius: '8px',
+              border: '1px solid #e9ecef',
+              marginBottom: '15px'
+            }}>
+              <p style={{ 
+                margin: '0', 
+                color: '#495057', 
+                fontSize: '13px',
+                fontWeight: '500'
+              }}>
+                ✓ Validating form data
+              </p>
+            </div>
+
+            <p style={{ 
+              margin: '0', 
+              color: '#6c757d', 
+              fontSize: '12px',
+              fontStyle: 'italic'
+            }}>
+              This usually takes 2-5 seconds
+            </p>
+          </div>
+        </div>
+      )}
       {title === 'Submit employee referrals' ? (
         <div className="modern-referral-container">
           <div className="modern-referral-icon">
@@ -968,35 +1345,35 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
             <div className="form-section">
               <h3 className="form-section-title">Personal Information</h3>
               <p className="form-section-description">Please provide your basic contact information</p>
-              <div className="modern-form-layout">
-                <div className="modern-form-section">
+            <div className="modern-form-layout">
+              <div className="modern-form-section">
                   <EnhancedInput formData={formData} updateField={updateField} 
-                    fieldName="name" 
-                    label="Name" 
-                    required 
-                    placeholder="Enter your full name" 
-                  />
-                  
-                  <EnhancedInput formData={formData} updateField={updateField} 
-                    fieldName="email" 
-                    label="Castotravel Email" 
-                    type="email" 
-                    required 
-                    placeholder="Enter your email address" 
-                  />
-                </div>
+                  fieldName="name" 
+                  label="Name" 
+                  required 
+                  placeholder="Enter your full name" 
+                />
                 
-                <div className="modern-form-section">
                   <EnhancedInput formData={formData} updateField={updateField} 
-                    fieldName="divisionmanager" 
-                    label="Division Manager" 
-                    type="select" 
-                    options={DIVISION_MANAGERS} 
-                    required 
-                  />
+                  fieldName="email" 
+                  label="Castotravel Email" 
+                  type="email" 
+                  required 
+                    placeholder="Enter your @castotravel.ph email address" 
+                />
+              </div>
+              
+              <div className="modern-form-section">
+                  <EnhancedInput formData={formData} updateField={updateField} 
+                  fieldName="divisionmanager" 
+                  label="Division Manager" 
+                  type="select" 
+                  options={DIVISION_MANAGERS} 
+                  required 
+                />
 
-                  {/* Only show attachment field if NOT Company ID form */}
-                  {title !== 'Request form for Company ID' && (
+                {/* Only show attachment field if NOT Company ID form */}
+                {title !== 'Request form for Company ID' && (
                   <EnhancedFileUpload 
                     fieldName="attachment" 
                     label="Attach Supporting Documents" 
@@ -1012,11 +1389,11 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
               <div className="form-section">
                 <h3 className="form-section-title">Request Details</h3>
                 <p className="form-section-description">Please provide specific information for your request</p>
-                <div className="modern-form-layout">
-                  <div className="modern-form-section full-width">
-                    {getFormSpecificFields()}
-                  </div>
-                </div>
+            <div className="modern-form-layout">
+              <div className="modern-form-section full-width">
+                {getFormSpecificFields()}
+              </div>
+            </div>
               </div>
             )}
 
@@ -1025,15 +1402,15 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
               <div className="form-section">
                 <h3 className="form-section-title">Request Description</h3>
                 <p className="form-section-description">Please provide details about your request</p>
-                <div className="modern-form-layout">
-                  <div className="modern-form-section full-width">
+              <div className="modern-form-layout">
+                <div className="modern-form-section full-width">
                     <EnhancedInput formData={formData} updateField={updateField} 
-                      fieldName="description" 
-                      label={title === 'Kudos Submission Form' ? 'Reason for Kudos' : 'Description'} 
-                      type="textarea" 
-                      required
-                      placeholder={title === 'Kudos Submission Form' ? 'Reason for Kudos' : 'Enter your description'}
-                    />
+                    fieldName="description" 
+                    label={title === 'Kudos Submission Form' ? 'Reason for Kudos' : 'Description'} 
+                    type="textarea" 
+                    required
+                    placeholder={title === 'Kudos Submission Form' ? 'Reason for Kudos' : 'Enter your description'}
+                  />
                   </div>
                 </div>
               </div>
@@ -1044,7 +1421,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
                 {loading ? (
                   <>
                     <span className="modern-form-loading"></span>
-                    Submitting...
+                    Please wait, submitting your request...
                   </>
                 ) : (
                   <>
@@ -1061,10 +1438,11 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
                 </svg>
                 Back
               </button>
-            </div>
-          </form>
+        </div>
+      </form>
         </>
       )}
+      <ErrorModal />
     </div>
   );
 };

@@ -63,12 +63,14 @@ const ModernSplashScreen = ({ onComplete }) => {
       <div className="splash-content">
         <div className="splash-logo">
           <div className="logo-container">
-            <div className="logo-icon">
-              <div className="logo-inner">
-                <span className="logo-text">HRD</span>
-              </div>
+              <img 
+                src="/castologobg.png" 
+                alt="Casto Travel Logo" 
+                className="splash-logo-image"
+                loading="eager"
+                decoding="async"
+              />
               <div className="logo-ring"></div>
-            </div>
           </div>
         </div>
         

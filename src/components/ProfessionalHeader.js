@@ -13,8 +13,14 @@ const ProfessionalHeader = ({ onSearch, searchTerm, onHomeClick, onQuickAccessCl
           title="Back to Home"
           style={{ cursor: 'pointer' }}
         >
-          <div className="logo-icon">
-            HRD
+          <div className="logo-container">
+            <img 
+              src="/castologobg.png" 
+              alt="Casto Travel Logo" 
+              className="logo-image"
+              loading="eager"
+              decoding="async"
+            />
           </div>
           <h1 className="logo-text">HRD Helpdesk</h1>
         </div>
