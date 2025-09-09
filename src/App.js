@@ -52,6 +52,7 @@ function App() {
   const [currentFormTitle, setCurrentFormTitle] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPath, setCurrentPath] = useState([]);
+  const [quickAccessVisible, setQuickAccessVisible] = useState(false);
 
   const handleSplashComplete = useCallback(() => {
       setLoading(false);
@@ -580,16 +581,27 @@ function App() {
   }, []);
 
   const handleBackToHome = useCallback(() => {
+    // Reset all form and navigation states
     setFormVisibleResult(false);
+    setFormVisible(false);
     setButtonsVisible(true);
     setSubButtonsVisible(false);
     setDetailButtonsVisible(false);
     setCurrentPath([]);
+    setCurrentFormTitle('');
+    setCurrentSubCategory('');
+    setCurrentDetailButtons([]);
+    setSearchTerm('');
+    setQuickAccessVisible(false);
   }, []);
 
   const handleSearch = useCallback((term) => {
     setSearchTerm(term);
   }, []);
+
+  const handleQuickAccessClick = useCallback(() => {
+    setQuickAccessVisible(!quickAccessVisible);
+  }, [quickAccessVisible]);
 
   useEffect(() => {
     if (buttonsVisible) {
@@ -621,6 +633,7 @@ function App() {
               onSearch={handleSearch}
               searchTerm={searchTerm}
               onHomeClick={handleBackToHome}
+              onQuickAccessClick={handleQuickAccessClick}
             />
             <div className="professional-main">
               <ProfessionalSidebar 
@@ -645,15 +658,10 @@ function App() {
             onSearch={handleSearch}
             searchTerm={searchTerm}
             onHomeClick={handleBackToHome}
+            onQuickAccessClick={handleQuickAccessClick}
           />
           
-          <div className={`professional-main ${!(subButtonsVisible || detailButtonsVisible || formVisible) ? 'no-sidebar' : ''}`}>
-            {(subButtonsVisible || detailButtonsVisible || formVisible) && (
-              <ProfessionalSidebar 
-                onNavigate={handleNavigate}
-                currentPath={currentPath}
-              />
-            )}
+          <div className="professional-main no-sidebar">
             
             <main className="professional-content">
               <ProfessionalBreadcrumb 
@@ -783,8 +791,40 @@ function App() {
           </div>
           
           <div className="chatbot-container">
-    <ChatBot />
-    </div>
+            <ChatBot />
+          </div>
+          
+          {/* Quick Access Dropdown */}
+          {quickAccessVisible && (
+            <div className="quick-access-dropdown">
+              <div className="quick-access-dropdown-header">
+                <h3>Quick Access</h3>
+                <button 
+                  className="quick-access-close"
+                  onClick={() => setQuickAccessVisible(false)}
+                >
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="quick-access-dropdown-content">
+                {MAIN_BUTTONS.map((button, index) => (
+                  <button
+                    key={index}
+                    className="quick-access-dropdown-item"
+                    onClick={() => {
+                      handleMainButtonClick(button.text);
+                      setQuickAccessVisible(false);
+                    }}
+                  >
+                    <span className="quick-access-item-icon">{getServiceIcon(button.text)}</span>
+                    <span className="quick-access-item-text">{button.text}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </ErrorBoundary>
     </ThemeProvider>

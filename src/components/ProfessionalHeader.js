@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme } from './ThemeProvider';
 
-const ProfessionalHeader = ({ onSearch, searchTerm, onHomeClick }) => {
+const ProfessionalHeader = ({ onSearch, searchTerm, onHomeClick, onQuickAccessClick }) => {
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -11,6 +11,7 @@ const ProfessionalHeader = ({ onSearch, searchTerm, onHomeClick }) => {
           className="logo-section clickable-logo"
           onClick={onHomeClick}
           title="Back to Home"
+          style={{ cursor: 'pointer' }}
         >
           <div className="logo-icon">
             HRD
@@ -26,13 +27,23 @@ const ProfessionalHeader = ({ onSearch, searchTerm, onHomeClick }) => {
             type="text"
             className="search-input"
             placeholder="Search HR services..."
-            value={searchTerm}
+            value={searchTerm || ''}
             onChange={(e) => onSearch(e.target.value)}
           />
         </div>
       </div>
       
       <div className="header-right">
+        <button 
+          className="quick-access-header-btn"
+          onClick={onQuickAccessClick}
+          title="Quick Access Menu"
+        >
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        
         <button 
           className="theme-toggle"
           onClick={toggleTheme}

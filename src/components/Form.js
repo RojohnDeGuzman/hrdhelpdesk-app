@@ -618,63 +618,77 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
             <p className="modern-form-subtitle">Please fill out all required fields to submit your request</p>
           </div>
           <form className="modern-form" onSubmit={handleSubmit}>
-            <div className="modern-form-layout">
-              <div className="modern-form-section">
-                <EnhancedInput 
-                  fieldName="name" 
-                  label="Name" 
-                  required 
-                  placeholder="Enter your full name" 
-                />
+            {/* Personal Information Section */}
+            <div className="form-section">
+              <h3 className="form-section-title">Personal Information</h3>
+              <p className="form-section-description">Please provide your basic contact information</p>
+              <div className="modern-form-layout">
+                <div className="modern-form-section">
+                  <EnhancedInput 
+                    fieldName="name" 
+                    label="Name" 
+                    required 
+                    placeholder="Enter your full name" 
+                  />
+                  
+                  <EnhancedInput 
+                    fieldName="email" 
+                    label="Castotravel Email" 
+                    type="email" 
+                    required 
+                    placeholder="Enter your email address" 
+                  />
+                </div>
                 
-                <EnhancedInput 
-                  fieldName="email" 
-                  label="Castotravel Email" 
-                  type="email" 
-                  required 
-                  placeholder="Enter your email address" 
-                />
-              </div>
-              
-              <div className="modern-form-section">
-                <EnhancedInput 
-                  fieldName="divisionmanager" 
-                  label="Division Manager" 
-                  type="select" 
-                  options={DIVISION_MANAGERS} 
-                  required 
-                />
+                <div className="modern-form-section">
+                  <EnhancedInput 
+                    fieldName="divisionmanager" 
+                    label="Division Manager" 
+                    type="select" 
+                    options={DIVISION_MANAGERS} 
+                    required 
+                  />
 
-                {/* Only show attachment field if NOT Company ID form */}
-                {title !== 'Request form for Company ID' && (
+                  {/* Only show attachment field if NOT Company ID form */}
+                  {title !== 'Request form for Company ID' && (
                   <EnhancedFileUpload 
                     fieldName="attachment" 
                     label="Attach Supporting Documents" 
                     accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                   />
                 )}
+                </div>
               </div>
             </div>
 
             {/* Form-specific fields */}
-            <div className="modern-form-layout">
-              <div className="modern-form-section full-width">
-                {getFormSpecificFields()}
+            {getFormSpecificFields().length > 0 && (
+              <div className="form-section">
+                <h3 className="form-section-title">Request Details</h3>
+                <p className="form-section-description">Please provide specific information for your request</p>
+                <div className="modern-form-layout">
+                  <div className="modern-form-section full-width">
+                    {getFormSpecificFields()}
+                  </div>
+                </div>
               </div>
-            </div>
-
+            )}
 
             {/* Fallback description field for forms without specific configurations */}
             {!getFormSpecificFields().length && (
-              <div className="modern-form-layout">
-                <div className="modern-form-section full-width">
-                  <EnhancedInput 
-                    fieldName="description" 
-                    label={title === 'Kudos Submission Form' ? 'Reason for Kudos' : 'Description'} 
-                    type="textarea" 
-                    required
-                    placeholder={title === 'Kudos Submission Form' ? 'Reason for Kudos' : 'Enter your description'}
-                  />
+              <div className="form-section">
+                <h3 className="form-section-title">Request Description</h3>
+                <p className="form-section-description">Please provide details about your request</p>
+                <div className="modern-form-layout">
+                  <div className="modern-form-section full-width">
+                    <EnhancedInput 
+                      fieldName="description" 
+                      label={title === 'Kudos Submission Form' ? 'Reason for Kudos' : 'Description'} 
+                      type="textarea" 
+                      required
+                      placeholder={title === 'Kudos Submission Form' ? 'Reason for Kudos' : 'Enter your description'}
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -700,9 +714,9 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 Back
-          </button>
-        </div>
-      </form>
+              </button>
+            </div>
+          </form>
         </>
       )}
     </div>
