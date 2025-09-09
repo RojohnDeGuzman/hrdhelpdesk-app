@@ -5,7 +5,14 @@ body, html {
   padding: 0;
   height: 100%;
   font-family: 'Poppins', sans-serif;
-  background-color: #ffffff;  
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+  transition: background 0.3s ease;
+}
+
+/* Dark theme background */
+[data-theme="dark"] body,
+[data-theme="dark"] html {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
 }
 
 .main-background {  
@@ -14,11 +21,50 @@ body, html {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('../public/hrdbackground.gif');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
   z-index: -1;
+  transition: background 0.3s ease;
+}
+
+/* Dark theme main background */
+[data-theme="dark"] .main-background {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+
+/* Add subtle geometric pattern overlay */
+.main-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+    linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.05) 50%, transparent 60%);
+  background-size: 300px 300px, 400px 400px, 100px 100px;
+  animation: backgroundFloat 20s ease-in-out infinite;
+}
+
+/* Dark theme geometric pattern */
+[data-theme="dark"] .main-background::before {
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+    linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.03) 50%, transparent 60%);
+}
+
+/* Subtle animation for the background */
+@keyframes backgroundFloat {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.8;
+  }
+  50% { 
+    transform: translateY(-10px) rotate(1deg);
+    opacity: 1;
+  }
 }
 
 .hidden {

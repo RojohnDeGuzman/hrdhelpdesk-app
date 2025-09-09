@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 // Email configuration for Vercel serverless functions
 const emailConfig = {
@@ -324,4 +324,4 @@ System: HRD Helpdesk Application
   }
 }
 
-module.exports = EmailService;
+export default EmailService;

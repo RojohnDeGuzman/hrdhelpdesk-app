@@ -1,4 +1,4 @@
-const EmailService = require('./emailService');
+import EmailService from './emailService.js';
 
 // Initialize email service
 const emailService = new EmailService();

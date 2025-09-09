@@ -1,4 +1,4 @@
-const EmailService = require('./emailService');
+import EmailService from './emailService.js';
 
 // Initialize email service
 const emailService = new EmailService();
@@ -64,8 +64,11 @@ export default async function handler(req, res) {
 
   try {
     console.log('📧 API - Received request to send email');
-    console.log('📧 API - Request headers:', req.headers);
+    console.log('📧 API - Request method:', req.method);
+    console.log('📧 API - Request headers:', JSON.stringify(req.headers, null, 2));
     console.log('📧 API - Content-Type:', req.headers['content-type']);
+    console.log('📧 API - Request body type:', typeof req.body);
+    console.log('📧 API - Request body length:', req.body ? req.body.length : 'undefined');
 
     let formData = {};
     let attachments = [];
@@ -106,11 +109,22 @@ export default async function handler(req, res) {
     }
 
     // Test email connection first
-    const connectionTest = await emailService.testConnection();
-    if (!connectionTest) {
+    try {
+      const connectionTest = await emailService.testConnection();
+      if (!connectionTest) {
+        console.error('❌ API - Email service connection failed');
+        return res.status(500).json({
+          success: false,
+          message: 'Email service is not available. Please try again later.'
+        });
+      }
+      console.log('✅ API - Email service connection successful');
+    } catch (connectionError) {
+      console.error('❌ API - Email service connection error:', connectionError);
       return res.status(500).json({
         success: false,
-        message: 'Email service is not available. Please try again later.'
+        message: 'Email service connection failed. Please try again later.',
+        error: connectionError.message
       });
     }
 
