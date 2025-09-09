@@ -11,7 +11,11 @@ const emailConfig = {
   },
   tls: {
     ciphers: 'SSLv3'
-  }
+  },
+  // Add timeout settings for Vercel
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 5000,    // 5 seconds
+  socketTimeout: 10000      // 10 seconds
 };
 
 class EmailService {

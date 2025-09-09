@@ -108,28 +108,14 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Test email connection first
-    try {
-      const connectionTest = await emailService.testConnection();
-      if (!connectionTest) {
-        console.error('❌ API - Email service connection failed');
-        return res.status(500).json({
-          success: false,
-          message: 'Email service is not available. Please try again later.'
-        });
-      }
-      console.log('✅ API - Email service connection successful');
-    } catch (connectionError) {
-      console.error('❌ API - Email service connection error:', connectionError);
-      return res.status(500).json({
-        success: false,
-        message: 'Email service connection failed. Please try again later.',
-        error: connectionError.message
-      });
-    }
-
-    // Send the email
-    const result = await emailService.sendHRDRequest(formData, attachments);
+    // Send the email directly (connection test removed to prevent timeout)
+    // Add timeout wrapper to prevent Vercel timeout
+    const emailPromise = emailService.sendHRDRequest(formData, attachments);
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Email sending timeout')), 25000) // 25 second timeout
+    );
+    
+    const result = await Promise.race([emailPromise, timeoutPromise]);
 
     if (result.success) {
       console.log('✅ API - Email sent successfully');
