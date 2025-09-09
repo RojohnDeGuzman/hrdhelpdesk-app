@@ -439,90 +439,48 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
     };
 
     try {
-      // Handle regular attachment upload
+      // Prepare attachments for direct email sending (Vercel serverless approach)
+      const attachments = [];
+      
+      // Handle regular attachment
       if (attachment && attachment instanceof File && attachment.size > 0) {
-        console.log('📎 Uploading attachment:', attachment.name, 'Size:', attachment.size);
-        const formData = new FormData();
-        formData.append('file', attachment);
-        try {
-          const uploadResponse = await axios.post(`${UPLOAD_SERVER_URL}/upload`, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-          });
-          if (uploadResponse.data.fileUrl) {
-            uploadedFileUrls.attachment = uploadResponse.data.fileUrl;
-            uploadedFileNames.attachment = attachment.name;
-          }
-        } catch (uploadError) {
-          console.error('❌ Error uploading attachment:', uploadError);
-          setErrorModal({ 
-            show: true, 
-            title: 'Upload Failed', 
-            message: 'Failed to upload attachment. Please try again.' 
-          });
-          setLoading(false);
-          return;
-        }
-      } else {
+        console.log('📎 Processing attachment:', attachment.name, 'Size:', attachment.size);
+        const attachmentBuffer = await attachment.arrayBuffer();
+        attachments.push({
+          originalname: attachment.name,
+          mimetype: attachment.type,
+          buffer: Buffer.from(attachmentBuffer)
+        });
       }
 
       // Handle picture and signature uploads for Company ID form
       if (title === 'Request form for Company ID') {
         if (picture && picture instanceof File && picture.size > 0) {
-          const pictureFormData = new FormData();
-          pictureFormData.append('file', picture);
-          try {
-            const pictureResponse = await axios.post(`${UPLOAD_SERVER_URL}/upload?type=picture`, pictureFormData, {
-              headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            if (pictureResponse.data.fileUrl) {
-              uploadedFileUrls.picture = pictureResponse.data.fileUrl;
-              uploadedFileNames.picture = picture.name;
-            }
-          } catch (uploadError) {
-            console.error('Error uploading picture:', uploadError);
-          }
+          console.log('📎 Processing picture:', picture.name, 'Size:', picture.size);
+          const pictureBuffer = await picture.arrayBuffer();
+          attachments.push({
+            originalname: picture.name,
+            mimetype: picture.type,
+            buffer: Buffer.from(pictureBuffer)
+          });
         }
 
         if (signature && signature instanceof File && signature.size > 0) {
-          const signatureFormData = new FormData();
-          signatureFormData.append('file', signature);
-          try {
-            const signatureResponse = await axios.post(`${UPLOAD_SERVER_URL}/upload?type=signature`, signatureFormData, {
-              headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            if (signatureResponse.data.fileUrl) {
-              uploadedFileUrls.signature = signatureResponse.data.fileUrl;
-              uploadedFileNames.signature = signature.name;
-            }
-          } catch (uploadError) {
-            console.error('Error uploading signature:', uploadError);
-          }
+          console.log('📎 Processing signature:', signature.name, 'Size:', signature.size);
+          const signatureBuffer = await signature.arrayBuffer();
+          attachments.push({
+            originalname: signature.name,
+            mimetype: signature.type,
+            buffer: Buffer.from(signatureBuffer)
+          });
         }
       }
 
       // Send email using our backend service
       const emailData = {
-        formData: {
-          ...formData, // Include ALL form fields
-          title: title,
-        },
-        attachments: [
-          ...(uploadedFileUrls.attachment ? [{
-            filename: uploadedFileNames.attachment || 'attachment',
-            url: uploadedFileUrls.attachment,
-            type: 'attachment'
-          }] : []),
-          ...(uploadedFileUrls.picture ? [{
-            filename: uploadedFileNames.picture || 'picture',
-            url: uploadedFileUrls.picture,
-            type: 'picture'
-          }] : []),
-          ...(uploadedFileUrls.signature ? [{
-            filename: uploadedFileNames.signature || 'signature',
-            url: uploadedFileUrls.signature,
-            type: 'signature'
-          }] : []),
-        ]
+        ...formData, // Include ALL form fields
+        title: title,
+        attachments: attachments // Send attachments directly
       };
 
       // Use Vercel API endpoint in production, local server in development

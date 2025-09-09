@@ -77,8 +77,10 @@ export default async function handler(req, res) {
       formData = fields;
       attachments = files;
     } else {
-      // Regular JSON data
-      formData = req.body;
+      // Regular JSON data with attachments
+      formData = { ...req.body };
+      attachments = req.body.attachments || [];
+      delete formData.attachments; // Remove attachments from form data
     }
 
     console.log('📧 API - Parsed form data:', JSON.stringify(formData, null, 2));
