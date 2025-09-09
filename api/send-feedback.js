@@ -1,7 +1,7 @@
-const EmailService = require('./emailService');
+const EmailServiceV2 = require('./emailServiceV2');
 
 // Initialize email service
-const emailService = new EmailService();
+const emailService = new EmailServiceV2();
 
 module.exports = async (req, res) => {
   // Set CORS headers

@@ -20,7 +20,10 @@ const emailConfig = {
 
 class EmailService {
   constructor() {
+    console.log('🔧 EmailService - Initializing with nodemailer version:', nodemailer.version || 'unknown');
+    console.log('🔧 EmailService - Available methods:', Object.getOwnPropertyNames(nodemailer));
     this.transporter = nodemailer.createTransport(emailConfig);
+    console.log('✅ EmailService - Transporter created successfully');
   }
 
   // Test email connection
