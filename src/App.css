@@ -67,45 +67,6 @@ body, html {
   }
 }
 
-/* Service Card Animations */
-@keyframes cardFloat {
-  0%, 100% { 
-    transform: translateY(0px);
-  }
-  50% { 
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes cardPulse {
-  0%, 100% { 
-    transform: scale(1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  }
-  50% { 
-    transform: scale(1.02);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  }
-}
-
-@keyframes iconBounce {
-  0%, 100% { 
-    transform: translateY(0px) scale(1);
-  }
-  50% { 
-    transform: translateY(-4px) scale(1.1);
-  }
-}
-
-@keyframes shimmer {
-  0% { 
-    background-position: -200px 0;
-  }
-  100% { 
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
 @keyframes gradientShift {
   0%, 100% { 
     background-position: 0% 50%;
@@ -115,171 +76,14 @@ body, html {
   }
 }
 
-/* Animated Service Cards */
-.service-card-animated {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: cardFloat 6s ease-in-out infinite;
-  will-change: transform, box-shadow;
-}
-
-/* Staggered animation delays for wave effect */
-.service-card-animated:nth-child(1) { animation-delay: 0s; }
-.service-card-animated:nth-child(2) { animation-delay: 0.5s; }
-.service-card-animated:nth-child(3) { animation-delay: 1s; }
-.service-card-animated:nth-child(4) { animation-delay: 1.5s; }
-.service-card-animated:nth-child(5) { animation-delay: 2s; }
-.service-card-animated:nth-child(6) { animation-delay: 2.5s; }
-.service-card-animated:nth-child(7) { animation-delay: 3s; }
-.service-card-animated:nth-child(8) { animation-delay: 3.5s; }
-.service-card-animated:nth-child(9) { animation-delay: 4s; }
-
-/* Hover effects */
-.service-card-animated:hover {
-  transform: translateY(-12px) scale(1.03);
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-  animation-play-state: paused;
-}
-
-/* Light theme hover effects */
-[data-theme="light"] .service-card-animated:hover {
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(59, 130, 246, 0.2);
-}
-
-/* Dark theme hover effects */
-[data-theme="dark"] .service-card-animated:hover {
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(99, 102, 241, 0.3);
-}
-
-/* Animated background gradient */
-.service-card-animated::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    45deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 70%
-  );
-  background-size: 200px 200px;
-  animation: shimmer 3s ease-in-out infinite;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.service-card-animated:hover::before {
-  opacity: 1;
-}
-
-/* Dark theme shimmer */
-[data-theme="dark"] .service-card-animated::before {
-  background: linear-gradient(
-    45deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.05) 50%,
-    transparent 70%
-  );
-}
-
-/* Animated icons */
-.service-card-animated .service-icon {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: iconBounce 4s ease-in-out infinite;
-}
-
-.service-card-animated:hover .service-icon {
-  animation: iconBounce 0.6s ease-in-out infinite;
-  transform: scale(1.1);
-}
-
-/* Theme-adaptive icon colors */
-[data-theme="light"] .service-card-animated .service-icon {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-[data-theme="dark"] .service-card-animated .service-icon {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-/* Animated text */
-.service-card-animated .service-title {
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, #1e293b, #475569);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradientShift 8s ease-in-out infinite;
-}
-
-[data-theme="dark"] .service-card-animated .service-title {
-  background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.service-card-animated:hover .service-title {
-  transform: translateY(-2px);
-}
-
-/* Animated description */
-.service-card-animated .service-description {
-  transition: all 0.3s ease;
-  opacity: 0.8;
-}
-
-.service-card-animated:hover .service-description {
-  opacity: 1;
-  transform: translateY(-1px);
-}
-
-/* Animated arrow */
-.service-card-animated .service-arrow {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateX(0);
-}
-
-.service-card-animated:hover .service-arrow {
-  transform: translateX(4px) scale(1.1);
-}
-
-/* Pulse effect for active cards */
-.service-card-animated:active {
-  animation: cardPulse 0.3s ease-in-out;
-}
-
-/* Responsive animations */
-@media (max-width: 768px) {
-  .service-card-animated {
-    animation-duration: 8s; /* Slower on mobile */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  
-  .service-card-animated:hover {
-    transform: translateY(-8px) scale(1.02); /* Less dramatic on mobile */
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .service-card-animated {
-    animation: none;
-  }
-  
-  .service-card-animated:hover {
-    transform: translateY(-4px) scale(1.01);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -314,18 +118,6 @@ body, html {
   transform: translateY(-2px);
 }
 
-/* Fade in up animation */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* Animated Search Bar */
 .search-bar-animated {
   animation: fadeInUp 1s ease-out 0.6s both;
@@ -355,6 +147,8 @@ body, html {
 .suggestions-button-animated:active {
   transform: translateY(-2px) scale(1.02);
 }
+
+
 
 .hidden {
   display: none;

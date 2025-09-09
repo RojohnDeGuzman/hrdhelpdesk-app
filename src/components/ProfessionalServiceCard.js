@@ -48,7 +48,7 @@ const ProfessionalServiceCard = ({
 
   return (
     <div 
-      className={`professional-service-card service-card-animated ${searchResult ? 'search-result' : ''}`}
+      className={`professional-service-card ${searchResult ? 'search-result' : ''}`}
       onClick={onClick}
       style={{ gridColumn: grid > 1 ? `span ${grid}` : 'auto' }}
     >
