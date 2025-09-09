@@ -32,7 +32,9 @@ const FeedbackModal = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:3001/send-feedback', {
+      // Use Vercel API endpoint in production, local server in development
+      const apiUrl = process.env.NODE_ENV === 'production' ? '/api/send-feedback' : 'http://localhost:3001/send-feedback';
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

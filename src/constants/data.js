@@ -96,4 +96,4 @@ export const EMAILJS_CONFIG = {
   publicKey: 'Kd-X-TB6CDLGtM7ir'
 };
 
-export const UPLOAD_SERVER_URL = 'http://localhost:3001';
+export const UPLOAD_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';

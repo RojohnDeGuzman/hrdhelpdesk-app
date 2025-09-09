@@ -525,7 +525,9 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
         ]
       };
 
-      const response = await axios.post(`${UPLOAD_SERVER_URL}/send-email`, emailData);
+      // Use Vercel API endpoint in production, local server in development
+      const apiUrl = process.env.NODE_ENV === 'production' ? '/api/send-email' : `${UPLOAD_SERVER_URL}/send-email`;
+      const response = await axios.post(apiUrl, emailData);
 
       if (onSubmitSuccess) {
       onSubmitSuccess();

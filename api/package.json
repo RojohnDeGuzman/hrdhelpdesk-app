@@ -1,0 +1,9 @@
+{
+  "name": "hrd-helpdesk-api",
+  "version": "1.0.0",
+  "description": "API functions for HRD Helpdesk",
+  "main": "index.js",
+  "dependencies": {
+    "nodemailer": "^6.9.7"
+  }
+}
