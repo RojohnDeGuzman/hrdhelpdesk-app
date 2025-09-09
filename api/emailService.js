@@ -16,7 +16,7 @@ const emailConfig = {
 
 class EmailService {
   constructor() {
-    this.transporter = nodemailer.createTransporter(emailConfig);
+    this.transporter = nodemailer.createTransport(emailConfig);
   }
 
   // Test email connection
