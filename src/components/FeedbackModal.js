@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getApiUrl } from '../constants/data';
 import { useTheme } from './ThemeProvider';
 
 const FeedbackModal = ({ isOpen, onClose }) => {
@@ -32,9 +33,8 @@ const FeedbackModal = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
 
     try {
-      // Use Vercel API endpoint in production, local server in development
-      const apiUrl = process.env.NODE_ENV === 'production' ? '/api/send-feedback' : 'http://localhost:3001/send-feedback';
-      const response = await fetch(apiUrl, {
+      // Use the correct API URL based on environment
+      const response = await fetch(getApiUrl('send-feedback'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

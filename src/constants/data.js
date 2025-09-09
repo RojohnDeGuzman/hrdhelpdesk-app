@@ -97,3 +97,12 @@ export const EMAILJS_CONFIG = {
 };
 
 export const UPLOAD_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';
+
+// Helper function to get the correct API URL
+export const getApiUrl = (endpoint) => {
+  if (process.env.NODE_ENV === 'production') {
+    return `/api/${endpoint}`;
+  } else {
+    return `http://localhost:3001/${endpoint}`;
+  }
+};

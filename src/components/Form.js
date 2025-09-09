@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DIVISION_MANAGERS, UPLOAD_SERVER_URL } from '../constants/data';
+import { DIVISION_MANAGERS, UPLOAD_SERVER_URL, getApiUrl } from '../constants/data';
 import axios from 'axios';
 import '../styles/modern-forms.css';
 
@@ -483,9 +483,8 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
         attachments: attachments // Send attachments directly
       };
 
-      // Use Vercel API endpoint in production, local server in development
-      const apiUrl = process.env.NODE_ENV === 'production' ? '/api/send-email' : `${UPLOAD_SERVER_URL}/send-email`;
-      const response = await axios.post(apiUrl, emailData);
+      // Use the correct API URL based on environment
+      const response = await axios.post(getApiUrl('send-email'), emailData);
 
       if (onSubmitSuccess) {
       onSubmitSuccess();
