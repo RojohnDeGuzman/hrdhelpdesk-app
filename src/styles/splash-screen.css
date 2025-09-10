@@ -96,13 +96,13 @@
 .title-main::after {
   content: '';
   position: absolute;
-  bottom: -6px;
+  bottom: -8px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
-  height: 3px;
+  width: 100%;
+  height: 2px;
   background: linear-gradient(90deg, #4ecdc4, #45b7d1, #96ceb4);
-  border-radius: 2px;
+  border-radius: 1px;
   animation: titleUnderline 1.5s ease-out 1.2s both;
 }
 
@@ -404,10 +404,10 @@
   
   .title-main::after {
     height: 2px;
-    bottom: -4px;
+    bottom: -6px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%;
+    width: 100%;
   }
   
   .splash-subtitle {
@@ -469,10 +469,10 @@
   
   .title-main::after {
     height: 2px;
-    bottom: -3px;
+    bottom: -4px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%;
+    width: 100%;
   }
   
   .splash-features {
