@@ -14,6 +14,9 @@
   z-index: 1;
   /* Theme-aware colors */
   border: 1px solid var(--gray-200);
+  /* Ensure proper positioning within content area */
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
 }
 
 /* Dark theme form container */
@@ -375,13 +378,15 @@
   font-weight: var(--font-weight-semibold);
   font-family: inherit;
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all 0.2s ease;
   border: none;
   display: flex;
   align-items: center;
   gap: var(--space-2);
   min-width: 120px;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .modern-form-button:disabled {
@@ -401,7 +406,23 @@
   background: var(--primary-hover);
   border-color: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.modern-form-button-primary:hover:not(:disabled)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.modern-form-button-primary:hover:not(:disabled)::before {
+  transform: translateX(100%);
 }
 
 .modern-form-button-secondary {
@@ -412,7 +433,26 @@
 
 .modern-form-button-secondary:hover:not(:disabled) {
   background: var(--gray-200);
-  transform: translateY(-1px);
+  border-color: var(--gray-400);
+  color: var(--gray-900);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.modern-form-button-secondary:hover:not(:disabled)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.modern-form-button-secondary:hover:not(:disabled)::before {
+  transform: translateX(100%);
 }
 
 .modern-form-loading {
@@ -471,6 +511,8 @@
   box-shadow: var(--shadow-lg);
   max-width: 500px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .modern-referral-icon {
@@ -624,6 +666,8 @@
   border: none;
   border-radius: 0;
   box-shadow: none;
+  position: relative;
+  z-index: 1;
 }
 
 .downloadable-forms-header {
@@ -686,12 +730,32 @@
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .downloadable-forms-button:hover {
   background: var(--gray-200);
   border-color: var(--gray-400);
-  transform: translateY(-1px);
+  color: var(--gray-900);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.downloadable-forms-button:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.downloadable-forms-button:hover::before {
+  transform: translateX(100%);
 }
 
 .modern-forms-grid {
@@ -1156,6 +1220,8 @@
 .professional-content .modern-form-container {
   margin: var(--space-1) 0;
   max-width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 /* Responsive design */

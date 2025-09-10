@@ -4,6 +4,8 @@
   "description": "API functions for HRD Helpdesk",
   "main": "index.js",
   "dependencies": {
-    "nodemailer": "^6.9.7"
+    "nodemailer": "^6.9.7",
+    "dompurify": "^3.0.5",
+    "jsdom": "^23.0.1"
   }
 }

@@ -16,6 +16,7 @@ import './styles/design-system.css';
 import './styles/professional-design.css';
 import './styles/splash-screen.css';
 import './styles/modern-forms.css';
+import './styles/accessibility.css';
 
 const FormVisibleResult = ({ onBack }) => (
     <div className="modern-form-container">
@@ -30,7 +31,12 @@ const FormVisibleResult = ({ onBack }) => (
         Your HR request has been submitted and will be processed shortly. 
         You will receive a confirmation email with your request details.
       </p>
-      <button className="modern-form-button modern-form-button-primary" onClick={onBack}>
+      <button 
+        className="modern-form-button modern-form-button-primary accessible-button" 
+        onClick={onBack}
+        aria-label="Return to home page"
+        title="Click to return to the main HR services page"
+      >
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
         </svg>
@@ -657,6 +663,7 @@ function App() {
       setSubButtonsVisible(false);
       setButtonsVisible(true);
       setCurrentPath([]);
+      setSearchTerm(''); // Clear search when going back to home
     }
   }, [formVisible, detailButtonsVisible, subButtonsVisible]);
 
@@ -735,6 +742,11 @@ function App() {
     <ThemeProvider>
       <ErrorBoundary>
         <div className="professional-app">
+          {/* Skip to main content link for accessibility */}
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
+          
           <ProfessionalHeader 
             onSearch={handleSearch}
             searchTerm={searchTerm}
@@ -744,7 +756,7 @@ function App() {
           
           <div className="professional-main no-sidebar">
             
-            <main className="professional-content">
+            <main id="main-content" className="professional-content" role="main">
               <ProfessionalBreadcrumb 
                 path={currentPath} 
                 onNavigate={handleNavigate}
@@ -858,7 +870,7 @@ function App() {
               {formVisible && (
                 <>
                   {currentFormTitle === "Downloadable Forms" ? (
-                    <DownloadableForms onBack={handleBackClick} />
+                    <DownloadableForms onBack={handleBackToHome} />
                   ) : (
                     <Form 
                       title={currentFormTitle}
@@ -874,12 +886,17 @@ function App() {
           {/* Suggestions and Feedback Button */}
           <div className="suggestions-feedback-container">
             <button 
-              className="suggestions-feedback-button"
+              className="suggestions-feedback-button accessible-button"
               onClick={() => setFeedbackModalVisible(true)}
               title="Share your feedback and suggestions"
+              aria-label="Open feedback and suggestions modal"
+              aria-describedby="feedback-description"
             >
               💬 Suggestions & Feedback
             </button>
+            <span id="feedback-description" className="sr-only">
+              Click to open a form where you can share feedback and suggestions with the HR team
+            </span>
           </div>
           
           {/* Quick Access Dropdown */}

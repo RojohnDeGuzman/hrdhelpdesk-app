@@ -93,18 +93,7 @@
   position: relative;
 }
 
-.splash-subtitle::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, #4ecdc4, #45b7d1, #96ceb4);
-  border-radius: 1px;
-  animation: titleUnderline 1.5s ease-out 1.2s both;
-}
+/* Removed the underline line under subtitle */
 
 .splash-subtitle {
   font-size: var(--font-size-lg);
@@ -116,32 +105,64 @@
   display: inline-block;
 }
 
+/* Ensure no underline line appears under subtitle */
+.splash-subtitle::after,
+.splash-subtitle::before {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+/* Also ensure no line appears under the title */
+.title-main::after,
+.title-main::before {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
 .splash-progress {
   margin-bottom: var(--space-8);
   animation: progressSlideIn 1s ease-out 0.9s both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .loading-message {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   margin-bottom: 1rem;
   opacity: 0.8;
   animation: messagePulse 2s ease-in-out infinite;
   font-weight: 500;
+  color: #4ecdc4;
+  text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
 }
 
 .progress-container {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .progress-bar {
   width: 100%;
+  max-width: 300px;
   height: 8px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   overflow: hidden;
-  margin-bottom: 1rem;
+  margin: 0 auto 1rem auto;
   position: relative;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: block;
 }
 
 .progress-fill {
@@ -150,27 +171,13 @@
   border-radius: 4px;
   transition: width 0.4s ease;
   position: relative;
-  box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4);
+  box-shadow: none;
 }
 
 .progress-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-  animation: progressShine 2s infinite;
-  border-radius: 4px;
+  display: none;
 }
 
-.progress-text {
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: 600;
-  opacity: 0.9;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
 
 .splash-dots {
   display: flex;
@@ -342,6 +349,7 @@
   50% { opacity: 1; }
 }
 
+
 @keyframes progressShine {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
@@ -404,13 +412,7 @@
     font-size: var(--font-size-4xl);
   }
   
-  .splash-subtitle::after {
-    height: 2px;
-    bottom: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-  }
+  /* Removed underline line for tablet */
   
   .splash-subtitle {
     font-size: var(--font-size-base);
@@ -469,13 +471,7 @@
     font-size: var(--font-size-3xl);
   }
   
-  .splash-subtitle::after {
-    height: 2px;
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-  }
+  /* Removed underline line for mobile */
   
   .splash-features {
     flex-direction: column;

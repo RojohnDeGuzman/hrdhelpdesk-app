@@ -93,9 +93,6 @@ const ModernSplashScreen = ({ onComplete }) => {
               ></div>
               <div className="progress-glow"></div>
             </div>
-            <div className="progress-text">
-              {Math.round(Math.min(progress, 100))}%
-            </div>
           </div>
         </div>
         

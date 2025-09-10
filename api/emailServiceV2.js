@@ -2,12 +2,12 @@ const nodemailer = require('nodemailer');
 
 // Email configuration for Vercel serverless functions
 const emailConfig = {
-  host: 'smtp.office365.com',
-  port: 587,
-  secure: false,
+  host: process.env.EMAIL_HOST || 'smtp.office365.com',
+  port: parseInt(process.env.EMAIL_PORT) || 587,
+  secure: process.env.EMAIL_SECURE === 'true',
   auth: {
-    user: 'hrd-helpdesk@castotravel.ph',
-    pass: 'wngxrmcmqwhzgnrd'
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   },
   tls: {
     ciphers: 'SSLv3'
@@ -20,6 +20,11 @@ const emailConfig = {
 
 class EmailServiceV2 {
   constructor() {
+    // Validate required environment variables
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      throw new Error('Missing required environment variables: EMAIL_USER and EMAIL_PASS must be set');
+    }
+    
     console.log('🔧 EmailServiceV2 - Initializing with nodemailer');
     console.log('🔧 EmailServiceV2 - Nodemailer type:', typeof nodemailer);
     console.log('🔧 EmailServiceV2 - Available methods:', Object.getOwnPropertyNames(nodemailer));

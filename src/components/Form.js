@@ -408,7 +408,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
           title: 'Missing Required Files', 
           message: `${randomMessage}\n\nMissing: Picture upload` 
         });
-        return;
+      return;
       }
       if (!signature) {
         const randomMessage = fileErrorMessages[Math.floor(Math.random() * fileErrorMessages.length)];
@@ -1289,7 +1289,14 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
             </svg>
             Go to Referral Form
           </button>
-          <button type="button" className="modern-form-button modern-form-button-secondary" onClick={onBack} style={{ marginTop: 'var(--space-4)' }}>
+          <button 
+            type="button" 
+            className="modern-form-button modern-form-button-secondary accessible-button" 
+            onClick={onBack} 
+            style={{ marginTop: 'var(--space-4)' }}
+            aria-label="Go back to previous page"
+            title="Click to go back to the previous page"
+          >
             Back
           </button>
         </div>
@@ -1391,12 +1398,18 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
                   </>
                 )}
               </button>
-              <button type="button" className="modern-form-button modern-form-button-secondary" onClick={onBack}>
+              <button 
+                type="button" 
+                className="modern-form-button modern-form-button-secondary accessible-button" 
+                onClick={onBack}
+                aria-label="Go back to previous page"
+                title="Click to go back to the previous page"
+              >
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 Back
-              </button>
+          </button>
         </div>
       </form>
         </>
