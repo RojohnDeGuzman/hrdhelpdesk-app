@@ -93,7 +93,7 @@
   position: relative;
 }
 
-.title-main::after {
+.splash-subtitle::after {
   content: '';
   position: absolute;
   bottom: -8px;
@@ -112,6 +112,8 @@
   margin: 0;
   opacity: 0.9;
   animation: subtitleSlideIn 1s ease-out 0.7s both;
+  position: relative;
+  display: inline-block;
 }
 
 .splash-progress {
@@ -402,7 +404,7 @@
     font-size: var(--font-size-4xl);
   }
   
-  .title-main::after {
+  .splash-subtitle::after {
     height: 2px;
     bottom: -6px;
     left: 50%;
@@ -467,7 +469,7 @@
     font-size: var(--font-size-3xl);
   }
   
-  .title-main::after {
+  .splash-subtitle::after {
     height: 2px;
     bottom: -4px;
     left: 50%;
