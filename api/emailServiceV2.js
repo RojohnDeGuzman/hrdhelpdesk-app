@@ -155,105 +155,133 @@ class EmailServiceV2 {
         <style>
           body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            line-height: 1.6; 
-            color: #2c3e50; 
+            line-height: 1.5; 
+            color: #333; 
             margin: 0; 
-            padding: 0; 
-            background-color: #ecf0f1;
+            padding: 20px; 
+            background-color: #f5f5f5;
           }
           .container { 
-            max-width: 700px; 
-            margin: 20px auto; 
+            max-width: 800px; 
+            margin: 0 auto; 
             background: white; 
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border: 1px solid #bdc3c7;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
           }
           .header { 
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); 
+            background: #2c3e50; 
             color: white; 
-            padding: 25px; 
+            padding: 20px; 
             text-align: center;
-            position: relative;
+            border-bottom: 3px solid #3498db;
           }
-          .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
-          }
-          .header-content { position: relative; z-index: 1; }
           .header h1 { 
             margin: 0; 
-            font-size: 24px; 
+            font-size: 22px; 
             font-weight: 600;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
             letter-spacing: 0.5px;
           }
           .content { 
-            padding: 30px; 
+            padding: 0; 
             background: #ffffff;
           }
+          .section {
+            margin: 0;
+            border-bottom: 1px solid #e0e0e0;
+          }
+          .section:last-child {
+            border-bottom: none;
+          }
+          .section-header {
+            background: #f8f9fa;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e0e0e0;
+          }
+          .section-content {
+            padding: 15px 20px;
+          }
           .field-line {
-            margin-bottom: 12px;
-            line-height: 1.6;
-            padding: 8px 0;
-            border-bottom: 1px solid #ecf0f1;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            padding: 4px 0;
           }
           .field-line:last-child { 
-            border-bottom: none; 
             margin-bottom: 0;
           }
           .label { 
-            font-weight: 700; 
+            font-weight: 600; 
             color: #2c3e50; 
-            font-size: 14px;
+            font-size: 13px;
             display: inline;
-            min-width: 140px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 12px;
+            min-width: 120px;
+            margin-right: 8px;
           }
           .value { 
-            font-size: 14px;
-            color: #34495e;
+            font-size: 13px;
+            color: #555;
             display: inline;
             font-weight: 400;
-            margin-left: 8px;
           }
-          .footer { 
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
-            padding: 20px 30px; 
-            border-top: 1px solid #dee2e6;
-            font-size: 12px; 
-            color: #6c757d;
+          .requester-section {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+          }
+          .details-section {
+            background: #ffffff;
+          }
+          .other-section {
+            background: #f8f9fa;
+          }
+          .urgency-section {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+          }
+          .confirmation-section {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
             text-align: center;
             font-weight: 500;
+            color: #2e7d32;
           }
-          .priority-badge {
-            display: inline-block;
-            background: #e74c3c;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-left: 10px;
+          .footer { 
+            background: #f8f9fa; 
+            padding: 15px 20px; 
+            border-top: 1px solid #e0e0e0;
+            font-size: 11px; 
+            color: #666;
+            text-align: center;
           }
-          .status-indicator {
+          .important-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 12px;
+            color: #856404;
+          }
+          .important-note strong {
+            color: #d63031;
+          }
+          .attachment-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 5px 0;
+            font-size: 12px;
+            color: #007bff;
+            text-decoration: none;
             display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #27ae60;
-            border-radius: 50%;
-            margin-right: 8px;
+          }
+          .attachment-item:hover {
+            background: #e9ecef;
           }
         </style>
       </head>
@@ -266,55 +294,79 @@ class EmailServiceV2 {
           </div>
 
           <div class="content">
+            <!-- Request Submitted By Section -->
+            <div class="section requester-section">
+              <div class="section-header">
+                📧 Request Submitted By
+              </div>
+              <div class="section-content">
+                <div class="field-line">
+                  <span class="label">Name:</span> <span class="value"><strong>${name || 'Not provided'}</strong></span>
+                </div>
+                <div class="field-line">
+                  <span class="label">Email:</span> <span class="value"><a href="mailto:${email}" style="color: #007bff; text-decoration: none;">${email}</a></span>
+                </div>
+                <div class="important-note">
+                  <strong>IMPORTANT:</strong> Reply directly to this email to respond to the employee. Your reply will be sent to: <a href="mailto:${email}" style="color: #007bff;">${email}</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Request Details Section -->
+            <div class="section details-section">
+              <div class="section-header">
+                📋 Request Details
+              </div>
+              <div class="section-content">
     `;
 
-    // Only show fields that have values - start with essential fields
+    // Add form type if available
     if (formType && formType.trim() !== '') {
       html += `
-            <div class="field-line">
-              <span class="label">Form Type:</span> <span class="value">${formType}</span>
-            </div>
+                <div class="field-line">
+                  <span class="label">Request Type:</span> <span class="value">${formType}</span>
+                </div>
       `;
     }
 
-    // Requester is always required, but show fallback if missing
-    if (name && name.trim() !== '') {
-      html += `
-            <div class="field-line">
-              <span class="label">Requester:</span> <span class="value">${name} (${email})</span>
-            </div>
-      `;
-    } else {
-      html += `
-            <div class="field-line">
-              <span class="label">Requester:</span> <span class="value">${email}</span>
-            </div>
-      `;
-    }
-
+    // Add division manager if available
     if (divisionmanager && divisionmanager.trim() !== '') {
       html += `
-            <div class="field-line">
-              <span class="label">Division/Manager:</span> <span class="value">${divisionmanager}</span>
-            </div>
+                <div class="field-line">
+                  <span class="label">Division Manager:</span> <span class="value">${divisionmanager}</span>
+                </div>
       `;
     }
 
+    // Add subject if available
     if (subject && subject.trim() !== '') {
       html += `
-            <div class="field-line">
-              <span class="label">Subject:</span> <span class="value">${subject}</span>
-            </div>
+                <div class="field-line">
+                  <span class="label">Subject:</span> <span class="value">${subject}</span>
+                </div>
       `;
     }
 
+    // Add description if available
     if (description && description.trim() !== '') {
       html += `
-            <div class="field-line">
-              <span class="label">Description:</span> <span class="value">${description}</span>
-            </div>
+                <div class="field-line">
+                  <span class="label">Description:</span> <span class="value">${description}</span>
+                </div>
       `;
     }
+
+    html += `
+              </div>
+            </div>
+
+            <!-- Other Details Section -->
+            <div class="section other-section">
+              <div class="section-header">
+                📝 Other
+              </div>
+              <div class="section-content">
+    `;
 
     // Add other form fields dynamically (exclude unwanted fields and empty values)
     const excludedFields = ['attachments', 'ntLogin', 'userVerification', 'title', 'formType', 'name', 'email', 'divisionmanager', 'subject', 'description'];
@@ -323,6 +375,7 @@ class EmailServiceV2 {
     console.log('📧 Email Service - Processing other fields:', Object.keys(otherFields));
     console.log('📧 Email Service - Meaningful fields to include:', meaningfulFields);
     
+    let hasOtherFields = false;
     Object.entries(otherFields).forEach(([key, value]) => {
       // Only show if field has value, is not excluded, and is meaningful
       if (value && value.toString().trim() !== '' && 
@@ -331,19 +384,64 @@ class EmailServiceV2 {
         const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
         console.log(`📧 Email Service - Adding field: ${key} = ${value}`);
         html += `
-            <div class="field-line">
-              <span class="label">${label}:</span> <span class="value">${value}</span>
-            </div>
+                <div class="field-line">
+                  <span class="label">${label}:</span> <span class="value">${value}</span>
+                </div>
         `;
+        hasOtherFields = true;
       }
     });
 
+    // If no other fields, show a message
+    if (!hasOtherFields) {
+      html += `
+                <div class="field-line">
+                  <span class="value" style="color: #999; font-style: italic;">No additional details provided</span>
+                </div>
+      `;
+    }
+
     html += `
+              </div>
+            </div>
+
+            <!-- Attachments Section -->
+    `;
+
+    // Add attachments section if any
+    if (attachments && attachments.length > 0) {
+      html += `
+            <div class="section">
+              <div class="section-header">
+                📎 Attachments
+              </div>
+              <div class="section-content">
+      `;
+      attachments.forEach(attachment => {
+        html += `
+                <div class="attachment-item">
+                  📎 ${attachment.originalname}
+                </div>
+        `;
+      });
+      html += `
+              </div>
+            </div>
+      `;
+    }
+
+    html += `
+            <!-- Confirmation Section -->
+            <div class="section confirmation-section">
+              <div class="section-content">
+                This request was submitted through the HRD Helpdesk system.
+              </div>
+            </div>
           </div>
 
           <div class="footer">
-            <div><span class="status-indicator"></span>HRD Helpdesk System</div>
-            <div style="margin-top: 8px; font-size: 11px; color: #95a5a6;">Generated on ${timestamp}</div>
+            <div>Submitted on: ${timestamp}</div>
+            <div>System: HRD Helpdesk Application</div>
           </div>
         </div>
       </body>
