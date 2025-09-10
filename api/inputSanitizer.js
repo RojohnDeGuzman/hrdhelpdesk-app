@@ -74,21 +74,31 @@ const sanitizeFormData = (data) => {
 const validateFormData = (data) => {
   const errors = [];
   
+  console.log('🔍 Validating form data:', Object.keys(data));
+  
   // Required fields validation - make it more flexible
-  const requiredFields = ['name', 'email', 'description'];
+  const requiredFields = ['name', 'email'];
+  
+  // Only add description if it exists and is not empty
+  if (data.description !== undefined && data.description !== '') {
+    requiredFields.push('description');
+  }
   
   // Check if serviceType exists and is required
-  if (data.serviceType !== undefined) {
+  if (data.serviceType !== undefined && data.serviceType !== '') {
     requiredFields.push('serviceType');
   }
   
   // Check if subject exists and is required
-  if (data.subject !== undefined) {
+  if (data.subject !== undefined && data.subject !== '') {
     requiredFields.push('subject');
   }
   
+  console.log('🔍 Required fields to validate:', requiredFields);
+  
   requiredFields.forEach(field => {
-    if (!data[field] || data[field].trim() === '') {
+    const value = data[field];
+    if (!value || (typeof value === 'string' && value.trim() === '') || value === 'undefined' || value === 'null') {
       const fieldLabel = field === 'serviceType' ? 'Service Type' : 
                         field === 'subject' ? 'Subject' :
                         field.charAt(0).toUpperCase() + field.slice(1);
@@ -96,20 +106,24 @@ const validateFormData = (data) => {
     }
   });
   
-  // Email format validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (data.email && !emailRegex.test(data.email)) {
-    errors.push('Please enter a valid email format (e.g., john.doe@castotravel.ph)');
-  }
+  console.log('🔍 Validation errors found:', errors);
   
-  // Email domain validation
-  if (data.email && !data.email.toLowerCase().endsWith('@castotravel.ph')) {
-    errors.push('Please use your company email address (@castotravel.ph). Personal emails are not accepted.');
-  }
-  
-  // Check for common email mistakes
-  if (data.email && (data.email.includes('@gmail.com') || data.email.includes('@yahoo.com') || data.email.includes('@hotmail.com'))) {
-    errors.push('Please use your company email address (@castotravel.ph) instead of personal email.');
+  // Email format validation - only if email exists
+  if (data.email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      errors.push('Please enter a valid email format (e.g., john.doe@castotravel.ph)');
+    } else {
+      // Email domain validation - only if email format is valid
+      if (!data.email.toLowerCase().endsWith('@castotravel.ph')) {
+        errors.push('Please use your company email address (@castotravel.ph). Personal emails are not accepted.');
+      }
+      
+      // Check for common email mistakes
+      if (data.email.includes('@gmail.com') || data.email.includes('@yahoo.com') || data.email.includes('@hotmail.com')) {
+        errors.push('Please use your company email address (@castotravel.ph) instead of personal email.');
+      }
+    }
   }
   
   // Length validation

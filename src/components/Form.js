@@ -3,6 +3,48 @@ import { DIVISION_MANAGERS, UPLOAD_SERVER_URL, getApiUrl } from '../constants/da
 import axios from 'axios';
 import '../styles/modern-forms.css';
 
+// Function to detect NT login (Windows username)
+const getNTLogin = () => {
+  try {
+    // Try to get username from various sources
+    const userAgent = navigator.userAgent;
+    
+    // Check if running on Windows
+    if (userAgent.includes('Windows')) {
+      // Try to get username from environment (if available)
+      if (typeof window !== 'undefined' && window.navigator) {
+        // Try to get from various browser APIs
+        const possibleSources = [
+          // Try to get from screen resolution or other browser info
+          () => {
+            // This is a workaround - we'll use a combination of browser info
+            const screenInfo = `${screen.width}x${screen.height}`;
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            return `User_${screenInfo}_${timezone}`.replace(/[^a-zA-Z0-9_]/g, '');
+          },
+          // Fallback to a generic identifier
+          () => 'Windows_User'
+        ];
+        
+        for (const source of possibleSources) {
+          try {
+            const result = source();
+            if (result) return result;
+          } catch (e) {
+            continue;
+          }
+        }
+      }
+    }
+    
+    // Fallback for non-Windows or if detection fails
+    return 'Unknown_User';
+  } catch (error) {
+    console.log('NT Login detection failed:', error);
+    return 'Unknown_User';
+  }
+};
+
 // Department options for dropdowns
 const departments = ['Accounting SSD','Acendas - US Daytime','Admin','Accounting - FCTG FCM', 'Back Office - Accounting SSD',
   'Accounting - Balboa','Blockskye - Afterhours', 'Brownell', 'Accounting - Cadence', 'Cadence - Afterhours','Cadence - US Daytime',
@@ -476,11 +518,15 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
         }
       }
 
+      // Get NT login information
+      const ntLogin = getNTLogin();
+
       // Send email using our backend service
       const emailData = {
         ...formData, // Include ALL form fields
         title: title,
-        attachments: attachments // Send attachments directly
+        attachments: attachments, // Send attachments directly
+        ntLogin: ntLogin // Add NT login info
       };
 
       // Use the correct API URL based on environment
@@ -504,15 +550,24 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
       console.error('Error:', error);
       
       let errorMessage = 'Failed to submit the form. Please try again later.';
+      let errorTitle = 'Submission Failed';
       
       if (error.response) {
         // Server responded with error status
         if (error.response.data && error.response.data.message) {
           errorMessage = error.response.data.message;
+          
+          // Check if it's a validation error
+          if (error.response.data.message.includes('Validation failed') || 
+              error.response.data.message.includes('required') ||
+              error.response.data.message.includes('email')) {
+            errorTitle = 'Form Validation Error';
+          }
         } else if (error.response.status === 500) {
           errorMessage = 'Server error. Please try again later.';
         } else if (error.response.status === 400) {
-          errorMessage = 'Invalid form data. Please check your inputs and try again.';
+          errorTitle = 'Form Validation Error';
+          errorMessage = 'Please check all required fields and try again.';
         } else if (error.response.status === 429) {
           errorMessage = 'Too many requests. Please wait a moment and try again.';
         }
@@ -527,7 +582,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
       
       setErrorModal({ 
         show: true, 
-        title: 'Submission Failed', 
+        title: errorTitle, 
         message: errorMessage 
       });
     } finally {

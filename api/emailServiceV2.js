@@ -355,13 +355,11 @@ class EmailServiceV2 {
 
           <div class="content">
             <div class="user-verification">
-              <h4>🔐 User Verification</h4>
+              <h4>🔐 User Confirmation</h4>
               <div class="info">
                 <strong>Submitted by:</strong> ${name} (${email})<br>
-                <strong>Submission Time:</strong> ${timestamp}<br>
-                <strong>IP Address:</strong> ${formData.userVerification?.ipAddress || 'Unknown'}<br>
-                <strong>Browser:</strong> ${formData.userVerification?.browser || 'Unknown'}<br>
-                <strong>Operating System:</strong> ${formData.userVerification?.os || 'Unknown'}
+                <strong>NT Login:</strong> ${formData.ntLogin || 'Not detected'}<br>
+                <strong>Submission Time:</strong> ${timestamp}
               </div>
             </div>
 
