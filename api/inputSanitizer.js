@@ -98,6 +98,11 @@ const validateFormData = (data) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
       errors.push('Please enter a valid email format');
+    } else {
+      // Email domain validation - require @castotravel.ph
+      if (!data.email.toLowerCase().endsWith('@castotravel.ph')) {
+        errors.push('Please use your company email address (@castotravel.ph)');
+      }
     }
   }
   
@@ -118,14 +123,18 @@ const validateFormData = (data) => {
 const validateFeedbackData = (data) => {
   const errors = [];
   
-  // Ultra-flexible feedback validation - only check email format
+  // Ultra-flexible feedback validation - only check email format and domain
   if (!data.email || data.email.trim() === '') {
     errors.push('Email is required');
   } else {
-    // Only check email format, not domain
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
       errors.push('Please enter a valid email format');
+    } else {
+      // Email domain validation - require @castotravel.ph
+      if (!data.email.toLowerCase().endsWith('@castotravel.ph')) {
+        errors.push('Please use your company email address (@castotravel.ph)');
+      }
     }
   }
   
