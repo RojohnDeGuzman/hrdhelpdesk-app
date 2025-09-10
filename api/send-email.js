@@ -3,9 +3,6 @@ const { validateFile } = require('./fileValidation');
 const { validateFormData, sanitizeFormData } = require('./inputSanitizer');
 const rateLimiter = require('./rateLimiter');
 
-// Initialize email service
-const emailService = new EmailServiceV2();
-
 // Helper function to parse multipart form data
 function parseMultipartFormData(body, boundary) {
   const parts = body.split(`--${boundary}`);
@@ -93,6 +90,20 @@ module.exports = async (req, res) => {
         bodyKeys: Object.keys(req.body || {}),
         hasAttachments: req.body && req.body.attachments
       });
+
+      // Initialize email service
+      let emailService;
+      try {
+        emailService = new EmailServiceV2();
+        console.log('✅ Email service initialized successfully');
+      } catch (error) {
+        console.error('❌ Failed to initialize email service:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Email service initialization failed. Please try again later.',
+          error: error.message
+        });
+      }
 
       let formData = {};
       let attachments = [];
