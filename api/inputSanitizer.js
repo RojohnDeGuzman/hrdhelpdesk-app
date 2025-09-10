@@ -90,22 +90,23 @@ const validateFormData = (data) => {
   console.log('🔍 Validating form data:', Object.keys(data));
   console.log('🔍 Form data values:', data);
   
-  // Form validation - require essential fields
-  console.log('🔍 Required fields to validate: name, email, and form-specific fields');
+  // Simple validation - only require name, email, and division manager
+  console.log('🔍 Required fields to validate: name, email, division manager');
   
-  // Always required fields
-  const alwaysRequired = ['name', 'email'];
+  // Required fields
+  const requiredFields = ['name', 'email', 'divisionmanager'];
   
-  // Check always required fields
-  alwaysRequired.forEach(field => {
+  // Check required fields
+  requiredFields.forEach(field => {
     const value = data[field];
     if (!value || (typeof value === 'string' && value.trim() === '') || value === 'undefined' || value === 'null') {
-      const fieldLabel = field.charAt(0).toUpperCase() + field.slice(1);
+      const fieldLabel = field === 'divisionmanager' ? 'Division Manager' : 
+                        field.charAt(0).toUpperCase() + field.slice(1);
       errors.push(`${fieldLabel} is required`);
     }
   });
   
-  // Email format and domain validation
+  // Email format and domain validation - must be @castotravel.ph
   if (data.email && data.email.trim() !== '') {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
@@ -115,59 +116,6 @@ const validateFormData = (data) => {
       if (!data.email.toLowerCase().endsWith('@castotravel.ph')) {
         errors.push('Please use your company email address (@castotravel.ph)');
       }
-    }
-  }
-  
-  // Form-specific required fields based on form type
-  if (data.formType) {
-    switch (data.formType.toLowerCase()) {
-      case 'request form for company id':
-        // For Company ID requests, require employee name and current department
-        if (!data.employeeName || data.employeeName.trim() === '') {
-          errors.push('Employee Name is required for Company ID requests');
-        }
-        if (!data.currentDept || data.currentDept.trim() === '') {
-          errors.push('Current Department is required for Company ID requests');
-        }
-        break;
-        
-      case 'salary adjustment request':
-        // For salary adjustments, require reason and adjustment type
-        if (!data.reason || data.reason.trim() === '') {
-          errors.push('Reason is required for salary adjustment requests');
-        }
-        if (!data.adjustmentType || data.adjustmentType.trim() === '') {
-          errors.push('Adjustment Type is required for salary adjustment requests');
-        }
-        break;
-        
-      case 'leave request':
-        // For leave requests, require dates
-        if (!data.fromDate || data.fromDate.trim() === '') {
-          errors.push('From Date is required for leave requests');
-        }
-        if (!data.toDate || data.toDate.trim() === '') {
-          errors.push('To Date is required for leave requests');
-        }
-        break;
-        
-      default:
-        // For general requests, require subject and description
-        if (!data.subject || data.subject.trim() === '') {
-          errors.push('Subject is required');
-        }
-        if (!data.description || data.description.trim() === '') {
-          errors.push('Description is required');
-        }
-        break;
-    }
-  } else {
-    // If no form type specified, require subject and description
-    if (!data.subject || data.subject.trim() === '') {
-      errors.push('Subject is required');
-    }
-    if (!data.description || data.description.trim() === '') {
-      errors.push('Description is required');
     }
   }
   
