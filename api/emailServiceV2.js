@@ -65,8 +65,9 @@ class EmailServiceV2 {
         department = 'HRD'
       } = formData;
 
-      // Create email content
-      const emailContent = this.createEmailContent(formData, attachments);
+    // Create email content
+    const emailContent = this.createEmailContent(formData, attachments);
+    console.log('📧 Email Service - Using NEW PROFESSIONAL template version 2.0');
       
       // Prepare mail options
       const mailOptions = {
@@ -267,37 +268,68 @@ class EmailServiceV2 {
           <div class="header">
             <div class="header-content">
               <h1>🎯 HRD Helpdesk Request</h1>
-              <p class="subtitle">New Support Ticket Submitted</p>
+              <p class="subtitle">New Support Ticket Submitted - Template v2.0</p>
             </div>
           </div>
 
           <div class="content">
-            <div class="field-line">
-              <span class="label">Form Type:</span> <span class="value">${formType || 'General Request'}</span>
-            </div>
+    `;
 
+    // Only show fields that have values - start with essential fields
+    if (formType && formType.trim() !== '') {
+      html += `
+            <div class="field-line">
+              <span class="label">Form Type:</span> <span class="value">${formType}</span>
+            </div>
+      `;
+    }
+
+    if (name && name.trim() !== '') {
+      html += `
             <div class="field-line">
               <span class="label">Requester:</span> <span class="value">${name} (${email})</span>
             </div>
+      `;
+    }
 
+    if (divisionmanager && divisionmanager.trim() !== '') {
+      html += `
             <div class="field-line">
-              <span class="label">Division/Manager:</span> <span class="value">${divisionmanager || 'Not specified'}</span>
+              <span class="label">Division/Manager:</span> <span class="value">${divisionmanager}</span>
             </div>
+      `;
+    }
 
+    if (subject && subject.trim() !== '') {
+      html += `
             <div class="field-line">
-              <span class="label">Subject:</span> <span class="value">${subject || 'No subject provided'}</span>
+              <span class="label">Subject:</span> <span class="value">${subject}</span>
             </div>
+      `;
+    }
 
+    if (description && description.trim() !== '') {
+      html += `
             <div class="field-line">
-              <span class="label">Description:</span> <span class="value">${description || 'No description provided'}</span>
+              <span class="label">Description:</span> <span class="value">${description}</span>
             </div>
-    `;
+      `;
+    }
 
-    // Add other form fields dynamically (exclude unwanted fields)
-    const excludedFields = ['attachments', 'ntLogin', 'userVerification', 'title'];
+    // Add other form fields dynamically (exclude unwanted fields and empty values)
+    const excludedFields = ['attachments', 'ntLogin', 'userVerification', 'title', 'formType', 'name', 'email', 'divisionmanager', 'subject', 'description'];
+    const meaningfulFields = ['reason', 'adjustmentType', 'salaryPeriod', 'employeeName', 'currentDept', 'effectiveDate', 'fromDate', 'toDate', 'requestedAgent', 'funddepartment', 'agentName', 'fromDept', 'toDept', 'emergencyContact', 'contactNumber', 'address', 'ccEmail'];
+    
+    console.log('📧 Email Service - Processing other fields:', Object.keys(otherFields));
+    console.log('📧 Email Service - Meaningful fields to include:', meaningfulFields);
+    
     Object.entries(otherFields).forEach(([key, value]) => {
-      if (value && value !== '' && !excludedFields.includes(key)) {
+      // Only show if field has value, is not excluded, and is meaningful
+      if (value && value.toString().trim() !== '' && 
+          !excludedFields.includes(key) && 
+          meaningfulFields.includes(key)) {
         const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        console.log(`📧 Email Service - Adding field: ${key} = ${value}`);
         html += `
             <div class="field-line">
               <span class="label">${label}:</span> <span class="value">${value}</span>
