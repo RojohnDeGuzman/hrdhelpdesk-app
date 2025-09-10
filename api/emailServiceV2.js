@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-const config = require('./config');
 
 // Email configuration for Vercel serverless functions
 const emailConfig = {
@@ -7,8 +6,8 @@ const emailConfig = {
   port: 587,
   secure: false,
   auth: {
-    user: config.office365Email,
-    pass: config.office365Password
+    user: 'hrd-helpdesk@castotravel.ph',
+    pass: 'wngxrmcmqwhzgnrd'
   },
   tls: {
     ciphers: 'SSLv3'
@@ -21,8 +20,8 @@ const emailConfig = {
 
 class EmailServiceV2 {
   constructor() {
-    console.log('🔧 EmailServiceV2 - Using email:', config.office365Email);
-    console.log('🔧 EmailServiceV2 - Using config file approach');
+    console.log('🔧 EmailServiceV2 - Using email: hrd-helpdesk@castotravel.ph');
+    console.log('🔧 EmailServiceV2 - Using hardcoded credentials approach');
     
     console.log('🔧 EmailServiceV2 - Initializing with nodemailer');
     console.log('🔧 EmailServiceV2 - Nodemailer type:', typeof nodemailer);
@@ -71,8 +70,8 @@ class EmailServiceV2 {
       
       // Prepare mail options
       const mailOptions = {
-        from: `"${name}" <${config.office365Email}>`,
-        to: config.osticketEmail, // Your osTicket email
+        from: `"${name}" <hrd-helpdesk@castotravel.ph>`,
+        to: 'hrd-helpdesk@castotravel.ph', // Your osTicket email
         cc: email, // CC the user
         replyTo: email, // Set reply-to as user's email
         subject: `${name} - ${subject} [HRD Helpdesk]`,
@@ -276,8 +275,8 @@ class EmailServiceV2 {
       `;
 
       const mailOptions = {
-        from: `"HRD Helpdesk System" <${config.office365Email}>`,
-        to: config.osticketEmail,
+        from: '"HRD Helpdesk System" <hrd-helpdesk@castotravel.ph>',
+        to: 'hrd-helpdesk@castotravel.ph',
         cc: email,
         replyTo: email,
         subject: `Feedback & Suggestions - ${name} [HRD Helpdesk]`,

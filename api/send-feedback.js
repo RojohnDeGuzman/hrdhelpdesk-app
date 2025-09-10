@@ -2,6 +2,9 @@ const EmailServiceV2 = require('./emailServiceV2');
 const { validateFeedbackData, sanitizeFormData } = require('./inputSanitizer');
 const rateLimiter = require('./rateLimiter');
 
+// Initialize email service
+const emailService = new EmailServiceV2();
+
 // Apply rate limiting
 const limiter = rateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -48,19 +51,6 @@ module.exports = async (req, res) => {
         headers: req.headers
       });
 
-      // Initialize email service
-      let emailService;
-      try {
-        emailService = new EmailServiceV2();
-        console.log('✅ Email service initialized successfully');
-      } catch (error) {
-        console.error('❌ Failed to initialize email service:', error);
-        return res.status(500).json({
-          success: false,
-          message: 'Email service initialization failed. Please try again later.',
-          error: error.message
-        });
-      }
 
       // Sanitize input data
       const sanitizedData = sanitizeFormData(req.body);
