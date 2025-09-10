@@ -52,15 +52,6 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Test email connection first
-    const connectionTest = await emailService.testConnection();
-    if (!connectionTest) {
-      return res.status(500).json({
-        success: false,
-        message: 'Email service is not available. Please try again later.'
-      });
-    }
-
     // Prepare feedback data
     const feedbackData = {
       rating: parseInt(rating),
@@ -70,8 +61,26 @@ module.exports = async (req, res) => {
       timestamp: new Date().toISOString()
     };
 
-    // Send the feedback email
-    const result = await emailService.sendFeedbackEmail(feedbackData);
+    // Send the feedback email with timeout
+    const sendFeedbackWithTimeout = () => {
+      return new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new Error('Feedback submission timeout'));
+        }, 25000); // 25 second timeout
+
+        emailService.sendFeedbackEmail(feedbackData)
+          .then(result => {
+            clearTimeout(timeout);
+            resolve(result);
+          })
+          .catch(error => {
+            clearTimeout(timeout);
+            reject(error);
+          });
+      });
+    };
+
+    const result = await sendFeedbackWithTimeout();
 
     if (result.success) {
       console.log('✅ API - Feedback email sent successfully');
