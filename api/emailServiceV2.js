@@ -284,10 +284,17 @@ class EmailServiceV2 {
       `;
     }
 
+    // Requester is always required, but show fallback if missing
     if (name && name.trim() !== '') {
       html += `
             <div class="field-line">
               <span class="label">Requester:</span> <span class="value">${name} (${email})</span>
+            </div>
+      `;
+    } else {
+      html += `
+            <div class="field-line">
+              <span class="label">Requester:</span> <span class="value">${email}</span>
             </div>
       `;
     }
