@@ -100,26 +100,37 @@ module.exports = async (req, res) => {
 
       // Check if it's multipart form data
       if (req.headers['content-type'] && req.headers['content-type'].includes('multipart/form-data')) {
+        console.log('📎 Processing multipart form data');
         const boundary = req.headers['content-type'].split('boundary=')[1];
         const { fields, files } = parseMultipartFormData(req.body, boundary);
         formData = fields;
         attachments = files;
+        console.log('📎 Parsed multipart data:', { fields: formData, files: attachments });
       } else {
+        console.log('📄 Processing JSON form data');
         // Regular JSON data with attachments
         formData = { ...req.body };
         attachments = req.body.attachments || [];
         delete formData.attachments; // Remove attachments from form data
+        console.log('📄 JSON data:', { fields: formData, files: attachments });
       }
 
+      // Log form data for debugging
+      console.log('📝 Raw form data:', formData);
+      
       // Sanitize form data
       const sanitizedFormData = sanitizeFormData(formData);
+      console.log('🧹 Sanitized form data:', sanitizedFormData);
       
       // Validate form data
       const validation = validateFormData(sanitizedFormData);
       if (!validation.isValid) {
+        console.log('❌ Form validation failed:', validation.errors);
+        console.log('📝 Form data received:', sanitizedFormData);
         return res.status(400).json({
           success: false,
-          message: `Validation failed: ${validation.errors.join(', ')}`
+          message: `Validation failed: ${validation.errors.join(', ')}`,
+          errors: validation.errors
         });
       }
 

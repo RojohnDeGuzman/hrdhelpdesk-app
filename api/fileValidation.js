@@ -10,10 +10,10 @@ const ALLOWED_FILE_TYPES = {
 
 // Maximum file sizes (in bytes)
 const MAX_FILE_SIZES = {
-  picture: 5 * 1024 * 1024,      // 5MB
-  signature: 2 * 1024 * 1024,    // 2MB
-  document: 10 * 1024 * 1024,    // 10MB
-  general: 10 * 1024 * 1024      // 10MB
+  picture: 20 * 1024 * 1024,     // 20MB
+  signature: 5 * 1024 * 1024,    // 5MB
+  document: 20 * 1024 * 1024,    // 20MB
+  general: 20 * 1024 * 1024      // 20MB
 };
 
 // Dangerous file extensions to block
