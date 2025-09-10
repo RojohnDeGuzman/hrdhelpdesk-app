@@ -10,23 +10,40 @@ const FeedbackModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const { theme } = useTheme();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Clear previous messages
+    setErrorMessage('');
+    setSuccessMessage('');
+    setSubmitStatus(null);
+
+    // Validation
     if (rating === 0) {
-      alert('Please provide a rating before submitting feedback.');
+      setErrorMessage('Please provide a rating before submitting feedback.');
+      setSubmitStatus('error');
       return;
     }
 
     if (!feedback.trim()) {
-      alert('Please provide your feedback before submitting.');
+      setErrorMessage('Please provide your feedback before submitting.');
+      setSubmitStatus('error');
       return;
     }
 
-    if (!email.trim() || !email.includes('@castotravel.ph')) {
-      alert('Please provide a valid @castotravel.ph email address.');
+    if (!email.trim()) {
+      setErrorMessage('Please provide your email address.');
+      setSubmitStatus('error');
+      return;
+    }
+
+    if (!email.includes('@castotravel.ph')) {
+      setErrorMessage('Please provide a valid @castotravel.ph email address.');
+      setSubmitStatus('error');
       return;
     }
 
@@ -48,8 +65,11 @@ const FeedbackModal = ({ isOpen, onClose }) => {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         setSubmitStatus('success');
+        setSuccessMessage('Thank you for your feedback! It has been sent to HR and you will receive a confirmation email shortly.');
         // Reset form
         setRating(0);
         setFeedback('');
@@ -58,12 +78,25 @@ const FeedbackModal = ({ isOpen, onClose }) => {
         setTimeout(() => {
           onClose();
           setSubmitStatus(null);
-        }, 2000);
+          setSuccessMessage('');
+        }, 3000);
       } else {
-        throw new Error('Failed to submit feedback');
+        // Handle specific error messages from the API
+        const errorMsg = data.message || 'Failed to submit feedback. Please try again.';
+        setErrorMessage(errorMsg);
+        setSubmitStatus('error');
       }
     } catch (error) {
       console.error('Error submitting feedback:', error);
+      let errorMsg = 'Network error. Please check your connection and try again.';
+      
+      if (error.message.includes('timeout')) {
+        errorMsg = 'Request timed out. Please try again.';
+      } else if (error.message.includes('Failed to fetch')) {
+        errorMsg = 'Unable to connect to the server. Please try again later.';
+      }
+      
+      setErrorMessage(errorMsg);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -78,6 +111,8 @@ const FeedbackModal = ({ isOpen, onClose }) => {
       setName('');
       setEmail('');
       setSubmitStatus(null);
+      setErrorMessage('');
+      setSuccessMessage('');
     }
   };
 
@@ -180,13 +215,19 @@ const FeedbackModal = ({ isOpen, onClose }) => {
             {/* Submit Status */}
             {submitStatus === 'success' && (
               <div className="feedback-success">
-                ✅ Thank you for your feedback! It has been sent to HR.
+                <div className="feedback-success-icon">✅</div>
+                <div className="feedback-success-message">
+                  {successMessage}
+                </div>
               </div>
             )}
 
             {submitStatus === 'error' && (
               <div className="feedback-error">
-                ❌ Failed to submit feedback. Please try again.
+                <div className="feedback-error-icon">❌</div>
+                <div className="feedback-error-message">
+                  {errorMessage}
+                </div>
               </div>
             )}
           </div>
