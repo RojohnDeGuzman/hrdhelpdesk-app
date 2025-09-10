@@ -41,11 +41,9 @@ const rateLimiter = (options = {}) => {
     rateLimitMap.set(clientIP, recentRequests);
 
     // Set rate limit headers
-    res.set({
-      'X-RateLimit-Limit': maxRequests,
-      'X-RateLimit-Remaining': Math.max(0, maxRequests - recentRequests.length),
-      'X-RateLimit-Reset': new Date(now + windowMs).toISOString()
-    });
+    res.setHeader('X-RateLimit-Limit', maxRequests);
+    res.setHeader('X-RateLimit-Remaining', Math.max(0, maxRequests - recentRequests.length));
+    res.setHeader('X-RateLimit-Reset', new Date(now + windowMs).toISOString());
 
     next();
   };
