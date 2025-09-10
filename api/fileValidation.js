@@ -8,12 +8,12 @@ const ALLOWED_FILE_TYPES = {
   general: ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
 };
 
-// Maximum file sizes (in bytes)
+// Maximum file sizes (in bytes) - Removed restrictions
 const MAX_FILE_SIZES = {
-  picture: 20 * 1024 * 1024,     // 20MB
-  signature: 5 * 1024 * 1024,    // 5MB
-  document: 20 * 1024 * 1024,    // 20MB
-  general: 20 * 1024 * 1024      // 20MB
+  picture: 100 * 1024 * 1024,     // 100MB
+  signature: 50 * 1024 * 1024,    // 50MB
+  document: 100 * 1024 * 1024,    // 100MB
+  general: 100 * 1024 * 1024      // 100MB
 };
 
 // Dangerous file extensions to block

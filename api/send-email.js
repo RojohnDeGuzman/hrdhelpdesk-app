@@ -118,6 +118,8 @@ module.exports = async (req, res) => {
 
       // Log form data for debugging
       console.log('📝 Raw form data:', formData);
+      console.log('📝 Raw form data keys:', Object.keys(formData));
+      console.log('📝 Raw form data values:', Object.values(formData));
       
       // Add user verification info (simplified)
       const timestamp = new Date().toISOString();
@@ -130,6 +132,7 @@ module.exports = async (req, res) => {
       // Sanitize form data
       const sanitizedFormData = sanitizeFormData(formData);
       console.log('🧹 Sanitized form data:', sanitizedFormData);
+      console.log('🧹 Sanitized form data keys:', Object.keys(sanitizedFormData));
       
       // Validate form data
       const validation = validateFormData(sanitizedFormData);
