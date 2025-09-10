@@ -1,18 +1,31 @@
 // Enhanced input sanitization and validation
 const DOMPurify = require('dompurify');
-const { JSDOM } = require('jsdom');
 
-// Create a JSDOM window for DOMPurify
-const window = new JSDOM('').window;
-const purify = DOMPurify(window);
+// Create a JSDOM window for DOMPurify with error handling
+let window, purify;
+try {
+  const { JSDOM } = require('jsdom');
+  window = new JSDOM('').window;
+  purify = DOMPurify(window);
+} catch (error) {
+  console.log('JSDOM not available, using basic sanitization');
+  // Fallback to basic sanitization if JSDOM fails
+  window = null;
+  purify = null;
+}
 
 // Sanitize HTML content
 const sanitizeHTML = (input) => {
   if (typeof input !== 'string') return input;
-  return purify.sanitize(input, { 
-    ALLOWED_TAGS: [],
-    ALLOWED_ATTR: []
-  });
+  if (purify) {
+    return purify.sanitize(input, { 
+      ALLOWED_TAGS: [],
+      ALLOWED_ATTR: []
+    });
+  } else {
+    // Fallback to basic HTML sanitization
+    return input.replace(/<[^>]*>/g, '').replace(/[<>'"&]/g, '');
+  }
 };
 
 // Sanitize text input (remove HTML tags and dangerous characters)
