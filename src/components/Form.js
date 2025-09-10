@@ -486,22 +486,49 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
       // Use the correct API URL based on environment
       const response = await axios.post(getApiUrl('send-email'), emailData);
 
-      if (onSubmitSuccess) {
-      onSubmitSuccess();
+      if (response.status === 200 && response.data.success) {
+        if (onSubmitSuccess) {
+          onSubmitSuccess();
+        } else {
+          setErrorModal({ 
+            show: true, 
+            title: 'Success!', 
+            message: 'Form submitted successfully! You will receive a confirmation email shortly.',
+            type: 'success'
+          });
+        }
       } else {
-        setErrorModal({ 
-          show: true, 
-          title: 'Success!', 
-          message: 'Form submitted successfully! You will receive a confirmation email shortly.',
-          type: 'success'
-        });
+        throw new Error(response.data.message || 'Form submission failed');
       }
     } catch (error) {
-      console.error('Error:', error.response ? error.response.data : error.message);
+      console.error('Error:', error);
+      
+      let errorMessage = 'Failed to submit the form. Please try again later.';
+      
+      if (error.response) {
+        // Server responded with error status
+        if (error.response.data && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        } else if (error.response.status === 500) {
+          errorMessage = 'Server error. Please try again later.';
+        } else if (error.response.status === 400) {
+          errorMessage = 'Invalid form data. Please check your inputs and try again.';
+        } else if (error.response.status === 429) {
+          errorMessage = 'Too many requests. Please wait a moment and try again.';
+        }
+      } else if (error.request) {
+        // Network error
+        errorMessage = 'Network error. Please check your connection and try again.';
+      } else if (error.message.includes('timeout')) {
+        errorMessage = 'Request timed out. Please try again.';
+      } else if (error.message.includes('Unexpected token')) {
+        errorMessage = 'Server returned an invalid response. Please try again later.';
+      }
+      
       setErrorModal({ 
         show: true, 
         title: 'Submission Failed', 
-        message: 'Failed to submit the form. Please try again later.' 
+        message: errorMessage 
       });
     } finally {
       setLoading(false);

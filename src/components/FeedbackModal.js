@@ -65,6 +65,17 @@ const FeedbackModal = ({ isOpen, onClose }) => {
         }),
       });
 
+      // Check if response is ok before parsing JSON
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Server returned non-JSON response');
+      }
+
       const data = await response.json();
 
       if (response.ok) {
@@ -94,6 +105,12 @@ const FeedbackModal = ({ isOpen, onClose }) => {
         errorMsg = 'Request timed out. Please try again.';
       } else if (error.message.includes('Failed to fetch')) {
         errorMsg = 'Unable to connect to the server. Please try again later.';
+      } else if (error.message.includes('HTTP error! status:')) {
+        errorMsg = 'Server error. Please try again later.';
+      } else if (error.message.includes('non-JSON response')) {
+        errorMsg = 'Server returned an invalid response. Please try again later.';
+      } else if (error.message.includes('Unexpected token')) {
+        errorMsg = 'Server returned an invalid response format. Please try again later.';
       }
       
       setErrorMessage(errorMsg);

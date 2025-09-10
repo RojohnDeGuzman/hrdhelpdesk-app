@@ -45,6 +45,12 @@ module.exports = async (req, res) => {
     }
 
     try {
+      console.log('📝 API - Received feedback request:', {
+        method: req.method,
+        body: req.body,
+        headers: req.headers
+      });
+
       // Sanitize input data
       const sanitizedData = sanitizeFormData(req.body);
       
@@ -104,10 +110,11 @@ module.exports = async (req, res) => {
       }
 
     } catch (error) {
-      console.error('❌ API - Error processing feedback');
+      console.error('❌ API - Error processing feedback:', error);
       return res.status(500).json({
         success: false,
-        message: 'Internal server error. Please try again later.'
+        message: 'Internal server error. Please try again later.',
+        error: error.message
       });
     }
   });

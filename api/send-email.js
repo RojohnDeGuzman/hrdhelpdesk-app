@@ -87,7 +87,12 @@ module.exports = async (req, res) => {
 
     try {
       // Log only essential information for debugging
-      console.log('📧 API - Received email request');
+      console.log('📧 API - Received email request:', {
+        method: req.method,
+        contentType: req.headers['content-type'],
+        bodyKeys: Object.keys(req.body || {}),
+        hasAttachments: req.body && req.body.attachments
+      });
 
       let formData = {};
       let attachments = [];
@@ -152,10 +157,11 @@ module.exports = async (req, res) => {
       }
 
     } catch (error) {
-      console.error('❌ API - Error processing request');
+      console.error('❌ API - Error processing request:', error);
       return res.status(500).json({
         success: false,
-        message: 'Internal server error. Please try again later.'
+        message: 'Internal server error. Please try again later.',
+        error: error.message
       });
     }
   });
