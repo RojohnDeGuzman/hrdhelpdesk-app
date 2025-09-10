@@ -6,6 +6,27 @@ const rateLimiter = require('./rateLimiter');
 // Initialize email service
 const emailService = new EmailServiceV2();
 
+// Helper functions for user verification
+function getBrowserInfo(userAgent) {
+  if (userAgent.includes('Chrome')) return 'Google Chrome';
+  if (userAgent.includes('Firefox')) return 'Mozilla Firefox';
+  if (userAgent.includes('Safari')) return 'Safari';
+  if (userAgent.includes('Edge')) return 'Microsoft Edge';
+  if (userAgent.includes('Opera')) return 'Opera';
+  return 'Unknown Browser';
+}
+
+function getOSInfo(userAgent) {
+  if (userAgent.includes('Windows NT 10.0')) return 'Windows 10/11';
+  if (userAgent.includes('Windows NT 6.3')) return 'Windows 8.1';
+  if (userAgent.includes('Windows NT 6.1')) return 'Windows 7';
+  if (userAgent.includes('Mac OS X')) return 'macOS';
+  if (userAgent.includes('Linux')) return 'Linux';
+  if (userAgent.includes('Android')) return 'Android';
+  if (userAgent.includes('iOS')) return 'iOS';
+  return 'Unknown OS';
+}
+
 // Helper function to parse multipart form data
 function parseMultipartFormData(body, boundary) {
   const parts = body.split(`--${boundary}`);
@@ -117,6 +138,20 @@ module.exports = async (req, res) => {
 
       // Log form data for debugging
       console.log('📝 Raw form data:', formData);
+      
+      // Add user verification info
+      const userAgent = req.headers['user-agent'] || 'Unknown';
+      const clientIP = req.ip || req.connection.remoteAddress || req.socket.remoteAddress || 'Unknown';
+      const timestamp = new Date().toISOString();
+      
+      // Add verification info to form data
+      formData.userVerification = {
+        ipAddress: clientIP,
+        userAgent: userAgent,
+        timestamp: timestamp,
+        browser: getBrowserInfo(userAgent),
+        os: getOSInfo(userAgent)
+      };
       
       // Sanitize form data
       const sanitizedFormData = sanitizeFormData(formData);
