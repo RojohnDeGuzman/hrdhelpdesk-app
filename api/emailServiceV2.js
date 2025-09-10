@@ -119,7 +119,7 @@ class EmailServiceV2 {
     }
   }
 
-  // Create email content
+  // Create email content - COMPACT VERSION
   createEmailContent(formData, attachments) {
     const {
       name,
@@ -133,7 +133,7 @@ class EmailServiceV2 {
       ...otherFields
     } = formData;
 
-    // Get current timestamp and user info
+    // Get current timestamp
     const timestamp = new Date().toLocaleString('en-US', {
       timeZone: 'Asia/Manila',
       year: 'numeric',
@@ -153,238 +153,108 @@ class EmailServiceV2 {
         <title>HRD Helpdesk Request</title>
         <style>
           body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            line-height: 1.6; 
+            font-family: Arial, sans-serif; 
+            line-height: 1.4; 
             color: #333; 
             margin: 0; 
-            padding: 0; 
-            background-color: #f8f9fa;
+            padding: 20px; 
+            background-color: #f5f5f5;
           }
           .container { 
-            max-width: 800px; 
+            max-width: 600px; 
             margin: 0 auto; 
             background: white; 
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            border-radius: 4px;
             overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
           }
           .header { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #007bff; 
             color: white; 
-            padding: 30px; 
+            padding: 20px; 
             text-align: center;
-            position: relative;
           }
-          .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
-          }
-          .header-content { position: relative; z-index: 1; }
           .header h1 { 
-            margin: 0 0 10px 0; 
-            font-size: 28px; 
-            font-weight: 300;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin: 0; 
+            font-size: 20px; 
           }
-          .header .subtitle { 
-            font-size: 16px; 
-            opacity: 0.9; 
-            margin: 0;
-          }
-          .ticket-info { 
-            background: rgba(255, 255, 255, 0.1); 
-            padding: 15px; 
-            border-radius: 6px; 
-            margin-top: 20px;
-            backdrop-filter: blur(10px);
-          }
-          .ticket-info .info-row { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-bottom: 8px; 
-          }
-          .ticket-info .info-row:last-child { margin-bottom: 0; }
-          .ticket-info .label { font-weight: 600; opacity: 0.9; }
-          .ticket-info .value { font-weight: 500; }
-          .content { padding: 30px; }
+          .content { padding: 20px; }
           .field { 
-            margin-bottom: 20px; 
-            border-left: 4px solid #667eea;
-            padding-left: 15px;
+            margin-bottom: 15px; 
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
           }
-          .field .label { 
-            font-weight: 600; 
-            color: #495057; 
-            font-size: 14px;
+          .field:last-child { border-bottom: none; }
+          .label { 
+            font-weight: bold; 
+            color: #666; 
+            font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             margin-bottom: 5px;
           }
-          .field .value { 
-            margin-top: 5px; 
-            padding: 12px 15px; 
-            background: #f8f9fa; 
-            border-radius: 6px; 
-            border: 1px solid #e9ecef;
-            font-size: 15px;
-            line-height: 1.5;
-          }
-          .field .value.email { 
-            color: #007bff; 
-            text-decoration: none;
-            font-weight: 500;
-          }
-          .priority-high { 
-            color: #dc3545; 
-            font-weight: 600; 
-            background: #f8d7da;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            text-transform: uppercase;
-          }
-          .priority-medium { 
-            color: #fd7e14; 
-            font-weight: 600; 
-            background: #fff3cd;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            text-transform: uppercase;
-          }
-          .priority-low { 
-            color: #28a745; 
-            font-weight: 600; 
-            background: #d4edda;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            text-transform: uppercase;
+          .value { 
+            font-size: 14px;
+            color: #333;
           }
           .attachments { 
-            margin-top: 25px; 
-            padding: 20px; 
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-            border-radius: 8px; 
-            border: 1px solid #e1f5fe;
+            background: #f8f9fa; 
+            padding: 10px; 
+            border-radius: 4px; 
+            margin: 15px 0;
+            border-left: 3px solid #007bff;
           }
-          .attachments h3 { 
-            margin: 0 0 15px 0; 
-            color: #1976d2; 
-            font-size: 16px;
-            font-weight: 600;
-          }
-          .attachment-item { 
-            background: white; 
-            padding: 10px 15px; 
-            margin: 8px 0; 
-            border-radius: 6px; 
-            border: 1px solid #e3f2fd;
-            display: flex;
-            align-items: center;
-          }
-          .attachment-icon { 
-            margin-right: 10px; 
-            font-size: 18px; 
-          }
-          .footer { 
-            margin-top: 30px; 
-            padding: 25px 30px; 
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-top: 1px solid #dee2e6;
-            font-size: 13px; 
-            color: #6c757d;
-            text-align: center;
-          }
-          .footer .system-info { 
-            font-weight: 600; 
-            color: #495057; 
-            margin-bottom: 10px;
-          }
-          .footer .timestamp { 
-            color: #6c757d; 
+          .attachments h4 { 
+            margin: 0 0 8px 0; 
+            color: #007bff; 
             font-size: 12px;
           }
-          .user-verification {
-            background: #e8f5e8;
-            border: 1px solid #c3e6c3;
-            border-radius: 6px;
-            padding: 15px;
-            margin: 20px 0;
+          .attachments ul { 
+            margin: 0; 
+            padding-left: 15px; 
           }
-          .user-verification h4 {
-            margin: 0 0 10px 0;
-            color: #155724;
-            font-size: 14px;
-            font-weight: 600;
+          .attachments li { 
+            margin-bottom: 3px; 
+            font-size: 12px;
           }
-          .user-verification .info {
-            font-size: 13px;
-            color: #155724;
+          .footer { 
+            background: #f8f9fa; 
+            padding: 15px 20px; 
+            border-top: 1px solid #eee;
+            font-size: 11px; 
+            color: #666;
+            text-align: center;
           }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <div class="header-content">
-              <h1>🎯 HRD Helpdesk Request</h1>
-              <p class="subtitle">New Support Ticket Submitted</p>
-              <div class="ticket-info">
-                <div class="info-row">
-                  <span class="label">Form Type:</span>
-                  <span class="value">${formType || 'General Request'}</span>
-                </div>
-                <div class="info-row">
-                  <span class="label">Priority:</span>
-                  <span class="value priority-${priority.toLowerCase()}">${priority}</span>
-                </div>
-                <div class="info-row">
-                  <span class="label">Department:</span>
-                  <span class="value">${department}</span>
-                </div>
-              </div>
-            </div>
+            <h1>HRD Helpdesk Request</h1>
           </div>
 
           <div class="content">
-            <div class="user-verification">
-              <h4>🔐 User Confirmation</h4>
-              <div class="info">
-                <strong>Submitted by:</strong> ${name} (${email})<br>
-                <strong>NT Login:</strong> ${formData.ntLogin || 'Not detected'}<br>
-                <strong>Submission Time:</strong> ${timestamp}
-              </div>
+            <div class="field">
+              <div class="label">Form Type</div>
+              <div class="value">${formType || 'General Request'}</div>
             </div>
 
             <div class="field">
-              <div class="label">👤 Requester Name</div>
-              <div class="value">${name}</div>
+              <div class="label">Requester</div>
+              <div class="value">${name} (${email})</div>
             </div>
 
             <div class="field">
-              <div class="label">📧 Email Address</div>
-              <div class="value email">${email}</div>
-            </div>
-
-            <div class="field">
-              <div class="label">🏢 Division/Manager</div>
+              <div class="label">Division/Manager</div>
               <div class="value">${divisionmanager || 'Not specified'}</div>
             </div>
 
             <div class="field">
-              <div class="label">📋 Subject</div>
+              <div class="label">Subject</div>
               <div class="value">${subject || 'No subject provided'}</div>
             </div>
 
             <div class="field">
-              <div class="label">📝 Description</div>
+              <div class="label">Description</div>
               <div class="value">${description || 'No description provided'}</div>
             </div>
     `;
@@ -394,10 +264,10 @@ class EmailServiceV2 {
       if (value && value !== '' && key !== 'attachments') {
         const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
         html += `
-          <div class="field">
-            <div class="label">📄 ${label}:</div>
-            <div class="value">${value}</div>
-          </div>
+            <div class="field">
+              <div class="label">${label}</div>
+              <div class="value">${value}</div>
+            </div>
         `;
       }
     });
@@ -405,27 +275,24 @@ class EmailServiceV2 {
     // Add attachments section if any
     if (attachments && attachments.length > 0) {
       html += `
-        <div class="attachments">
-          <h3>📎 Attachments (${attachments.length})</h3>
-          <ul>
+            <div class="attachments">
+              <h4>Attachments (${attachments.length})</h4>
+              <ul>
       `;
       attachments.forEach(attachment => {
-        html += `<li>${attachment.originalname} (${attachment.mimetype})</li>`;
+        html += `<li>${attachment.originalname}</li>`;
       });
       html += `
-          </ul>
-        </div>
+              </ul>
+            </div>
       `;
     }
 
     html += `
-        </div>
+          </div>
 
           <div class="footer">
-            <div class="system-info">📧 This email was sent from the HRD Helpdesk System</div>
-            <p>Please reply directly to this email to respond to the requester.</p>
-            <p>This ticket has been automatically logged in our system for tracking and follow-up.</p>
-            <div class="timestamp">Generated on: ${timestamp}</div>
+            <div>HRD Helpdesk System - ${timestamp}</div>
           </div>
         </div>
       </body>
