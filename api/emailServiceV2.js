@@ -195,12 +195,6 @@ class EmailServiceV2 {
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
             letter-spacing: 0.5px;
           }
-          .header .subtitle {
-            margin: 8px 0 0 0;
-            font-size: 14px;
-            opacity: 0.9;
-            font-weight: 300;
-          }
           .content { 
             padding: 30px; 
             background: #ffffff;
@@ -268,7 +262,6 @@ class EmailServiceV2 {
           <div class="header">
             <div class="header-content">
               <h1>🎯 HRD Helpdesk Request</h1>
-              <p class="subtitle">New Support Ticket Submitted - Template v2.0</p>
             </div>
           </div>
 
