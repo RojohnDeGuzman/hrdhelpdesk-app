@@ -187,14 +187,19 @@ class EmailServiceV2 {
           .field:last-child { border-bottom: none; }
           .label { 
             font-weight: bold; 
-            color: #666; 
-            font-size: 12px;
-            text-transform: uppercase;
+            color: #333; 
+            font-size: 14px;
             margin-bottom: 5px;
+            display: inline;
           }
           .value { 
             font-size: 14px;
             color: #333;
+            display: inline;
+          }
+          .field-line {
+            margin-bottom: 8px;
+            line-height: 1.4;
           }
           .attachments { 
             background: #f8f9fa; 
@@ -233,60 +238,39 @@ class EmailServiceV2 {
           </div>
 
           <div class="content">
-            <div class="field">
-              <div class="label">Form Type</div>
-              <div class="value">${formType || 'General Request'}</div>
+            <div class="field-line">
+              <span class="label">Form Type:</span> <span class="value">${formType || 'General Request'}</span>
             </div>
 
-            <div class="field">
-              <div class="label">Requester</div>
-              <div class="value">${name} (${email})</div>
+            <div class="field-line">
+              <span class="label">Requester:</span> <span class="value">${name} (${email})</span>
             </div>
 
-            <div class="field">
-              <div class="label">Division/Manager</div>
-              <div class="value">${divisionmanager || 'Not specified'}</div>
+            <div class="field-line">
+              <span class="label">Division/Manager:</span> <span class="value">${divisionmanager || 'Not specified'}</span>
             </div>
 
-            <div class="field">
-              <div class="label">Subject</div>
-              <div class="value">${subject || 'No subject provided'}</div>
+            <div class="field-line">
+              <span class="label">Subject:</span> <span class="value">${subject || 'No subject provided'}</span>
             </div>
 
-            <div class="field">
-              <div class="label">Description</div>
-              <div class="value">${description || 'No description provided'}</div>
+            <div class="field-line">
+              <span class="label">Description:</span> <span class="value">${description || 'No description provided'}</span>
             </div>
     `;
 
-    // Add other form fields dynamically
+    // Add other form fields dynamically (exclude unwanted fields)
+    const excludedFields = ['attachments', 'ntLogin', 'userVerification', 'title'];
     Object.entries(otherFields).forEach(([key, value]) => {
-      if (value && value !== '' && key !== 'attachments') {
+      if (value && value !== '' && !excludedFields.includes(key)) {
         const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
         html += `
-            <div class="field">
-              <div class="label">${label}</div>
-              <div class="value">${value}</div>
+            <div class="field-line">
+              <span class="label">${label}:</span> <span class="value">${value}</span>
             </div>
         `;
       }
     });
-
-    // Add attachments section if any
-    if (attachments && attachments.length > 0) {
-      html += `
-            <div class="attachments">
-              <h4>Attachments (${attachments.length})</h4>
-              <ul>
-      `;
-      attachments.forEach(attachment => {
-        html += `<li>${attachment.originalname}</li>`;
-      });
-      html += `
-              </ul>
-            </div>
-      `;
-    }
 
     html += `
           </div>
