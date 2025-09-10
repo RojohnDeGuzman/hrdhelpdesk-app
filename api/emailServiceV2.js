@@ -153,88 +153,122 @@ class EmailServiceV2 {
         <title>HRD Helpdesk Request</title>
         <style>
           body { 
-            font-family: Arial, sans-serif; 
-            line-height: 1.4; 
-            color: #333; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #2c3e50; 
             margin: 0; 
-            padding: 20px; 
-            background-color: #f5f5f5;
+            padding: 0; 
+            background-color: #ecf0f1;
           }
           .container { 
-            max-width: 600px; 
-            margin: 0 auto; 
+            max-width: 700px; 
+            margin: 20px auto; 
             background: white; 
-            border-radius: 4px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 1px solid #bdc3c7;
           }
           .header { 
-            background: #007bff; 
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); 
             color: white; 
-            padding: 20px; 
+            padding: 25px; 
             text-align: center;
+            position: relative;
           }
+          .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+          }
+          .header-content { position: relative; z-index: 1; }
           .header h1 { 
             margin: 0; 
-            font-size: 20px; 
+            font-size: 24px; 
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
           }
-          .content { padding: 20px; }
-          .field { 
-            margin-bottom: 15px; 
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-          }
-          .field:last-child { border-bottom: none; }
-          .label { 
-            font-weight: bold; 
-            color: #333; 
+          .header .subtitle {
+            margin: 8px 0 0 0;
             font-size: 14px;
-            margin-bottom: 5px;
+            opacity: 0.9;
+            font-weight: 300;
+          }
+          .content { 
+            padding: 30px; 
+            background: #ffffff;
+          }
+          .field-line {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+          }
+          .field-line:last-child { 
+            border-bottom: none; 
+            margin-bottom: 0;
+          }
+          .label { 
+            font-weight: 700; 
+            color: #2c3e50; 
+            font-size: 14px;
             display: inline;
+            min-width: 140px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 12px;
           }
           .value { 
             font-size: 14px;
-            color: #333;
+            color: #34495e;
             display: inline;
-          }
-          .field-line {
-            margin-bottom: 8px;
-            line-height: 1.4;
-          }
-          .attachments { 
-            background: #f8f9fa; 
-            padding: 10px; 
-            border-radius: 4px; 
-            margin: 15px 0;
-            border-left: 3px solid #007bff;
-          }
-          .attachments h4 { 
-            margin: 0 0 8px 0; 
-            color: #007bff; 
-            font-size: 12px;
-          }
-          .attachments ul { 
-            margin: 0; 
-            padding-left: 15px; 
-          }
-          .attachments li { 
-            margin-bottom: 3px; 
-            font-size: 12px;
+            font-weight: 400;
+            margin-left: 8px;
           }
           .footer { 
-            background: #f8f9fa; 
-            padding: 15px 20px; 
-            border-top: 1px solid #eee;
-            font-size: 11px; 
-            color: #666;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+            padding: 20px 30px; 
+            border-top: 1px solid #dee2e6;
+            font-size: 12px; 
+            color: #6c757d;
             text-align: center;
+            font-weight: 500;
+          }
+          .priority-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 10px;
+          }
+          .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #27ae60;
+            border-radius: 50%;
+            margin-right: 8px;
           }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>HRD Helpdesk Request</h1>
+            <div class="header-content">
+              <h1>🎯 HRD Helpdesk Request</h1>
+              <p class="subtitle">New Support Ticket Submitted</p>
+            </div>
           </div>
 
           <div class="content">
@@ -276,7 +310,8 @@ class EmailServiceV2 {
           </div>
 
           <div class="footer">
-            <div>HRD Helpdesk System - ${timestamp}</div>
+            <div><span class="status-indicator"></span>HRD Helpdesk System</div>
+            <div style="margin-top: 8px; font-size: 11px; color: #95a5a6;">Generated on ${timestamp}</div>
           </div>
         </div>
       </body>
