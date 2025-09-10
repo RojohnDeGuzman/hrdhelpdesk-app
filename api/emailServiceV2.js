@@ -6,8 +6,8 @@ const emailConfig = {
   port: parseInt(process.env.EMAIL_PORT) || 587,
   secure: process.env.EMAIL_SECURE === 'true',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    user: process.env.EMAIL_USER || 'hrd-helpdesk@castotravel.ph',
+    pass: process.env.EMAIL_PASS || 'wngxrmcmqwhzgnrd'
   },
   tls: {
     ciphers: 'SSLv3'
@@ -20,10 +20,12 @@ const emailConfig = {
 
 class EmailServiceV2 {
   constructor() {
-    // Validate required environment variables
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      throw new Error('Missing required environment variables: EMAIL_USER and EMAIL_PASS must be set');
-    }
+    // Get email credentials from environment variables or fallback to hardcoded values
+    const emailUser = process.env.EMAIL_USER || 'hrd-helpdesk@castotravel.ph';
+    const emailPass = process.env.EMAIL_PASS || 'wngxrmcmqwhzgnrd';
+    
+    console.log('🔧 EmailServiceV2 - Using email:', emailUser);
+    console.log('🔧 EmailServiceV2 - Using environment variables:', !!process.env.EMAIL_USER);
     
     console.log('🔧 EmailServiceV2 - Initializing with nodemailer');
     console.log('🔧 EmailServiceV2 - Nodemailer type:', typeof nodemailer);
