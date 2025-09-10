@@ -74,23 +74,42 @@ const sanitizeFormData = (data) => {
 const validateFormData = (data) => {
   const errors = [];
   
-  // Required fields validation
-  const requiredFields = ['name', 'email', 'serviceType', 'description'];
+  // Required fields validation - make it more flexible
+  const requiredFields = ['name', 'email', 'description'];
+  
+  // Check if serviceType exists and is required
+  if (data.serviceType !== undefined) {
+    requiredFields.push('serviceType');
+  }
+  
+  // Check if subject exists and is required
+  if (data.subject !== undefined) {
+    requiredFields.push('subject');
+  }
+  
   requiredFields.forEach(field => {
     if (!data[field] || data[field].trim() === '') {
-      errors.push(`${field} is required`);
+      const fieldLabel = field === 'serviceType' ? 'Service Type' : 
+                        field === 'subject' ? 'Subject' :
+                        field.charAt(0).toUpperCase() + field.slice(1);
+      errors.push(`${fieldLabel} is required`);
     }
   });
-  
-  // Email validation
-  if (data.email && !data.email.endsWith('@castotravel.ph')) {
-    errors.push('Email must be a valid @castotravel.ph email address');
-  }
   
   // Email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (data.email && !emailRegex.test(data.email)) {
-    errors.push('Please enter a valid email address');
+    errors.push('Please enter a valid email format (e.g., john.doe@castotravel.ph)');
+  }
+  
+  // Email domain validation
+  if (data.email && !data.email.toLowerCase().endsWith('@castotravel.ph')) {
+    errors.push('Please use your company email address (@castotravel.ph). Personal emails are not accepted.');
+  }
+  
+  // Check for common email mistakes
+  if (data.email && (data.email.includes('@gmail.com') || data.email.includes('@yahoo.com') || data.email.includes('@hotmail.com'))) {
+    errors.push('Please use your company email address (@castotravel.ph) instead of personal email.');
   }
   
   // Length validation

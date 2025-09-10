@@ -41,8 +41,23 @@ const FeedbackModal = ({ isOpen, onClose }) => {
       return;
     }
 
-    if (!email.includes('@castotravel.ph')) {
-      setErrorMessage('Please provide a valid @castotravel.ph email address.');
+    // Enhanced email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage('Please enter a valid email format (e.g., john.doe@castotravel.ph).');
+      setSubmitStatus('error');
+      return;
+    }
+
+    if (!email.toLowerCase().includes('@castotravel.ph')) {
+      setErrorMessage('Please provide a valid @castotravel.ph email address. Only company email addresses are accepted.');
+      setSubmitStatus('error');
+      return;
+    }
+
+    // Check for common email mistakes
+    if (email.includes('@gmail.com') || email.includes('@yahoo.com') || email.includes('@hotmail.com')) {
+      setErrorMessage('Please use your company email address (@castotravel.ph) instead of personal email.');
       setSubmitStatus('error');
       return;
     }
