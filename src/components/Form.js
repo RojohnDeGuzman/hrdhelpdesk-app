@@ -18,7 +18,7 @@ const getNTLogin = () => {
           // Try to get from screen resolution or other browser info
           () => {
             // This is a workaround - we'll use a combination of browser info
-            const screenInfo = `${screen.width}x${screen.height}`;
+            const screenInfo = `${window.screen.width}x${window.screen.height}`;
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             return `User_${screenInfo}_${timezone}`.replace(/[^a-zA-Z0-9_]/g, '');
           },
