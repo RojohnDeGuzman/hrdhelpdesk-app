@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Form from './components/Form';
 import DownloadableForms from './components/DownloadableForms';
 import ErrorBoundary from './components/ErrorBoundary';
-import ThemeProvider from './components/ThemeProvider';
+import ThemeProvider, { useTheme } from './components/ThemeProvider';
 import ProfessionalHeader from './components/ProfessionalHeader';
 import ProfessionalSidebar from './components/ProfessionalSidebar';
 import ProfessionalServiceCard from './components/ProfessionalServiceCard';
@@ -17,6 +17,35 @@ import './styles/professional-design.css';
 import './styles/splash-screen.css';
 import './styles/modern-forms.css';
 import './styles/accessibility.css';
+
+// Theme Toggle Button Component
+const ThemeToggleButton = () => {
+  const { theme, toggleTheme } = useTheme();
+  
+  return (
+    <button
+      className="theme-toggle-button"
+      onClick={toggleTheme}
+      title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+    >
+      <div className="theme-toggle-icon">
+        {theme === 'light' ? (
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        ) : (
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        )}
+      </div>
+      <span className="theme-toggle-text">
+        {theme === 'light' ? 'Dark' : 'Light'}
+      </span>
+    </button>
+  );
+};
 
 const FormVisibleResult = ({ onBack }) => (
     <div className="modern-form-container">
@@ -937,6 +966,60 @@ function App() {
           isOpen={feedbackModalVisible}
           onClose={() => setFeedbackModalVisible(false)}
         />
+        
+        {/* Professional Background Animations */}
+        <div className="background-animations">
+          {/* Interactive Particle System - More Visible */}
+          <div className="floating-particle particle-1"></div>
+          <div className="floating-particle particle-2"></div>
+          <div className="floating-particle particle-3"></div>
+          <div className="floating-particle particle-4"></div>
+          <div className="floating-particle particle-5"></div>
+          <div className="floating-particle particle-6"></div>
+          <div className="floating-particle particle-7"></div>
+          <div className="floating-particle particle-8"></div>
+          
+          {/* Minimalist Geometric Shapes - More Visible */}
+          <div className="geometric-shape shape-circle"></div>
+          <div className="geometric-shape shape-square"></div>
+          <div className="geometric-shape shape-triangle"></div>
+          <div className="geometric-shape shape-diamond"></div>
+          <div className="geometric-shape shape-hexagon"></div>
+          <div className="geometric-shape shape-star"></div>
+          
+          {/* Random Floating Circles - New */}
+          <div className="random-circle circle-1"></div>
+          <div className="random-circle circle-2"></div>
+          <div className="random-circle circle-3"></div>
+          <div className="random-circle circle-4"></div>
+          <div className="random-circle circle-5"></div>
+          <div className="random-circle circle-6"></div>
+          
+          {/* Floating Objects - New */}
+          <div className="floating-object object-1"></div>
+          <div className="floating-object object-2"></div>
+          <div className="floating-object object-3"></div>
+          <div className="floating-object object-4"></div>
+          
+          {/* Professional Background Orbs - More Visible */}
+          <div className="background-orb orb-1"></div>
+          <div className="background-orb orb-2"></div>
+          <div className="background-orb orb-3"></div>
+          <div className="background-orb orb-4"></div>
+          
+          {/* Floating Lines - More Visible */}
+          <div className="floating-line line-1"></div>
+          <div className="floating-line line-2"></div>
+          <div className="floating-line line-3"></div>
+          <div className="floating-line line-4"></div>
+          
+          {/* Breathing Elements - More Visible */}
+          <div className="breathing-element breath-1"></div>
+          <div className="breathing-element breath-2"></div>
+        </div>
+
+        {/* Floating Theme Toggle Button */}
+        <ThemeToggleButton />
       </ErrorBoundary>
     </ThemeProvider>
   );

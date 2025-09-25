@@ -52,6 +52,16 @@ const ProfessionalServiceCard = ({
       onClick={onClick}
       style={{ gridColumn: grid > 1 ? `span ${grid}` : 'auto' }}
     >
+      {/* Glitter Elements */}
+      <div className="glitter-element glitter-1"></div>
+      <div className="glitter-element glitter-2"></div>
+      <div className="glitter-element glitter-3"></div>
+      <div className="glitter-element glitter-4"></div>
+      <div className="glitter-element glitter-5"></div>
+      <div className="glitter-element glitter-6"></div>
+      <div className="glitter-element glitter-7"></div>
+      <div className="glitter-element glitter-8"></div>
+      
       {searchResult && (
         <div className="search-result-badge" style={{ backgroundColor: getResultTypeColor(resultType) }}>
           {getResultTypeLabel(resultType)}

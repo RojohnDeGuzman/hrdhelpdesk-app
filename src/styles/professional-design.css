@@ -74,7 +74,7 @@
 
 body {
   font-family: var(--font-family);
-  background-color: var(--gray-50);
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
   color: var(--gray-800);
   line-height: 1.6;
   margin: 0;
@@ -86,8 +86,9 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--gray-50);
   position: relative;
+  z-index: 100;
+  background: transparent;
 }
 
 /* Header Styles - Always Dark Theme */
@@ -398,6 +399,8 @@ body {
   flex: 1;
   min-height: 0;
   margin-top: 0;
+  position: relative;
+  z-index: 150;
 }
 
 /* Sidebar */
@@ -469,11 +472,22 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 250;
   align-items: center;
   min-width: 0;
-  position: relative;
-  z-index: 1;
+  background: transparent;
+  backdrop-filter: none;
+  border-radius: 0;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
 }
+
+/* Animated background elements - removed for transparency */
+
+/* Keyframe animations - removed for clean design */
 
 /* Content Area when sidebar is hidden (home page) */
 .professional-main.no-sidebar .professional-content {
@@ -664,6 +678,10 @@ body {
   margin-bottom: var(--space-8);
   max-width: 1200px;
   align-items: start;
+  position: relative;
+  z-index: 200;
+  background: transparent;
+  padding: var(--space-4);
 }
 
 /* Responsive grid for different screen sizes */
@@ -688,8 +706,9 @@ body {
 
 /* Professional Service Card */
 .professional-service-card {
-  background: var(--white);
-  border: 1px solid var(--gray-200);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
   transition: var(--transition-normal);
@@ -699,14 +718,122 @@ body {
   height: fit-content;
   min-height: 120px;
   display: flex;
+  z-index: 300;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 .professional-service-card:hover {
-  border-color: var(--primary-blue);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #164875;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(22, 72, 117, 0.3),
+    0 0 20px rgba(22, 72, 117, 0.4),
+    0 0 40px rgba(22, 72, 117, 0.2);
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* Glitter Elements Container - Removed circular motion */
+.professional-service-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: transparent;
+  border-radius: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.professional-service-card:hover::before {
+  opacity: 0;
+}
+
+/* Glitter Particles - Removed background pattern */
+.professional-service-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.professional-service-card:hover::after {
+  opacity: 0;
+}
+
+/* Floating Glitter Elements - Removed */
+.professional-service-card .glitter-element {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.professional-service-card:hover .glitter-element {
+  opacity: 0;
+}
+
+.glitter-1 {
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.glitter-2 {
+  top: 20%;
+  right: 15%;
+  animation-delay: 0.2s;
+}
+
+.glitter-3 {
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 0.4s;
+}
+
+.glitter-4 {
+  bottom: 15%;
+  right: 10%;
+  animation-delay: 0.6s;
+}
+
+.glitter-5 {
+  top: 50%;
+  left: 5%;
+  animation-delay: 0.8s;
+}
+
+.glitter-6 {
+  top: 50%;
+  right: 5%;
+  animation-delay: 1s;
+}
+
+.glitter-7 {
+  top: 30%;
+  left: 50%;
+  animation-delay: 1.2s;
+}
+
+.glitter-8 {
+  bottom: 30%;
+  left: 50%;
+  animation-delay: 1.4s;
 }
 
 .service-card-header {
@@ -1048,22 +1175,29 @@ body {
 }
 
 [data-theme="dark"] body {
-  background-color: var(--gray-900);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 70%, #475569 100%);
   color: var(--white);
 }
 
 [data-theme="dark"] .professional-app {
-  background-color: var(--gray-900);
+  background: transparent;
+  min-height: 100vh;
+  height: auto;
 }
 
 [data-theme="dark"] .professional-main {
-  background-color: var(--gray-900);
+  background: transparent;
 }
 
 [data-theme="dark"] .professional-content {
-  background-color: var(--gray-900);
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
   color: var(--white);
 }
+
+/* Dark theme animated elements - removed for transparency */
 
 [data-theme="dark"] .professional-sidebar {
   background-color: var(--gray-800);
@@ -1096,14 +1230,35 @@ body {
 }
 
 [data-theme="dark"] .professional-service-card {
-  background-color: var(--gray-800);
-  border-color: var(--gray-700);
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.6);
   color: var(--white);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 [data-theme="dark"] .professional-service-card:hover {
-  background-color: var(--gray-700);
-  border-color: var(--gray-600);
+  background: rgba(15, 23, 42, 0.95);
+  border-color: #164875;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(22, 72, 117, 0.4),
+    0 0 20px rgba(22, 72, 117, 0.5),
+    0 0 40px rgba(22, 72, 117, 0.3);
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* Dark Theme Glitter Effects - Removed */
+[data-theme="dark"] .professional-service-card::before {
+  background: transparent;
+}
+
+[data-theme="dark"] .professional-service-card::after {
+  background: transparent;
+}
+
+[data-theme="dark"] .professional-service-card .glitter-element {
+  background: transparent;
 }
 
 [data-theme="dark"] .service-card-title {
@@ -1112,6 +1267,10 @@ body {
 
 [data-theme="dark"] .service-card-description {
   color: var(--gray-300);
+}
+
+[data-theme="dark"] .services-grid {
+  background: transparent;
 }
 
 /* Header is always dark theme - no overrides needed */
@@ -1221,6 +1380,46 @@ body {
 
 [data-theme="dark"] .search-result-breadcrumb {
   color: var(--gray-400);
+}
+
+/* Glitter Animation Keyframes */
+@keyframes glitterRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes glitterFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-5px) scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes glitterSparkle {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.8;
+  }
+  25% {
+    transform: scale(1.2) rotate(90deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8) rotate(180deg);
+    opacity: 0.6;
+  }
+  75% {
+    transform: scale(1.1) rotate(270deg);
+    opacity: 0.9;
+  }
 }
 
 /* Search Result Type Colors */
