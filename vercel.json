@@ -6,15 +6,6 @@
     "api/send-feedback.js": {
       "maxDuration": 30
     },
-    "api/auth/send-otp.js": {
-      "maxDuration": 30
-    },
-    "api/auth/verify-otp.js": {
-      "maxDuration": 30
-    },
-    "api/debug/env.js": {
-      "maxDuration": 10
-    },
     "api/auth/oauth-login.js": {
       "maxDuration": 10
     },
