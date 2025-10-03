@@ -21,8 +21,10 @@ export const OAuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        // Use direct OAuth server connection
-        const oauthUrl = 'http://localhost:5001/api/auth/oauth-verify';
+        // Use production OAuth endpoint or local for development
+        const oauthUrl = process.env.NODE_ENV === 'production' 
+          ? '/api/auth/oauth-verify' 
+          : 'http://localhost:5001/api/auth/oauth-verify';
           
         console.log('🔍 Checking auth status at:', oauthUrl);
         const response = await fetch(oauthUrl, {
@@ -56,13 +58,17 @@ export const OAuthProvider = ({ children }) => {
 
   const login = () => {
     // Redirect to OAuth login directly
-    const oauthUrl = 'http://localhost:5001/api/auth/oauth-login';
+    const oauthUrl = process.env.NODE_ENV === 'production' 
+      ? '/api/auth/oauth-login' 
+      : 'http://localhost:5001/api/auth/oauth-login';
     window.location.href = oauthUrl;
   };
 
   const logout = async () => {
     try {
-      const oauthUrl = 'http://localhost:5001/api/auth/oauth-logout';
+      const oauthUrl = process.env.NODE_ENV === 'production' 
+        ? '/api/auth/oauth-logout' 
+        : 'http://localhost:5001/api/auth/oauth-logout';
         
       await fetch(oauthUrl, {
         method: 'POST',

@@ -41,7 +41,10 @@ const OAuthLoginPage = () => {
     setError('');
     
     // Redirect to OAuth login endpoint
-    window.location.href = 'http://localhost:5001/api/auth/oauth-login';
+    const oauthUrl = process.env.NODE_ENV === 'production' 
+      ? '/api/auth/oauth-login' 
+      : 'http://localhost:5001/api/auth/oauth-login';
+    window.location.href = oauthUrl;
   };
 
   return (

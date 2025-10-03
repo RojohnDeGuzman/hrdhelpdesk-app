@@ -112,6 +112,6 @@ export const getAuthApiUrl = (endpoint) => {
   if (process.env.NODE_ENV === 'production') {
     return `/api/auth/${endpoint}`;
   } else {
-    return `http://localhost:5000/api/auth/${endpoint}`;
+    return `http://localhost:5001/api/auth/${endpoint}`;
   }
 };
