@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
+require('dotenv').config(); // Load environment variables
 const app = express();
 const PORT = 5001;
 
@@ -24,10 +25,10 @@ app.get('/api/auth/oauth-login', (req, res) => {
     const state = crypto.randomBytes(32).toString('hex');
     
     // Store state in session/cookie for validation
-    res.setHeader('Set-Cookie', `oauth_state=${state}; HttpOnly; Secure; SameSite=Strict; Max-Age=600`);
+    res.setHeader('Set-Cookie', `oauth_state=${state}; HttpOnly; SameSite=Lax; Max-Age=600`);
     
-    // Microsoft OAuth URL
-    const authUrl = new URL('https://login.microsoftonline.com/common/oauth2/v2.0/authorize');
+    // Microsoft OAuth URL - use tenant-specific endpoint
+    const authUrl = new URL(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize`);
     authUrl.searchParams.set('client_id', CLIENT_ID);
     authUrl.searchParams.set('response_type', 'code');
     authUrl.searchParams.set('redirect_uri', REDIRECT_URI);
@@ -65,14 +66,22 @@ app.get('/api/auth/oauth-callback', async (req, res) => {
     
     // Validate state parameter
     const cookieState = req.headers.cookie?.match(/oauth_state=([^;]+)/)?.[1];
+    console.log('🔍 State validation:', { 
+      receivedState: state, 
+      cookieState: cookieState, 
+      cookies: req.headers.cookie 
+    });
+    
     if (!state || !cookieState || state !== cookieState) {
-      console.error('Invalid state parameter');
+      console.error('❌ Invalid state parameter:', { state, cookieState });
       return res.redirect('http://localhost:3000/login?error=invalid_state');
     }
     
+    console.log('✅ State validation passed');
+    
     // Exchange code for tokens
     console.log('🔄 Exchanging code for tokens...');
-    const tokenResponse = await fetch('https://login.microsoftonline.com/common/oauth2/v2.0/token', {
+    const tokenResponse = await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -110,9 +119,34 @@ app.get('/api/auth/oauth-callback', async (req, res) => {
     }
     
     const profile = await profileResponse.json();
+    
+    // Get user profile photo from Microsoft Graph
+    console.log('📸 Fetching user profile photo...');
+    let profilePhoto = null;
+    try {
+      const photoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+        headers: {
+          'Authorization': `Bearer ${tokens.access_token}`,
+        },
+      });
+      
+      if (photoResponse.ok) {
+        const photoBuffer = await photoResponse.arrayBuffer();
+        const photoBase64 = Buffer.from(photoBuffer).toString('base64');
+        const contentType = photoResponse.headers.get('content-type') || 'image/jpeg';
+        profilePhoto = `data:${contentType};base64,${photoBase64}`;
+        console.log('✅ User profile photo fetched successfully');
+      } else {
+        console.log('⚠️ No profile photo available, using default avatar');
+      }
+    } catch (error) {
+      console.log('⚠️ Error fetching profile photo:', error.message);
+    }
+    
     console.log('✅ User profile:', { 
       name: profile.displayName, 
-      email: profile.mail || profile.userPrincipalName 
+      email: profile.mail || profile.userPrincipalName,
+      hasPhoto: !!profilePhoto
     });
     
     // Validate email domain
@@ -126,11 +160,21 @@ app.get('/api/auth/oauth-callback', async (req, res) => {
     const sessionToken = crypto.randomBytes(32).toString('hex');
     
     // Set session cookies
-    res.setHeader('Set-Cookie', [
+    const cookies = [
       `hrd_session=${sessionToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`,
       `hrd_user_email=${encodeURIComponent(userEmail)}; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`,
       `hrd_user_name=${encodeURIComponent(profile.displayName || '')}; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`
-    ]);
+    ];
+    
+    // Store profile photo in memory with session token as key
+    if (profilePhoto) {
+      // Store photo in memory (in production, use Redis or database)
+      global.userPhotos = global.userPhotos || {};
+      global.userPhotos[sessionToken] = profilePhoto;
+      console.log('📸 Profile photo stored with session token');
+    }
+    
+    res.setHeader('Set-Cookie', cookies);
     
     console.log('✅ Authentication successful, redirecting to app...');
     
@@ -147,6 +191,12 @@ app.get('/api/auth/oauth-callback', async (req, res) => {
 app.post('/api/auth/oauth-logout', (req, res) => {
   try {
     console.log('🚪 User logout requested');
+    
+    // Get session token to clear photo from memory
+    const sessionToken = req.headers.cookie?.match(/hrd_session=([^;]+)/)?.[1];
+    if (sessionToken && global.userPhotos) {
+      delete global.userPhotos[sessionToken];
+    }
     
     // Clear session cookies
     res.setHeader('Set-Cookie', [
@@ -185,11 +235,15 @@ app.get('/api/auth/oauth-verify', (req, res) => {
       });
     }
     
+    // Get profile photo from memory storage
+    const userPhoto = global.userPhotos?.[sessionToken] || null;
+    
     res.json({
       success: true,
       user: {
         email: decodeURIComponent(userEmail),
         name: userName ? decodeURIComponent(userName) : null,
+        photo: userPhoto,
         authenticated: true
       }
     });

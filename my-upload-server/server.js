@@ -49,7 +49,13 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB limit
+    fieldSize: 50 * 1024 * 1024, // 50MB limit for fields
+  }
+});
 
 // Enable CORS for specific origins only
 app.use(cors({
@@ -57,8 +63,9 @@ app.use(cors({
   credentials: true
 }));
 
-// Parse JSON bodies
-app.use(express.json());
+// Parse JSON bodies with increased limit
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Authentication middleware
 const authenticateRequest = (req, res, next) => {
@@ -115,16 +122,16 @@ app.get('/download/:folder/:filename', (req, res) => {
 // Email endpoint for HRD Helpdesk forms
 app.post('/send-email', authenticateRequest, async (req, res) => {
   try {
-    const { formData, attachments = [] } = req.body;
+    const { attachments = [], ...formData } = req.body;
     
-    if (!formData) {
+    if (!formData || Object.keys(formData).length === 0) {
       return res.status(400).json({ 
         success: false, 
         error: 'Form data is required' 
       });
     }
 
-    // Send email to osTicket
+    // Send email to osTicket with attachments
     const emailResult = await emailService.sendHRDRequest(formData, attachments);
     
     if (emailResult.success) {
@@ -216,6 +223,6 @@ app.post('/send-feedback', authenticateRequest, async (req, res) => {
 });
 
 // Start the server
-app.listen(3001, () => {
-  console.log('Server is running on http://localhost:3001');
+app.listen(5000, () => {
+  console.log('Server is running on http://localhost:5000');
 });

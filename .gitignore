@@ -1,10 +1,34 @@
 # Dependencies
 node_modules/
 my-upload-server/node_modules/
+hr-staff-ui/node_modules/
 
 # Production builds
 build/
 dist/
+hr-staff-ui/build/
+
+# Large media files (keep essential ones)
+public/forms/
+public/*.pdf
+# Keep essential images for the app to work
+# public/*.gif
+# public/*.jpg  
+# public/*.png
+
+# Upload directories
+my-upload-server/uploads/
+uploads/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+env-config.txt
+env-example.txt
+env-oauth-example.txt
 
 # Environment variables
 .env

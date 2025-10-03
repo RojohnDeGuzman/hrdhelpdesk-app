@@ -847,7 +847,7 @@ body, html {
   position: absolute;
   z-index: 2;
   cursor: pointer;
-  background-image: url('../public/hrd.gif');
+  background-image: url('./hrd.gif');
   background-size: cover;
   background-position: center;
 }

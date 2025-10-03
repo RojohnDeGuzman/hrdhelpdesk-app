@@ -14,28 +14,35 @@ export const OAuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
+  const [userPhoto, setUserPhoto] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Check authentication status on app load
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const oauthUrl = process.env.NODE_ENV === 'production' 
-          ? '/api/auth/oauth-verify' 
-          : 'http://localhost:5001/api/auth/oauth-verify';
+        // Use direct OAuth server connection
+        const oauthUrl = 'http://localhost:5001/api/auth/oauth-verify';
           
+        console.log('🔍 Checking auth status at:', oauthUrl);
         const response = await fetch(oauthUrl, {
           method: 'GET',
           credentials: 'include'
         });
+        
+        console.log('🔍 Auth check response:', response.status, response.statusText);
 
         if (response.ok) {
           const data = await response.json();
+          console.log('🔍 Auth check data:', data);
           if (data.success && data.user) {
             setIsAuthenticated(true);
             setUserEmail(data.user.email);
             setUserName(data.user.name);
+            setUserPhoto(data.user.photo);
           }
+        } else {
+          console.log('🔍 Auth check failed:', response.status, response.statusText);
         }
       } catch (error) {
         console.error('Error checking auth status:', error);
@@ -48,18 +55,14 @@ export const OAuthProvider = ({ children }) => {
   }, []);
 
   const login = () => {
-    // Redirect to OAuth login
-    const oauthUrl = process.env.NODE_ENV === 'production' 
-      ? '/api/auth/oauth-login' 
-      : 'http://localhost:5001/api/auth/oauth-login';
+    // Redirect to OAuth login directly
+    const oauthUrl = 'http://localhost:5001/api/auth/oauth-login';
     window.location.href = oauthUrl;
   };
 
   const logout = async () => {
     try {
-      const oauthUrl = process.env.NODE_ENV === 'production' 
-        ? '/api/auth/oauth-logout' 
-        : 'http://localhost:5001/api/auth/oauth-logout';
+      const oauthUrl = 'http://localhost:5001/api/auth/oauth-logout';
         
       await fetch(oauthUrl, {
         method: 'POST',
@@ -72,6 +75,7 @@ export const OAuthProvider = ({ children }) => {
       setIsAuthenticated(false);
       setUserEmail('');
       setUserName('');
+      setUserPhoto(null);
       
       // Redirect to login
       window.location.href = '/login';
@@ -82,6 +86,7 @@ export const OAuthProvider = ({ children }) => {
     isAuthenticated,
     userEmail,
     userName,
+    userPhoto,
     isLoading,
     login,
     logout

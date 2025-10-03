@@ -6,8 +6,8 @@ const emailConfig = {
   port: 587,
   secure: false,
   auth: {
-    user: 'hrd-helpdesk@castotravel.ph',
-    pass: 'wngxrmcmqwhzgnrd'
+    user: process.env.EMAIL_USER || 'hrd-helpdesk@castotravel.ph',
+    pass: process.env.EMAIL_PASS || 'your-password-here'
   },
   tls: {
     ciphers: 'SSLv3'

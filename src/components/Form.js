@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DIVISION_MANAGERS, UPLOAD_SERVER_URL, getApiUrl } from '../constants/data';
-import { useAuth } from '../contexts/AuthContext';
+import { useOAuth } from '../contexts/OAuthContext';
 import axios from 'axios';
 import '../styles/modern-forms.css';
 
@@ -120,7 +120,7 @@ const EnhancedInput = ({ fieldName, label, type = "text", required = false, plac
 };
 
 const Form = ({ title, onBack, onSubmitSuccess }) => {
-  const { userEmail } = useAuth();
+  const { userEmail } = useOAuth();
   const [attachment, setAttachment] = useState(null);
   const [picture, setPicture] = useState(null);
   const [signature, setSignature] = useState(null);
@@ -527,15 +527,11 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
         }
       }
 
-      // Get NT login information
-      const ntLogin = getNTLogin();
-
       // Send email using our backend service
       const emailData = {
         ...formData, // Include ALL form fields
         title: title,
-        attachments: attachments, // Send attachments directly
-        ntLogin: ntLogin // Add NT login info
+        attachments: attachments // Include attachments for osTicket
       };
 
       // Use the correct API URL based on environment

@@ -51,8 +51,8 @@ class EmailService {
           .trim();
       };
 
-      // Get all form fields except the basic ones
-      const basicFields = ['name', 'email', 'divisionmanager', 'title'];
+      // Get all form fields except the basic ones (removed ntLogin and attachments)
+      const basicFields = ['name', 'email', 'divisionmanager', 'title', 'attachments'];
       const allFields = Object.keys(formData).filter(key => 
         !basicFields.includes(key) && 
         formData[key] !== null && 
@@ -123,11 +123,10 @@ class EmailService {
 
       let htmlBody = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2c3e50; margin-bottom: 20px;">HRD Helpdesk Request</h2>
+          <h2 style="color: #2c3e50; margin-bottom: 20px;">${title}</h2>
           
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
             <p style="margin: 5px 0;"><strong>From:</strong> ${name} (${email})</p>
-            <p style="margin: 5px 0;"><strong>Request Type:</strong> ${title}</p>
             <p style="margin: 5px 0;"><strong>Division Manager:</strong> ${divisionmanager}</p>
             <p style="margin: 5px 0; color: #666; font-size: 12px;">
               <strong>Reply to:</strong> ${email} | <strong>Submitted:</strong> ${new Date().toLocaleString()}
@@ -138,29 +137,67 @@ class EmailService {
             generateCategoryHTML(category, fields)
           ).join('')}
 
+          ${attachments.length > 0 ? `
+            <div style="margin-bottom: 15px;">
+              <h4 style="color: #2c3e50; margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid #dee2e6; padding-bottom: 5px;">Attachments</h4>
+              <div style="padding-left: 10px;">
+                ${attachments.map(attachment => {
+                  const filename = attachment.originalname || attachment.filename || attachment.url?.split('/').pop() || 'attachment';
+                  return `<p style="margin: 3px 0; font-size: 13px;"><strong>📎</strong> ${filename}</p>`;
+                }).join('')}
+              </div>
+            </div>
+          ` : ''}
+
           <div style="margin-top: 20px; padding: 10px; background-color: #e9ecef; border-radius: 3px; font-size: 12px; color: #6c757d;">
             <strong>Note:</strong> Reply directly to this email to respond to the employee.
           </div>
         </div>
       `;
 
-      // Prepare attachments - convert URLs to file paths
+      // Prepare attachments - handle both buffer and URL formats
       const emailAttachments = attachments.map(attachment => {
-        if (attachment.url) {
+        if (attachment.buffer && attachment.originalname) {
+          // Handle buffer-based attachments (from Form.js)
+          const processedAttachment = {
+            filename: attachment.originalname,
+            content: Buffer.from(attachment.buffer),
+            contentType: attachment.mimetype || 'application/octet-stream'
+          };
+          
+          console.log('📎 Processing buffer attachment:', attachment.originalname, 'Size:', attachment.buffer.length);
+          return processedAttachment;
+        } else if (attachment.url) {
           // Convert URL to local file path
-          // URL format: http://172.20.9.60:3001/download/pictures/filename.jpg
+          // URL format: http://localhost:5000/download/pictures/filename.jpg
           // Local path: uploads/pictures/filename.jpg
           const urlParts = attachment.url.split('/');
           const filename = urlParts[urlParts.length - 1];
           const folder = urlParts[urlParts.length - 2];
           
+          // Handle different URL formats
+          let filePath;
+          if (folder === 'download') {
+            // URL format: http://localhost:5000/download/filename.jpg
+            filePath = `uploads/${filename}`;
+          } else {
+            // URL format: http://localhost:5000/download/pictures/filename.jpg
+            filePath = `uploads/${folder}/${filename}`;
+          }
+          
           const processedAttachment = {
-            filename: attachment.filename || 'attachment',
-            path: `uploads/${folder}/${filename}`,
+            filename: attachment.filename || filename,
+            path: filePath,
             cid: attachment.cid || undefined
           };
           
-          console.log('📎 Processing attachment:', attachment.url, '->', processedAttachment.path);
+          console.log('📎 Processing URL attachment:', attachment.url, '->', processedAttachment.path);
+          console.log('📎 Attachment details:', {
+            originalUrl: attachment.url,
+            filename: processedAttachment.filename,
+            path: processedAttachment.path,
+            exists: require('fs').existsSync(processedAttachment.path)
+          });
           return processedAttachment;
         } else if (attachment.path) {
           return {
@@ -173,6 +210,30 @@ class EmailService {
       }).filter(attachment => attachment !== null);
       
       console.log('📎 Final email attachments:', JSON.stringify(emailAttachments, null, 2));
+      
+      // Verify attachment files exist (only for path-based attachments)
+      const fs = require('fs');
+      const path = require('path');
+      const validAttachments = emailAttachments.filter(attachment => {
+        if (attachment.content) {
+          // Buffer-based attachment - always valid
+          console.log('✅ Buffer attachment ready:', attachment.filename);
+          return true;
+        } else if (attachment.path) {
+          // Path-based attachment - check if file exists
+          const fullPath = path.resolve(attachment.path);
+          const exists = fs.existsSync(fullPath);
+          if (!exists) {
+            console.error('❌ Attachment file not found:', fullPath);
+          } else {
+            console.log('✅ Attachment file found:', fullPath);
+          }
+          return exists;
+        }
+        return false;
+      });
+      
+      console.log('📎 Valid attachments count:', validAttachments.length, 'out of', emailAttachments.length);
 
       // Email options
       const mailOptions = {
@@ -182,7 +243,7 @@ class EmailService {
         replyTo: email, // Set reply-to as the user's email for threading
         subject: subject,
         html: htmlBody,
-        attachments: emailAttachments,
+        attachments: validAttachments,
         headers: {
           'X-Original-Sender': email, // Custom header to identify the real sender
           'X-Sender-Name': name,

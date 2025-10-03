@@ -79,7 +79,7 @@ const FormVisibleResult = ({ onBack }) => (
 
 // Main App Content Component (separated for authentication wrapper)
 const MainAppContent = () => {
-  const { userEmail, logout } = useAuth();
+  const { userEmail, userName, userPhoto, logout } = useOAuth();
   const [loading, setLoading] = useState(true);
   const [buttonsVisible, setButtonsVisible] = useState(false);
   const [subButtonsVisible, setSubButtonsVisible] = useState(false);
@@ -758,6 +758,7 @@ const MainAppContent = () => {
               onQuickAccessClick={handleQuickAccessClick}
               userEmail={userEmail}
               userName={userName}
+              userPhoto={userPhoto}
               onLogout={logout}
             />
             <div className="professional-main no-sidebar">
@@ -787,6 +788,7 @@ const MainAppContent = () => {
             onQuickAccessClick={handleQuickAccessClick}
             userEmail={userEmail}
             userName={userName}
+            userPhoto={userPhoto}
             onLogout={logout}
           />
           
@@ -1034,7 +1036,7 @@ const MainAppContent = () => {
 
 // Main App Component with OAuth Authentication
 function App() {
-  const { isAuthenticated, isLoading, userEmail, userName, logout } = useOAuth();
+  const { isAuthenticated, isLoading } = useOAuth();
 
   // Show loading while checking authentication status
   if (isLoading) {

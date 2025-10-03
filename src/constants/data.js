@@ -96,14 +96,14 @@ export const EMAILJS_CONFIG = {
   publicKey: 'Kd-X-TB6CDLGtM7ir'
 };
 
-export const UPLOAD_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';
+export const UPLOAD_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000';
 
 // Helper function to get the correct API URL
 export const getApiUrl = (endpoint) => {
   if (process.env.NODE_ENV === 'production') {
     return `/api/${endpoint}`;
   } else {
-    return `http://localhost:3001/${endpoint}`;
+    return `http://localhost:5000/${endpoint}`;
   }
 };
 
