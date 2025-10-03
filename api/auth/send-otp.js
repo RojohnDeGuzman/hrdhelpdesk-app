@@ -5,13 +5,23 @@ const rateLimiter = require('../rateLimiter');
 const otpStorage = new Map();
 
 // Email configuration
-const transporter = nodemailer.createTransporter({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+let transporter;
+try {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.error('Missing email credentials: EMAIL_USER and EMAIL_PASS must be set');
+    throw new Error('Email configuration missing');
   }
-});
+  
+  transporter = nodemailer.createTransporter({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+} catch (error) {
+  console.error('Failed to create email transporter:', error);
+}
 
 // Rate limiter for OTP requests
 const otpLimiter = rateLimiter({
@@ -65,6 +75,15 @@ module.exports = async (req, res) => {
   // Apply rate limiting
   otpLimiter(req, res, async () => {
     try {
+      // Check if email transporter is configured
+      if (!transporter) {
+        console.error('Email transporter not configured');
+        return res.status(500).json({
+          success: false,
+          message: 'Email service not configured. Please contact administrator.'
+        });
+      }
+
       const { email } = req.body;
       
       // Validate email
@@ -152,9 +171,16 @@ module.exports = async (req, res) => {
 
     } catch (error) {
       console.error('Error sending OTP:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        email: req.body?.email
+      });
+      
       res.status(500).json({
         success: false,
-        message: 'Failed to send OTP. Please try again later.'
+        message: 'Failed to send OTP. Please try again later.',
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
     }
   });
