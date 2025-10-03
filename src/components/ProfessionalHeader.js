@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ProfessionalHeader = ({ onSearch, searchTerm, onHomeClick, onQuickAccessClick, userEmail, onLogout }) => {
+const ProfessionalHeader = ({ onSearch, searchTerm, onHomeClick, onQuickAccessClick, userEmail, userName, onLogout }) => {
 
   return (
     <header className="professional-header">
@@ -48,7 +48,7 @@ const ProfessionalHeader = ({ onSearch, searchTerm, onHomeClick, onQuickAccessCl
               </div>
               <div className="user-details">
                 <div className="user-name">
-                  {userEmail.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  {userName || userEmail.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                 </div>
                 <div className="user-email">
                   <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">

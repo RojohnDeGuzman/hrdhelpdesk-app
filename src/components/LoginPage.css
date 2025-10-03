@@ -756,3 +756,68 @@
   cursor: not-allowed;
   transform: none;
 }
+
+/* Microsoft Login Button */
+.microsoft-login-button {
+  width: 100%;
+  padding: 16px 24px;
+  background: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 120, 212, 0.3);
+}
+
+.microsoft-login-button:hover {
+  background: #106ebe;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 120, 212, 0.4);
+}
+
+.microsoft-login-button:active {
+  transform: translateY(0);
+}
+
+.microsoft-login-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.microsoft-login-button svg {
+  flex-shrink: 0;
+}
+
+/* Login Description */
+.login-description {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.login-description p {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+/* Error Message */
+.error-message {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+}

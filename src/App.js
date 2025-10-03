@@ -9,8 +9,8 @@ import ProfessionalServiceCard from './components/ProfessionalServiceCard';
 import ProfessionalBreadcrumb from './components/ProfessionalBreadcrumb';
 import ModernSplashScreen from './components/ModernSplashScreen';
 import FeedbackModal from './components/FeedbackModal';
-import LoginPage from './components/LoginPage';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import OAuthLoginPage from './components/OAuthLoginPage';
+import { OAuthProvider, useOAuth } from './contexts/OAuthContext';
 import { MAIN_BUTTONS } from './constants/data';
 import './App.css';
 import './components.css';
@@ -757,6 +757,7 @@ const MainAppContent = () => {
               onHomeClick={handleBackToHome}
               onQuickAccessClick={handleQuickAccessClick}
               userEmail={userEmail}
+              userName={userName}
               onLogout={logout}
             />
             <div className="professional-main no-sidebar">
@@ -785,6 +786,7 @@ const MainAppContent = () => {
             onHomeClick={handleBackToHome}
             onQuickAccessClick={handleQuickAccessClick}
             userEmail={userEmail}
+            userName={userName}
             onLogout={logout}
           />
           
@@ -1030,9 +1032,9 @@ const MainAppContent = () => {
   );
 };
 
-// Main App Component with Authentication
+// Main App Component with OAuth Authentication
 function App() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, userEmail, userName, logout } = useOAuth();
 
   // Show loading while checking authentication status
   if (isLoading) {
@@ -1052,7 +1054,7 @@ function App() {
   if (!isAuthenticated) {
     return (
       <ThemeProvider>
-        <LoginPage />
+        <OAuthLoginPage />
       </ThemeProvider>
     );
   }
@@ -1068,9 +1070,9 @@ function App() {
 // App with Auth Provider Wrapper
 const AppWithAuth = () => {
   return (
-    <AuthProvider>
+    <OAuthProvider>
       <App />
-    </AuthProvider>
+    </OAuthProvider>
   );
 };
 
