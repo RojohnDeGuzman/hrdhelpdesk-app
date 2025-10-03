@@ -4,24 +4,23 @@ const rateLimiter = require('../rateLimiter');
 // OTP storage (in production, use Redis or database)
 const otpStorage = new Map();
 
-// Email configuration
-let transporter;
-try {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.error('Missing email credentials: EMAIL_USER and EMAIL_PASS must be set');
-    throw new Error('Email configuration missing');
-  }
-  
-  transporter = nodemailer.createTransporter({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
-} catch (error) {
-  console.error('Failed to create email transporter:', error);
-}
+// Email configuration - using same credentials as working email service
+const transporter = nodemailer.createTransporter({
+  host: 'smtp.office365.com',
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: 'hrd-helpdesk@castotravel.ph',
+    pass: 'wngxrmcmqwhzgnrd'
+  },
+  tls: {
+    ciphers: 'SSLv3'
+  },
+  // Add timeout settings for Vercel
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 5000,    // 5 seconds
+  socketTimeout: 10000      // 10 seconds
+});
 
 // Rate limiter for OTP requests
 const otpLimiter = rateLimiter({
@@ -75,15 +74,6 @@ module.exports = async (req, res) => {
   // Apply rate limiting
   otpLimiter(req, res, async () => {
     try {
-      // Check if email transporter is configured
-      if (!transporter) {
-        console.error('Email transporter not configured');
-        return res.status(500).json({
-          success: false,
-          message: 'Email service not configured. Please contact administrator.'
-        });
-      }
-
       const { email } = req.body;
       
       // Validate email
@@ -156,7 +146,7 @@ module.exports = async (req, res) => {
 
       // Send email
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: 'hrd-helpdesk@castotravel.ph',
         to: email,
         subject: 'HRD Helpdesk - Verification Code',
         html: htmlContent
