@@ -5,6 +5,12 @@
     },
     "api/send-feedback.js": {
       "maxDuration": 30
+    },
+    "api/auth/send-otp.js": {
+      "maxDuration": 30
+    },
+    "api/auth/verify-otp.js": {
+      "maxDuration": 30
     }
   },
   "rewrites": [

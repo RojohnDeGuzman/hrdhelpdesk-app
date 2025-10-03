@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DIVISION_MANAGERS, UPLOAD_SERVER_URL, getApiUrl } from '../constants/data';
+import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import '../styles/modern-forms.css';
 
@@ -119,6 +120,7 @@ const EnhancedInput = ({ fieldName, label, type = "text", required = false, plac
 };
 
 const Form = ({ title, onBack, onSubmitSuccess }) => {
+  const { userEmail } = useAuth();
   const [attachment, setAttachment] = useState(null);
   const [picture, setPicture] = useState(null);
   const [signature, setSignature] = useState(null);
@@ -126,6 +128,13 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
   const [supportingDocuments, setSupportingDocuments] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorModal, setErrorModal] = useState({ show: false, message: '', title: '', type: 'error' });
+
+  // Auto-fill email when userEmail changes
+  useEffect(() => {
+    if (userEmail) {
+      setFormData(prev => ({ ...prev, email: userEmail }));
+    }
+  }, [userEmail]);
 
   // Professional Error Modal Component
   const ErrorModal = () => {
@@ -163,7 +172,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
   // Direct form state management - no hooks, no validation
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    email: userEmail || '', // Auto-fill with authenticated user's email
     divisionmanager: '',
     description: '',
     location: '',
@@ -530,7 +539,12 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
       };
 
       // Use the correct API URL based on environment
-      const response = await axios.post(getApiUrl('send-email'), emailData);
+      const response = await axios.post(getApiUrl('send-email'), emailData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('hrd_auth_token') || 'authenticated'}`,
+          'X-Auth-Token': localStorage.getItem('hrd_auth_status') || 'authenticated'
+        }
+      });
 
       if (response.status === 200 && response.data.success) {
         if (onSubmitSuccess) {

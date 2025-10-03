@@ -582,6 +582,11 @@
   color: #374151;
 }
 
+/* Dark theme attachment name */
+[data-theme="dark"] .attachment-name {
+  color: #e5e7eb;
+}
+
 .attachment-size {
   color: #6b7280;
   font-size: 0.875rem;
@@ -2060,11 +2065,21 @@
   max-width: 120px;
 }
 
+/* Dark theme attachment text */
+[data-theme="dark"] .attachment-name-outlook {
+  color: #e5e7eb;
+}
+
 .attachment-size {
   color: #6b7280;
   font-size: 0.6875rem;
   font-weight: 400;
   flex-shrink: 0;
+}
+
+/* Dark theme attachment size text */
+[data-theme="dark"] .attachment-size {
+  color: #9ca3af;
 }
 
 .attachment-actions-outlook {
@@ -2189,6 +2204,11 @@
   text-overflow: ellipsis;
   margin-right: 0.375rem;
   max-width: 100px;
+}
+
+/* Dark theme compact attachment name */
+[data-theme="dark"] .attachment-name-compact {
+  color: #e5e7eb;
 }
 
 .download-btn-compact {

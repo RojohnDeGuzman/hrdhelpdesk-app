@@ -2,6 +2,7 @@ const EmailServiceV2 = require('./emailServiceV2');
 const { validateFile } = require('./fileValidation');
 const { validateFormData, sanitizeFormData } = require('./inputSanitizer');
 const rateLimiter = require('./rateLimiter');
+const authenticateRequest = require('./auth-middleware');
 
 // Initialize email service
 const emailService = new EmailServiceV2();
@@ -55,8 +56,10 @@ const limiter = rateLimiter({
 });
 
 module.exports = async (req, res) => {
-  // Apply rate limiting
-  limiter(req, res, async () => {
+  // Apply authentication middleware
+  authenticateRequest(req, res, () => {
+    // Apply rate limiting
+    limiter(req, res, async () => {
     // Set CORS headers - restrict to your domain only
     const allowedOrigins = [
       'https://hrdhelpdesk-app.vercel.app',
@@ -198,5 +201,6 @@ module.exports = async (req, res) => {
         error: error.message
       });
     }
+    });
   });
 }

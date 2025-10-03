@@ -4,11 +4,13 @@ import DownloadableForms from './components/DownloadableForms';
 import ErrorBoundary from './components/ErrorBoundary';
 import ThemeProvider, { useTheme } from './components/ThemeProvider';
 import ProfessionalHeader from './components/ProfessionalHeader';
-import ProfessionalSidebar from './components/ProfessionalSidebar';
+// import ProfessionalSidebar from './components/ProfessionalSidebar'; // Currently unused
 import ProfessionalServiceCard from './components/ProfessionalServiceCard';
 import ProfessionalBreadcrumb from './components/ProfessionalBreadcrumb';
 import ModernSplashScreen from './components/ModernSplashScreen';
 import FeedbackModal from './components/FeedbackModal';
+import LoginPage from './components/LoginPage';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { MAIN_BUTTONS } from './constants/data';
 import './App.css';
 import './components.css';
@@ -75,7 +77,9 @@ const FormVisibleResult = ({ onBack }) => (
   </div>
 );
 
-function App() {
+// Main App Content Component (separated for authentication wrapper)
+const MainAppContent = () => {
+  const { userEmail, logout } = useAuth();
   const [loading, setLoading] = useState(true);
   const [buttonsVisible, setButtonsVisible] = useState(false);
   const [subButtonsVisible, setSubButtonsVisible] = useState(false);
@@ -420,9 +424,6 @@ function App() {
     'Modified Pag-IBIG (MP2)': [
       { text: "Modified Pag-IBIG (MP2)" },
     ],
-    'Government Statutory Benefits': [
-      { text: "Government Statutory Benefits" },
-    ],
   }), []);
 
   const handleNavigate = useCallback((path) => {
@@ -755,6 +756,8 @@ function App() {
               searchTerm={searchTerm}
               onHomeClick={handleBackToHome}
               onQuickAccessClick={handleQuickAccessClick}
+              userEmail={userEmail}
+              onLogout={logout}
             />
             <div className="professional-main no-sidebar">
               <main className="professional-content">
@@ -781,6 +784,8 @@ function App() {
             searchTerm={searchTerm}
             onHomeClick={handleBackToHome}
             onQuickAccessClick={handleQuickAccessClick}
+            userEmail={userEmail}
+            onLogout={logout}
           />
           
           <div className="professional-main no-sidebar">
@@ -1023,6 +1028,50 @@ function App() {
       </ErrorBoundary>
     </ThemeProvider>
   );
+};
+
+// Main App Component with Authentication
+function App() {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Show loading while checking authentication status
+  if (isLoading) {
+    return (
+      <ThemeProvider>
+        <div className="app-loading">
+          <div className="loading-spinner">
+            <div className="spinner"></div>
+            <p>Loading...</p>
+          </div>
+        </div>
+      </ThemeProvider>
+    );
+  }
+
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <ThemeProvider>
+        <LoginPage />
+      </ThemeProvider>
+    );
+  }
+
+  // Show main app if authenticated
+  return (
+    <ThemeProvider>
+      <MainAppContent />
+    </ThemeProvider>
+  );
 }
 
-export default App;
+// App with Auth Provider Wrapper
+const AppWithAuth = () => {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+};
+
+export default AppWithAuth;

@@ -51,14 +51,36 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Enable CORS for all routes
-app.use(cors());
+// Enable CORS for specific origins only
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5000'], // Only allow specific origins
+  credentials: true
+}));
 
 // Parse JSON bodies
 app.use(express.json());
 
+// Authentication middleware
+const authenticateRequest = (req, res, next) => {
+  // Check for authentication token in headers
+  const authHeader = req.headers.authorization;
+  const authToken = req.headers['x-auth-token'];
+  
+  // For now, we'll use a simple token check
+  // In production, implement proper JWT validation
+  if (!authHeader && !authToken) {
+    return res.status(401).json({
+      success: false,
+      message: 'Authentication required'
+    });
+  }
+  
+  // Basic validation - in production, validate against your auth system
+  next();
+};
+
 // Handle file upload
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', authenticateRequest, upload.single('file'), (req, res) => {
   let fileUrl = null;
 
   if (req.file) {
@@ -91,7 +113,7 @@ app.get('/download/:folder/:filename', (req, res) => {
 });
 
 // Email endpoint for HRD Helpdesk forms
-app.post('/send-email', async (req, res) => {
+app.post('/send-email', authenticateRequest, async (req, res) => {
   try {
     const { formData, attachments = [] } = req.body;
     
@@ -150,7 +172,7 @@ app.get('/test-email', async (req, res) => {
 });
 
 // Feedback submission endpoint
-app.post('/send-feedback', async (req, res) => {
+app.post('/send-feedback', authenticateRequest, async (req, res) => {
   try {
     const { rating, feedback, name, email, timestamp } = req.body;
 
