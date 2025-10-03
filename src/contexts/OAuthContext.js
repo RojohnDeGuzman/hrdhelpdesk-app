@@ -20,7 +20,11 @@ export const OAuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch('/api/auth/oauth-verify', {
+        const oauthUrl = process.env.NODE_ENV === 'production' 
+          ? '/api/auth/oauth-verify' 
+          : 'http://localhost:5001/api/auth/oauth-verify';
+          
+        const response = await fetch(oauthUrl, {
           method: 'GET',
           credentials: 'include'
         });
@@ -45,12 +49,19 @@ export const OAuthProvider = ({ children }) => {
 
   const login = () => {
     // Redirect to OAuth login
-    window.location.href = '/api/auth/oauth-login';
+    const oauthUrl = process.env.NODE_ENV === 'production' 
+      ? '/api/auth/oauth-login' 
+      : 'http://localhost:5001/api/auth/oauth-login';
+    window.location.href = oauthUrl;
   };
 
   const logout = async () => {
     try {
-      await fetch('/api/auth/oauth-logout', {
+      const oauthUrl = process.env.NODE_ENV === 'production' 
+        ? '/api/auth/oauth-logout' 
+        : 'http://localhost:5001/api/auth/oauth-logout';
+        
+      await fetch(oauthUrl, {
         method: 'POST',
         credentials: 'include'
       });
