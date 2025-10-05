@@ -58,6 +58,8 @@ export const OAuthProvider = ({ children }) => {
             setIsAuthenticated(true);
             setUserEmail(data.user.email);
             setUserName(data.user.name);
+            console.log('🔍 Frontend - User photo received:', data.user.photo ? 'Yes' : 'No');
+            console.log('🔍 Frontend - Photo data length:', data.user.photo ? data.user.photo.length : 0);
             setUserPhoto(data.user.photo);
           }
         } else {

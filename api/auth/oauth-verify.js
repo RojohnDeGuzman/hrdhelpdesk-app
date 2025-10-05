@@ -51,6 +51,9 @@ module.exports = async (req, res) => {
     
     // Get profile photo from memory storage
     const userPhoto = global.userPhotos?.[sessionToken] || null;
+    console.log('🔍 Verify - User photo found:', userPhoto ? 'Yes' : 'No');
+    console.log('🔍 Verify - Global userPhotos keys:', global.userPhotos ? Object.keys(global.userPhotos) : 'No global userPhotos');
+    console.log('🔍 Verify - Session token for photo lookup:', sessionToken);
     
     // In production, validate session token against database/Redis
     // For now, just check if cookies exist

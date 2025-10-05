@@ -107,17 +107,23 @@ module.exports = async (req, res) => {
         },
       });
       
+      console.log('📸 Photo response status:', photoResponse.status);
+      console.log('📸 Photo response headers:', Object.fromEntries(photoResponse.headers.entries()));
+      
       if (photoResponse.ok) {
         const photoBuffer = await photoResponse.arrayBuffer();
         const photoBase64 = Buffer.from(photoBuffer).toString('base64');
         const contentType = photoResponse.headers.get('content-type') || 'image/jpeg';
         profilePhoto = `data:${contentType};base64,${photoBase64}`;
-        console.log('✅ User profile photo fetched successfully');
+        console.log('✅ User profile photo fetched successfully, size:', photoBase64.length, 'bytes');
+        console.log('📸 Content type:', contentType);
       } else {
-        console.log('⚠️ No profile photo available, using default avatar');
+        console.log('⚠️ No profile photo available, status:', photoResponse.status);
+        console.log('📸 Photo response text:', await photoResponse.text());
       }
     } catch (error) {
       console.log('⚠️ Error fetching profile photo:', error.message);
+      console.log('📸 Error details:', error);
     }
     
     // Validate email domain
