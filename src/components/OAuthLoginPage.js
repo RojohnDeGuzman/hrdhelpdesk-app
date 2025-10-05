@@ -48,7 +48,7 @@ const OAuthLoginPage = () => {
   };
 
   return (
-    <div className="login-page">
+    <div className="login-page" style={{ border: '2px solid red' }}>
       <div className="login-background">
         <div className="login-particle particle-1"></div>
         <div className="login-particle particle-2"></div>
