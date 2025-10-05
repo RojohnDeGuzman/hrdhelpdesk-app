@@ -41,6 +41,9 @@ module.exports = async (req, res) => {
       });
     }
     
+    // Get profile photo from memory storage
+    const userPhoto = global.userPhotos?.[sessionToken] || null;
+    
     // In production, validate session token against database/Redis
     // For now, just check if cookies exist
     
@@ -49,6 +52,7 @@ module.exports = async (req, res) => {
       user: {
         email: decodeURIComponent(userEmail),
         name: userName ? decodeURIComponent(userName) : null,
+        photo: userPhoto,
         authenticated: true
       }
     });

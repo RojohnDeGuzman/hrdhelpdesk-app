@@ -29,6 +29,12 @@ module.exports = async (req, res) => {
   }
 
   try {
+    // Get session token to clear photo from memory
+    const sessionToken = req.headers.cookie?.match(/hrd_session=([^;]+)/)?.[1];
+    if (sessionToken && global.userPhotos) {
+      delete global.userPhotos[sessionToken];
+    }
+    
     // Clear session cookies
     res.setHeader('Set-Cookie', [
       'hrd_session=; HttpOnly; Secure; SameSite=Strict; Max-Age=0',
