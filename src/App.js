@@ -1045,7 +1045,10 @@ function App() {
     return (
       <ThemeProvider>
         <UnifiedLoadingScreen 
-          onComplete={() => {}} 
+          onComplete={() => {
+            // Loading complete, let the app continue
+            console.log('🔍 Unified loading screen completed');
+          }} 
           isAuthenticating={true}
         />
       </ThemeProvider>

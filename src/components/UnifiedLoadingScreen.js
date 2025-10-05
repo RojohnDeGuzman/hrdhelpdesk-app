@@ -46,16 +46,16 @@ const UnifiedLoadingScreen = ({ onComplete, isAuthenticating = false }) => {
       });
     }, 150);
 
-    // Complete loading after 3 seconds
+    // Complete loading after 2.5 seconds for better timing
     const completeTimer = setTimeout(() => {
       setLoadingText('Ready!');
       setTimeout(() => {
         setIsVisible(false);
         setTimeout(() => {
           onComplete();
-        }, 600); // Wait for fade out animation
-      }, 300);
-    }, 3000);
+        }, 500); // Wait for fade out animation
+      }, 200);
+    }, 2500);
 
     return () => {
       clearInterval(progressInterval);
