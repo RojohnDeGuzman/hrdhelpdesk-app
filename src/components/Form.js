@@ -771,9 +771,9 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
     const formConfigs = {
       // Personal Information Forms
       'Change of address or contact number': [
-        <EnhancedInput formData={formData} updateField={updateField} key="employeeId" fieldName="employeeId" label="Employee ID" required placeholder="Enter your employee ID" formData={formData} updateField={updateField} />,
-        <EnhancedInput formData={formData} updateField={updateField} key="phoneNumber" fieldName="phoneNumber" label="New Phone Number" type="tel" required placeholder="Enter new phone number" formData={formData} updateField={updateField} />,
-        <EnhancedInput formData={formData} updateField={updateField} key="address" fieldName="address" label="New Address" type="textarea" required placeholder="Enter your new address" formData={formData} updateField={updateField} />
+        <EnhancedInput formData={formData} updateField={updateField} key="employeeId" fieldName="employeeId" label="Employee ID" required placeholder="Enter your employee ID" />,
+        <EnhancedInput formData={formData} updateField={updateField} key="phoneNumber" fieldName="phoneNumber" label="New Phone Number" type="tel" required placeholder="Enter new phone number" />,
+        <EnhancedInput formData={formData} updateField={updateField} key="address" fieldName="address" label="New Address" type="textarea" required placeholder="Enter your new address" />
       ],
       'Update emergency contact details': [
         <EnhancedInput formData={formData} updateField={updateField} key="emergencyContact" fieldName="emergencyContact" label="Emergency Contact Name" required placeholder="Enter emergency contact name" />,
