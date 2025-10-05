@@ -90,6 +90,7 @@ export const OAuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    console.log('🚪 Starting logout process...');
     setIsLoggingOut(true);
     
     try {
@@ -97,22 +98,28 @@ export const OAuthProvider = ({ children }) => {
         ? '/api/auth/oauth-logout' 
         : 'http://localhost:5001/api/auth/oauth-logout';
         
-      await fetch(oauthUrl, {
+      console.log('🚪 Calling logout endpoint:', oauthUrl);
+      const response = await fetch(oauthUrl, {
         method: 'POST',
         credentials: 'include'
       });
+      
+      console.log('🚪 Logout response:', response.status, response.statusText);
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
       // Clear local state
+      console.log('🚪 Clearing local state...');
       setIsAuthenticated(false);
       setUserEmail('');
       setUserName('');
       setUserPhoto(null);
       setIsLoading(false);
+      setAuthCheckFailed(false);
       
-      // Redirect to login page
-      window.location.href = '/';
+      // Force reload to clear any cached state
+      console.log('🚪 Reloading page...');
+      window.location.reload();
     }
   };
 
