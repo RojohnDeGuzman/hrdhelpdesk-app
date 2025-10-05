@@ -46,7 +46,7 @@
   will-change: transform;
   filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.4));
   transition: all 0.3s ease;
-  border-radius: 24px;
+  border-radius: 0;
   display: block;
   margin: 0 auto;
   position: relative;
