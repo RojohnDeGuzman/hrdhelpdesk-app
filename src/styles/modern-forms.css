@@ -1699,6 +1699,15 @@
   font-weight: 600;
 }
 
+/* Ensure all success modal text is white */
+.error-modal.success .error-modal-body {
+  color: #ffffff !important;
+}
+
+.error-modal.success .error-modal-body p {
+  color: #ffffff !important;
+}
+
 .error-modal-footer {
   padding: 16px 24px 24px 24px;
   display: flex;
