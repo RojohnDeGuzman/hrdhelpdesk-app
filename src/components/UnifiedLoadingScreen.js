@@ -72,14 +72,14 @@ const UnifiedLoadingScreen = ({ onComplete, isAuthenticating = false }) => {
         <div className="loading-logo">
           <div className="logo-container">
               <img 
-                src="/castologobg.png" 
+                src="/castologobg1.png" 
                 alt="Casto Travel Logo" 
                 className="loading-logo-image"
                 loading="eager"
                 decoding="async"
                 onError={(e) => {
                   console.log('Loading logo failed to load:', e.target.src);
-                  e.target.src = '/castologobg1.png';
+                  e.target.src = '/castologobg.png';
                 }}
               />
               <div className="logo-ring"></div>
