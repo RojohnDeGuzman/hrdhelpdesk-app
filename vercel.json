@@ -24,5 +24,29 @@
       "source": "/api/(.*)",
       "destination": "/api/$1"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "hrdhelpdesk-app-git-main-rojohn-michael-de-guzmans-projects.vercel.app"
+        }
+      ],
+      "destination": "https://hrdhelpdesk-app.vercel.app/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "hrdhelpdesk-daltpmhob-rojohn-michael-de-guzmans-projects.vercel.app"
+        }
+      ],
+      "destination": "https://hrdhelpdesk-app.vercel.app/$1",
+      "permanent": true
+    }
   ]
 }
