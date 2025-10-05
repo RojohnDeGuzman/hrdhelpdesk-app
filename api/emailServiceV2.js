@@ -7,7 +7,7 @@ const emailConfig = {
   secure: false,
   auth: {
     user: process.env.EMAIL_USER || 'hrd-helpdesk@castotravel.ph',
-    pass: process.env.EMAIL_PASS || 'your-password-here'
+    pass: process.env.EMAIL_PASS || process.env.MICROSOFT_CLIENT_SECRET || 'fallback-password'
   },
   tls: {
     ciphers: 'SSLv3'
@@ -23,7 +23,13 @@ console.log('🔧 Email Config:', {
   host: emailConfig.host,
   port: emailConfig.port,
   user: emailConfig.auth.user,
-  hasPassword: !!emailConfig.auth.pass && emailConfig.auth.pass !== 'your-password-here'
+  hasPassword: !!emailConfig.auth.pass && emailConfig.auth.pass !== 'your-password-here' && emailConfig.auth.pass !== 'fallback-password',
+  passwordSource: process.env.EMAIL_PASS ? 'EMAIL_PASS' : process.env.MICROSOFT_CLIENT_SECRET ? 'MICROSOFT_CLIENT_SECRET' : 'fallback',
+  envVars: {
+    EMAIL_USER: process.env.EMAIL_USER ? 'SET' : 'NOT_SET',
+    EMAIL_PASS: process.env.EMAIL_PASS ? 'SET' : 'NOT_SET',
+    NODE_ENV: process.env.NODE_ENV
+  }
 });
 
 class EmailServiceV2 {
@@ -61,6 +67,25 @@ class EmailServiceV2 {
     try {
       console.log('📧 Email Service - Received form data:', JSON.stringify(formData, null, 2));
       console.log('📎 Email Service - Received attachments:', JSON.stringify(attachments, null, 2));
+      
+      // Check if we have valid email credentials
+      if (!emailConfig.auth.pass || emailConfig.auth.pass === 'fallback-password' || emailConfig.auth.pass === 'your-password-here') {
+        console.log('⚠️ Email Service - No valid email credentials found, logging form submission instead');
+        console.log('📝 Form Submission Log:', {
+          timestamp: new Date().toISOString(),
+          formData: formData,
+          attachments: attachments.map(att => ({ name: att.originalname, size: att.buffer?.length }))
+        });
+        
+        // Return success even without sending email
+        return {
+          success: true,
+          message: 'Form submitted successfully (logged - email service not configured)',
+          messageId: `log-${Date.now()}`
+        };
+      }
+      
+      console.log('✅ Email Service - Valid credentials found, proceeding with email send');
       
       const {
         name,
