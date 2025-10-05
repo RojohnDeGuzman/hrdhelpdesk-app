@@ -91,7 +91,8 @@ class EmailServiceV2 {
         name,
         email,
         divisionmanager,
-        subject,
+        title,
+        subject = title, // Use title as fallback for subject
         description,
         formType,
         priority = 'Normal',
@@ -108,7 +109,7 @@ class EmailServiceV2 {
         to: 'hrd-helpdesk@castotravel.ph', // Your osTicket email
         cc: email, // CC the user
         replyTo: email, // Set reply-to as user's email
-        subject: `${name} - ${subject} [HRD Helpdesk]`,
+        subject: `${name} - ${title || subject} [HRD Helpdesk]`,
         html: emailContent,
         // Add custom headers for osTicket integration
         headers: {
@@ -166,7 +167,8 @@ class EmailServiceV2 {
       name,
       email,
       divisionmanager,
-      subject,
+      title,
+      subject = title, // Use title as fallback for subject
       description,
       formType,
       priority = 'Normal',
@@ -378,11 +380,11 @@ class EmailServiceV2 {
       `;
     }
 
-    // Add subject if available
-    if (subject && subject.trim() !== '') {
+    // Add title/subject if available
+    if ((title || subject) && (title || subject).trim() !== '') {
       html += `
                 <div class="field-line">
-                  <span class="label">Subject:</span> <span class="value">${subject}</span>
+                  <span class="label">Request Title:</span> <span class="value">${title || subject}</span>
                 </div>
       `;
     }
@@ -409,7 +411,7 @@ class EmailServiceV2 {
     `;
 
     // Add other form fields dynamically (exclude unwanted fields and empty values)
-    const excludedFields = ['attachments', 'ntLogin', 'userVerification', 'title', 'formType', 'name', 'email', 'divisionmanager', 'subject', 'description'];
+    const excludedFields = ['attachments', 'ntLogin', 'userVerification', 'title', 'subject', 'formType', 'name', 'email', 'divisionmanager', 'description'];
     const meaningfulFields = ['reason', 'adjustmentType', 'salaryPeriod', 'employeeName', 'currentDept', 'effectiveDate', 'fromDate', 'toDate', 'requestedAgent', 'funddepartment', 'agentName', 'fromDept', 'toDept', 'emergencyContact', 'contactNumber', 'address', 'ccEmail'];
     
     console.log('📧 Email Service - Processing other fields:', Object.keys(otherFields));
