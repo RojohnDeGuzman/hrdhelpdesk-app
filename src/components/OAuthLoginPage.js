@@ -83,7 +83,6 @@ const OAuthLoginPage = () => {
               }}
             />
             <h1 className="login-title">HRD HELPDESK</h1>
-            <p className="login-subtitle">Employee Portal Access</p>
           </div>
 
           <div className="login-form">

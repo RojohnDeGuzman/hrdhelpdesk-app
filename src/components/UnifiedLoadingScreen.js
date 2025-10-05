@@ -64,6 +64,13 @@ const UnifiedLoadingScreen = ({ onComplete, isAuthenticating = false }) => {
     };
   }, [onComplete, loadingMessages]);
 
+  // Call onComplete when component becomes invisible
+  useEffect(() => {
+    if (!isVisible) {
+      onComplete();
+    }
+  }, [isVisible, onComplete]);
+
   if (!isVisible) return null;
 
   return (
