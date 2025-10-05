@@ -10,6 +10,7 @@ import ProfessionalBreadcrumb from './components/ProfessionalBreadcrumb';
 import ModernSplashScreen from './components/ModernSplashScreen';
 import FeedbackModal from './components/FeedbackModal';
 import OAuthLoginPage from './components/OAuthLoginPage';
+import AuthLoadingScreen from './components/AuthLoadingScreen';
 import { OAuthProvider, useOAuth } from './contexts/OAuthContext';
 import { MAIN_BUTTONS } from './constants/data';
 import './App.css';
@@ -19,6 +20,7 @@ import './styles/professional-design.css';
 import './styles/splash-screen.css';
 import './styles/modern-forms.css';
 import './styles/accessibility.css';
+import './styles/auth-loading.css';
 
 // Theme Toggle Button Component
 const ThemeToggleButton = () => {
@@ -1038,11 +1040,11 @@ const MainAppContent = () => {
 function App() {
   const { isAuthenticated, isLoading, authCheckFailed } = useOAuth();
 
-  // Show OAuth login page while checking authentication status
+  // Show auth loading screen while checking authentication status
   if (isLoading && !authCheckFailed) {
     return (
       <ThemeProvider>
-        <OAuthLoginPage />
+        <AuthLoadingScreen />
       </ThemeProvider>
     );
   }
