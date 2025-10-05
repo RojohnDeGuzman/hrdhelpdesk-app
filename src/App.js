@@ -1045,13 +1045,13 @@ function App() {
         <div className="app-loading">
           <div className="loading-spinner">
             <img 
-              src="/castologobg1.png" 
+              src="/castologobg.png" 
               alt="Casto Travel Logo" 
               className="loading-logo"
               onError={(e) => {
                 console.error('Loading logo failed to load:', e.target.src);
-                if (e.target.src.includes('castologobg1.png')) {
-                  e.target.src = '/castologobg.png';
+                if (e.target.src.includes('castologobg.png')) {
+                  e.target.src = '/castologobg1.png';
                 } else {
                   e.target.style.display = 'none';
                 }
