@@ -601,7 +601,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
   };
 
   const handleReferralClick = () => {
-    window.location.href = "https://forms.office.com/Pages/ResponsePage.aspx?id=OCfYxf2Iu0mwFJhfjf-8IwIdX7N3k2xEvvPK_rTQuKZUMDc3NlZTUjFLUElZT0VFUVRCUjVKM0E0Mi4u";
+    window.open("https://forms.office.com/Pages/ResponsePage.aspx?id=OCfYxf2Iu0mwFJhfjf-8IwIdX7N3k2xEvvPK_rTQuKZUMDc3NlZTUjFLUElZT0VFUVRCUjVKM0E0Mi4u", "_blank", "noopener,noreferrer");
   };
 
   // Enhanced file upload component
