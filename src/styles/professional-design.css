@@ -114,7 +114,7 @@ body {
   object-fit: contain;
   margin-bottom: var(--space-2);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
   background: transparent;
   padding: 8px;
 }
