@@ -43,12 +43,12 @@
   justify-content: center;
 }
 
-.logo-container {
+.unified-loading-screen .logo-container {
   position: relative;
   display: inline-block;
 }
 
-.loading-logo-image {
+.unified-loading-screen .loading-logo-image {
   width: 200px;
   height: 200px;
   object-fit: contain;
@@ -60,16 +60,16 @@
   display: block;
   margin: 0 auto;
   position: relative;
-  z-index: 2;
+  z-index: 10;
   background: transparent;
 }
 
-.loading-logo-image:hover {
+.unified-loading-screen .loading-logo-image:hover {
   transform: scale(1.05);
   filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.4));
 }
 
-.logo-ring {
+.unified-loading-screen .logo-ring {
   position: absolute;
   top: -16px;
   left: -16px;
@@ -78,7 +78,7 @@
   border: 3px solid rgba(59, 130, 246, 0.4);
   border-radius: 50%;
   animation: logoRing 2s ease-in-out infinite;
-  z-index: 1;
+  z-index: 5;
 }
 
 .loading-text {
@@ -294,7 +294,7 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .loading-logo-image {
+  .unified-loading-screen .loading-logo-image {
     width: 180px;
     height: 180px;
   }
@@ -313,7 +313,7 @@
 }
 
 @media (max-width: 480px) {
-  .loading-logo-image {
+  .unified-loading-screen .loading-logo-image {
     width: 160px;
     height: 160px;
   }
