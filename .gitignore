@@ -14,7 +14,9 @@ public/*.pdf
 # Keep essential images for the app to work
 # public/*.gif
 # public/*.jpg  
-# public/*.png
+# Allow logo files
+!public/castologobg.png
+!public/castologobg1.png
 
 # Upload directories
 my-upload-server/uploads/
