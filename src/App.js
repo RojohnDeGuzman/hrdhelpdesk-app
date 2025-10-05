@@ -1040,6 +1040,20 @@ const MainAppContent = () => {
 function App() {
   const { isAuthenticated, isLoading, authCheckFailed } = useOAuth();
 
+  // Show loading screen while checking authentication
+  if (isLoading) {
+    return (
+      <ThemeProvider>
+        <UnifiedLoadingScreen 
+          onComplete={() => {
+            console.log('🔍 Auth check loading completed');
+          }} 
+          isAuthenticating={true}
+        />
+      </ThemeProvider>
+    );
+  }
+
   // Show login page if not authenticated or auth check failed
   if (!isAuthenticated || authCheckFailed) {
     return (
