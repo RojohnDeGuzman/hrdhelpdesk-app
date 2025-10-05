@@ -1,6 +1,4 @@
 {
-  "name": "hrdhelpdesk-app",
-  "version": 2,
   "functions": {
     "api/send-email.js": {
       "maxDuration": 30
@@ -26,18 +24,5 @@
       "source": "/api/(.*)",
       "destination": "/api/$1"
     }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
-  ],
-  "buildCommand": "npm run build",
-  "outputDirectory": "build"
+  ]
 }
