@@ -37,6 +37,9 @@ module.exports = async (req, res) => {
     console.log('🔍 Verify - All cookies:', req.headers.cookie);
     console.log('🔍 Verify - Session token:', sessionToken ? 'Found' : 'Not found');
     console.log('🔍 Verify - User email:', userEmail ? 'Found' : 'Not found');
+    console.log('🔍 Verify - User-Agent:', req.headers['user-agent']);
+    console.log('🔍 Verify - Referer:', req.headers.referer);
+    console.log('🔍 Verify - Origin:', req.headers.origin);
     
     if (!sessionToken || !userEmail) {
       console.log('🔍 Verify - Authentication failed: missing session or email');

@@ -17,6 +17,9 @@
     },
     "api/auth/oauth-verify.js": {
       "maxDuration": 10
+    },
+    "api/auth/force-logout.js": {
+      "maxDuration": 10
     }
   },
   "rewrites": [
