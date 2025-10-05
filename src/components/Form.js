@@ -120,7 +120,7 @@ const EnhancedInput = ({ fieldName, label, type = "text", required = false, plac
 };
 
 const Form = ({ title, onBack, onSubmitSuccess }) => {
-  const { userEmail } = useOAuth();
+  const { userEmail, userName } = useOAuth();
   const [attachment, setAttachment] = useState(null);
   const [picture, setPicture] = useState(null);
   const [signature, setSignature] = useState(null);
@@ -129,12 +129,16 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [errorModal, setErrorModal] = useState({ show: false, message: '', title: '', type: 'error' });
 
-  // Auto-fill email when userEmail changes
+  // Auto-fill email and name when user data changes
   useEffect(() => {
-    if (userEmail) {
-      setFormData(prev => ({ ...prev, email: userEmail }));
+    if (userEmail || userName) {
+      setFormData(prev => ({ 
+        ...prev, 
+        email: userEmail || prev.email,
+        name: userName || prev.name
+      }));
     }
-  }, [userEmail]);
+  }, [userEmail, userName]);
 
   // Professional Error Modal Component
   const ErrorModal = () => {
@@ -171,7 +175,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
 
   // Direct form state management - no hooks, no validation
   const [formData, setFormData] = useState({
-    name: '',
+    name: userName || '', // Auto-fill with authenticated user's name
     email: userEmail || '', // Auto-fill with authenticated user's email
     divisionmanager: '',
     description: '',
