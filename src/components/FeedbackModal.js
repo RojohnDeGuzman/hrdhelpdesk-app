@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getApiUrl } from '../constants/data';
 import { useTheme } from './ThemeProvider';
+import { useOAuth } from '../contexts/OAuthContext';
 
 const FeedbackModal = ({ isOpen, onClose }) => {
   const [rating, setRating] = useState(0);
@@ -13,6 +14,15 @@ const FeedbackModal = ({ isOpen, onClose }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const { theme } = useTheme();
+  const { userEmail, userName } = useOAuth();
+
+  // Auto-fill name and email from OAuth context
+  useEffect(() => {
+    if (userEmail || userName) {
+      setName(userName || '');
+      setEmail(userEmail || '');
+    }
+  }, [userEmail, userName]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -217,28 +227,28 @@ const FeedbackModal = ({ isOpen, onClose }) => {
             {/* Contact Information */}
             <div className="feedback-section">
               <label className="feedback-label">
-                Your Name (Optional)
+                Your Name {userName ? '(Auto-filled)' : '(Optional)'}
               </label>
               <input
                 type="text"
                 className="feedback-input"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name (optional)"
+                placeholder={userName ? "Your name from your account" : "Enter your name (optional)"}
                 disabled={isSubmitting}
               />
             </div>
 
             <div className="feedback-section">
               <label className="feedback-label">
-                Your Email <span className="required">*</span>
+                Your Email <span className="required">*</span> {userEmail ? '(Auto-filled)' : ''}
               </label>
               <input
                 type="email"
                 className="feedback-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@castotravel.ph"
+                placeholder={userEmail ? "Your email from your account" : "your.email@castotravel.ph"}
                 disabled={isSubmitting}
                 required
               />

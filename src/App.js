@@ -1038,17 +1038,18 @@ const MainAppContent = () => {
 
 // Main App Component with OAuth Authentication
 function App() {
-  const { isAuthenticated, isLoading, authCheckFailed } = useOAuth();
+  const { isAuthenticated, isLoading, authCheckFailed, isLoggingOut } = useOAuth();
 
-  // Show splash screen while checking authentication or during initial loading
-  if (isLoading) {
+  // Show splash screen while checking authentication, during logout, or during initial loading
+  if (isLoading || isLoggingOut) {
     return (
       <ThemeProvider>
         <UnifiedLoadingScreen 
           onComplete={() => {
             console.log('🔍 Auth check completed');
           }} 
-          isAuthenticating={true}
+          isAuthenticating={isLoggingOut ? false : true}
+          isLoggingOut={isLoggingOut}
         />
       </ThemeProvider>
     );

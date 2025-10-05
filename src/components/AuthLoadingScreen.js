@@ -5,7 +5,7 @@ const AuthLoadingScreen = () => {
     <div className="auth-loading-screen">
       <div className="auth-loading-content">
         <div className="auth-loading-logo">
-          <div className="logo-container">
+          <div className="auth-logo-container">
             <img 
               src="/castologobg.png" 
               alt="Casto Travel Logo" 

@@ -3,7 +3,7 @@ const crypto = require('crypto');
 // Microsoft OAuth configuration
 const CLIENT_ID = process.env.MICROSOFT_CLIENT_ID || 'your-client-id';
 const CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET || 'your-client-secret';
-const REDIRECT_URI = process.env.MICROSOFT_REDIRECT_URI || 'https://your-app.vercel.app/api/auth/oauth-callback';
+const REDIRECT_URI = process.env.MICROSOFT_REDIRECT_URI || 'https://hrdhelpdesk-app.vercel.app/api/auth/oauth-callback';
 const TENANT_ID = process.env.MICROSOFT_TENANT_ID || 'common'; // or your specific tenant ID
 
 module.exports = async (req, res) => {

@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeProvider';
 
-const UnifiedLoadingScreen = ({ onComplete, isAuthenticating = false }) => {
+const UnifiedLoadingScreen = ({ onComplete, isAuthenticating = false, isLoggingOut = false }) => {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [loadingText, setLoadingText] = useState('Initializing...');
   const { theme } = useTheme();
 
-  const loadingMessages = isAuthenticating 
+  const loadingMessages = isLoggingOut
+    ? [
+        'Logging Out...',
+        'Clearing Session...',
+        'Securing Data...',
+        'Finalizing Logout...',
+        'Redirecting...'
+      ]
+    : isAuthenticating 
     ? [
         'Verifying Authentication...',
         'Loading HR Services...',
@@ -25,6 +33,9 @@ const UnifiedLoadingScreen = ({ onComplete, isAuthenticating = false }) => {
 
   useEffect(() => {
     let messageIndex = 0;
+    
+    // Set initial message based on state
+    setLoadingText(loadingMessages[0]);
     
     // Update loading messages
     const messageInterval = setInterval(() => {

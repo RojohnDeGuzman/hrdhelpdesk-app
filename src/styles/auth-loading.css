@@ -26,7 +26,7 @@
   margin-bottom: 2rem;
 }
 
-.auth-loading-logo .logo-container {
+.auth-loading-logo .auth-logo-container {
   position: relative;
   display: inline-block;
   width: 120px;
@@ -227,7 +227,7 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .auth-loading-logo .logo-container {
+  .auth-loading-logo .auth-logo-container {
     width: 100px;
     height: 100px;
   }
