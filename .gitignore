@@ -9,8 +9,8 @@ dist/
 hr-staff-ui/build/
 
 # Large media files (keep essential ones)
-public/forms/
-# public/*.pdf
+# public/forms/ - Allow forms directory for PDF downloads
+# public/*.pdf - Allow PDF files for downloadable forms
 # Keep essential images for the app to work
 # public/*.gif
 # public/*.jpg  
