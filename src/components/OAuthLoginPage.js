@@ -66,9 +66,21 @@ const OAuthLoginPage = () => {
         <div className="login-form-container">
           <div className="login-header">
             <img 
-              src="/castologobg.png" 
+              src="/castologobg1.png" 
               alt="Casto Travel Logo" 
               className="login-logo-image"
+              onError={(e) => {
+                console.error('Logo failed to load:', e.target.src);
+                // Try fallback logo
+                if (e.target.src.includes('castologobg1.png')) {
+                  e.target.src = '/castologobg.png';
+                } else {
+                  e.target.style.display = 'none';
+                }
+              }}
+              onLoad={() => {
+                console.log('Logo loaded successfully');
+              }}
             />
             <h1 className="login-title">HRD HELPDESK</h1>
             <p className="login-subtitle">Employee Portal Access</p>

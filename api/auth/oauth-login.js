@@ -43,8 +43,8 @@ module.exports = async (req, res) => {
     // Store state in session/cookie for validation
     res.setHeader('Set-Cookie', `oauth_state=${state}; HttpOnly; Secure; SameSite=Strict; Max-Age=600`);
     
-    // Microsoft OAuth URL
-    const authUrl = new URL('https://login.microsoftonline.com/common/oauth2/v2.0/authorize');
+    // Microsoft OAuth URL - use tenant-specific endpoint
+    const authUrl = new URL(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize`);
     authUrl.searchParams.set('client_id', CLIENT_ID);
     authUrl.searchParams.set('response_type', 'code');
     authUrl.searchParams.set('redirect_uri', REDIRECT_URI);
