@@ -10,7 +10,7 @@ import ProfessionalBreadcrumb from './components/ProfessionalBreadcrumb';
 import ModernSplashScreen from './components/ModernSplashScreen';
 import FeedbackModal from './components/FeedbackModal';
 import OAuthLoginPage from './components/OAuthLoginPage';
-import AuthLoadingScreen from './components/AuthLoadingScreen';
+import UnifiedLoadingScreen from './components/UnifiedLoadingScreen';
 import { OAuthProvider, useOAuth } from './contexts/OAuthContext';
 import { MAIN_BUTTONS } from './constants/data';
 import './App.css';
@@ -20,7 +20,7 @@ import './styles/professional-design.css';
 import './styles/splash-screen.css';
 import './styles/modern-forms.css';
 import './styles/accessibility.css';
-import './styles/auth-loading.css';
+import './styles/unified-loading.css';
 
 // Theme Toggle Button Component
 const ThemeToggleButton = () => {
@@ -743,7 +743,7 @@ const MainAppContent = () => {
   if (loading) {
     return (
       <ThemeProvider>
-        <ModernSplashScreen onComplete={handleSplashComplete} />
+        <UnifiedLoadingScreen onComplete={handleSplashComplete} />
       </ThemeProvider>
     );
   }
@@ -1040,11 +1040,14 @@ const MainAppContent = () => {
 function App() {
   const { isAuthenticated, isLoading, authCheckFailed } = useOAuth();
 
-  // Show auth loading screen while checking authentication status
+  // Show unified loading screen while checking authentication status
   if (isLoading && !authCheckFailed) {
     return (
       <ThemeProvider>
-        <AuthLoadingScreen />
+        <UnifiedLoadingScreen 
+          onComplete={() => {}} 
+          isAuthenticating={true}
+        />
       </ThemeProvider>
     );
   }
