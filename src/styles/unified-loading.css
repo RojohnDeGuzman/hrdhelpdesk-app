@@ -35,7 +35,7 @@
   min-height: 100vh;
 }
 
-.loading-logo {
+.unified-loading-screen .loading-logo {
   margin-bottom: 2rem;
   text-align: center;
   width: 100%;
@@ -82,7 +82,7 @@
   z-index: 5;
 }
 
-.loading-text {
+.unified-loading-screen .loading-text {
   margin-bottom: 2.5rem;
   text-align: center;
   width: 100%;
@@ -92,7 +92,7 @@
   justify-content: center;
 }
 
-.loading-title {
+.unified-loading-screen .loading-title {
   font-size: 2.5rem;
   font-weight: 800;
   margin: 0 0 0.8rem 0;
@@ -109,7 +109,7 @@
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.loading-subtitle {
+.unified-loading-screen .loading-subtitle {
   font-size: 1.1rem;
   color: #94a3b8;
   margin: 0;
@@ -118,7 +118,7 @@
   text-align: center;
 }
 
-.loading-progress {
+.unified-loading-screen .loading-progress {
   margin-bottom: 1.5rem;
   text-align: center;
   width: 100%;
@@ -128,7 +128,7 @@
   justify-content: center;
 }
 
-.loading-message {
+.unified-loading-screen .loading-message {
   font-size: 0.95rem;
   color: #cbd5e1;
   margin-bottom: 1rem;
@@ -173,7 +173,7 @@
   animation: progressShimmer 2s infinite;
 }
 
-.loading-dots {
+.unified-loading-screen .loading-dots {
   display: flex;
   justify-content: center;
   align-items: center;
