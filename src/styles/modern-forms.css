@@ -1682,8 +1682,8 @@
   white-space: pre-line;
 }
 
-/* Success modal message override */
-.error-modal.success .error-modal-message {
+/* Success modal message override - dark theme */
+[data-theme="dark"] .error-modal.success .error-modal-message {
   color: #ffffff !important;
   font-size: 16px !important;
   line-height: 1.6;
@@ -1699,13 +1699,39 @@
   font-weight: 600;
 }
 
-/* Ensure all success modal text is white */
-.error-modal.success .error-modal-body {
+/* Success modal message override - light theme */
+[data-theme="light"] .error-modal.success .error-modal-message {
+  color: #1f2937 !important;
+  font-size: 16px !important;
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.8) !important;
+  padding: 20px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(8px);
+  margin: 16px 0 !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-shadow: none;
+  font-weight: 500;
+}
+
+/* Ensure all success modal text is white in dark theme only */
+[data-theme="dark"] .error-modal.success .error-modal-body {
   color: #ffffff !important;
 }
 
-.error-modal.success .error-modal-body p {
+[data-theme="dark"] .error-modal.success .error-modal-body p {
   color: #ffffff !important;
+}
+
+/* Light theme success modal text */
+[data-theme="light"] .error-modal.success .error-modal-body {
+  color: #1f2937 !important;
+}
+
+[data-theme="light"] .error-modal.success .error-modal-body p {
+  color: #1f2937 !important;
 }
 
 .error-modal-footer {
@@ -1821,11 +1847,20 @@
   text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
 }
 
-.error-modal.success .error-modal-title {
+/* Success modal title - dark theme */
+[data-theme="dark"] .error-modal.success .error-modal-title {
   color: #ffffff !important;
   font-size: 24px !important;
   font-weight: 700 !important;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* Success modal title - light theme */
+[data-theme="light"] .error-modal.success .error-modal-title {
+  color: #1f2937 !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  text-shadow: none;
 }
 
 .error-modal.success .error-modal-message {
