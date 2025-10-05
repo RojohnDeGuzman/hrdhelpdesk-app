@@ -106,12 +106,3 @@ export const getApiUrl = (endpoint) => {
     return `http://localhost:5000/${endpoint}`;
   }
 };
-
-// Helper function to get the correct auth API URL
-export const getAuthApiUrl = (endpoint) => {
-  if (process.env.NODE_ENV === 'production') {
-    return `/api/auth/${endpoint}`;
-  } else {
-    return `http://localhost:5001/api/auth/${endpoint}`;
-  }
-};
