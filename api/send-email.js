@@ -1,6 +1,6 @@
 const EmailServiceV2 = require('./emailServiceV2');
 const { validateFile } = require('./fileValidation');
-const { validateFormData, sanitizeFormData } = require('./inputSanitizer');
+const { validateFormData, sanitizeFormData } = require('./inputValidation');
 const rateLimiter = require('./rateLimiter');
 const authenticateRequest = require('./auth-middleware');
 
