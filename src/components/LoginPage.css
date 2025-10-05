@@ -48,8 +48,8 @@
 }
 
 .login-logo-image {
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   margin: 0 auto 24px;
   display: block;
@@ -646,8 +646,8 @@
   }
   
   .login-logo-image {
-    width: 160px;
-    height: 160px;
+    width: 180px;
+    height: 180px;
   }
   
   .login-header {
@@ -671,8 +671,8 @@
   }
 
   .login-logo-image {
-    width: 140px;
-    height: 140px;
+    width: 160px;
+    height: 160px;
     margin-bottom: 16px;
   }
 
