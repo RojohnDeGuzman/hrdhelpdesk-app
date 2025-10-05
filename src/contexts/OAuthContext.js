@@ -16,9 +16,16 @@ export const OAuthProvider = ({ children }) => {
   const [userName, setUserName] = useState('');
   const [userPhoto, setUserPhoto] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Check authentication status on app load
   useEffect(() => {
+    // Don't check auth if we're in the middle of logging out
+    if (isLoggingOut) {
+      setIsLoading(false);
+      return;
+    }
+
     const checkAuthStatus = async () => {
       try {
         // Use production OAuth endpoint or local for development
@@ -54,7 +61,7 @@ export const OAuthProvider = ({ children }) => {
     };
 
     checkAuthStatus();
-  }, []);
+  }, [isLoggingOut]);
 
   const login = () => {
     // Redirect to OAuth login directly
@@ -65,6 +72,8 @@ export const OAuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    setIsLoggingOut(true);
+    
     try {
       const oauthUrl = process.env.NODE_ENV === 'production' 
         ? '/api/auth/oauth-logout' 

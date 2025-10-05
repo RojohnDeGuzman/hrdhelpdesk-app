@@ -66,20 +66,22 @@ const OAuthLoginPage = () => {
         <div className="login-form-container">
           <div className="login-header">
             <img 
-              src="/castologobg.png" 
+              src="https://via.placeholder.com/100x100/0078d4/ffffff?text=LOGO" 
               alt="Casto Travel Logo" 
               className="login-logo-image"
               onError={(e) => {
                 console.error('Logo failed to load:', e.target.src);
-                // Try fallback logo
-                if (e.target.src.includes('castologobg.png')) {
+                // Try fallback to local logo
+                if (e.target.src.includes('placeholder')) {
                   e.target.src = '/castologobg.png';
+                } else if (e.target.src.includes('castologobg.png')) {
+                  e.target.src = '/castologobg1.png';
                 } else {
                   e.target.style.display = 'none';
                 }
               }}
-              onLoad={() => {
-                console.log('Logo loaded successfully');
+              onLoad={(e) => {
+                console.log('Logo loaded successfully:', e.target.src);
               }}
             />
             <h1 className="login-title">HRD HELPDESK</h1>
