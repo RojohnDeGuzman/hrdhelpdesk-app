@@ -1694,17 +1694,17 @@
 
 /* Success modal variant */
 .error-modal.success {
-  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%) !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
   box-shadow: 
     0 25px 50px -12px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(59, 130, 246, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
 .error-modal.success .error-modal-header {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%) !important;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.2) !important;
   backdrop-filter: blur(10px);
 }
 
@@ -1715,39 +1715,39 @@
 }
 
 .error-modal.success .error-modal-title {
-  color: #ffffff;
-  font-size: 24px;
-  font-weight: 700;
+  color: #ffffff !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .error-modal.success .error-modal-message {
-  color: #e2e8f0;
-  font-size: 16px;
+  color: #e2e8f0 !important;
+  font-size: 16px !important;
   line-height: 1.6;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05) !important;
+  padding: 20px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   backdrop-filter: blur(8px);
-  margin: 16px 0;
+  margin: 16px 0 !important;
 }
 
 .error-modal.success .error-modal-button {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
-  color: white;
-  border: none;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 16px 32px !important;
+  border-radius: 12px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 
     0 8px 24px rgba(59, 130, 246, 0.3),
     0 4px 12px rgba(59, 130, 246, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  display: flex;
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  display: flex !important;
   align-items: center;
   gap: 8px;
   position: relative;
