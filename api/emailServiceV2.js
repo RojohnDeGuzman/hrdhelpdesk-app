@@ -99,6 +99,14 @@ class EmailServiceV2 {
         department = 'HRD'
       } = formData;
 
+      // Debug title field
+      console.log('📧 Email Service - Title field debug:');
+      console.log('📧 Email Service - Raw title:', title);
+      console.log('📧 Email Service - Raw subject:', subject);
+      console.log('📧 Email Service - Final title used:', title || subject);
+      console.log('📧 Email Service - Title type:', typeof title);
+      console.log('📧 Email Service - Title length:', title ? title.length : 0);
+
     // Create email content
     const emailContent = this.createEmailContent(formData, attachments);
     console.log('📧 Email Service - Using NEW PROFESSIONAL template version 2.0');
@@ -109,7 +117,7 @@ class EmailServiceV2 {
         to: 'hrd-helpdesk@castotravel.ph', // Your osTicket email
         cc: email, // CC the user
         replyTo: email, // Set reply-to as user's email
-        subject: `${name} - ${title || subject} [HRD Helpdesk]`,
+        subject: `${name} - ${title || subject || 'No Title'} [HRD Helpdesk]`,
         html: emailContent,
         // Add custom headers for osTicket integration
         headers: {
@@ -381,13 +389,15 @@ class EmailServiceV2 {
     }
 
     // Add title/subject if available
-    if ((title || subject) && (title || subject).trim() !== '') {
-      html += `
-                <div class="field-line">
-                  <span class="label">Request Title:</span> <span class="value">${title || subject}</span>
-                </div>
-      `;
-    }
+    const finalTitle = title || subject || 'No Title Provided';
+    console.log('📧 Email Service - HTML Title debug:');
+    console.log('📧 Email Service - Final title for HTML:', finalTitle);
+    
+    html += `
+              <div class="field-line">
+                <span class="label">Request Title:</span> <span class="value">${finalTitle}</span>
+              </div>
+    `;
 
     // Add description if available
     if (description && description.trim() !== '') {
