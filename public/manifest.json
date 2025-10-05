@@ -3,12 +3,12 @@
   "name": "HRD Helpdesk",
   "icons": [
     {
-      "src": "logo192.png",
+      "src": "castologobg1.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "castologobg.png",
       "type": "image/png",
       "sizes": "512x512"
     }
