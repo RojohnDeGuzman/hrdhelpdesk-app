@@ -66,13 +66,13 @@ const OAuthLoginPage = () => {
         <div className="login-form-container">
           <div className="login-header">
             <img 
-              src="/castologobg1.png" 
+              src="/castologobg.png" 
               alt="Casto Travel Logo" 
               className="login-logo-image"
               onError={(e) => {
                 console.error('Logo failed to load:', e.target.src);
                 // Try fallback logo
-                if (e.target.src.includes('castologobg1.png')) {
+                if (e.target.src.includes('castologobg.png')) {
                   e.target.src = '/castologobg.png';
                 } else {
                   e.target.style.display = 'none';
