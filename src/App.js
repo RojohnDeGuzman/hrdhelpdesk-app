@@ -81,7 +81,7 @@ const FormVisibleResult = ({ onBack }) => (
 
 // Main App Content Component (separated for authentication wrapper)
 const MainAppContent = () => {
-  const { userEmail, userName, userPhoto, logout, isLoading } = useOAuth();
+  const { userEmail, userName, userPhoto, logout } = useOAuth();
   const [loading, setLoading] = useState(true);
   const [buttonsVisible, setButtonsVisible] = useState(false);
   const [subButtonsVisible, setSubButtonsVisible] = useState(false);
@@ -740,13 +740,10 @@ const MainAppContent = () => {
     }
   }, [buttonsVisible]);
 
-  if (loading || isLoading) {
+  if (loading) {
     return (
       <ThemeProvider>
-        <UnifiedLoadingScreen 
-          onComplete={handleSplashComplete} 
-          isAuthenticating={isLoading}
-        />
+        <UnifiedLoadingScreen onComplete={handleSplashComplete} />
       </ThemeProvider>
     );
   }
@@ -1043,6 +1040,20 @@ const MainAppContent = () => {
 function App() {
   const { isAuthenticated, isLoading, authCheckFailed } = useOAuth();
 
+  // Show splash screen while checking authentication or during initial loading
+  if (isLoading) {
+    return (
+      <ThemeProvider>
+        <UnifiedLoadingScreen 
+          onComplete={() => {
+            console.log('🔍 Auth check completed');
+          }} 
+          isAuthenticating={true}
+        />
+      </ThemeProvider>
+    );
+  }
+
   // Show login page if not authenticated or auth check failed
   if (!isAuthenticated || authCheckFailed) {
     return (
@@ -1052,7 +1063,7 @@ function App() {
     );
   }
 
-  // Show main app if authenticated (includes its own loading screen with auth check)
+  // Show main app if authenticated (includes its own loading screen)
   return (
     <ThemeProvider>
       <MainAppContent />
