@@ -101,25 +101,42 @@ module.exports = async (req, res) => {
     console.log('📸 Fetching user profile photo...');
     let profilePhoto = null;
     try {
-      const photoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+      // First try to get photo metadata to check if photo exists
+      const photoMetaResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo', {
         headers: {
           'Authorization': `Bearer ${tokens.access_token}`,
         },
       });
       
-      console.log('📸 Photo response status:', photoResponse.status);
-      console.log('📸 Photo response headers:', Object.fromEntries(photoResponse.headers.entries()));
+      console.log('📸 Photo metadata response status:', photoMetaResponse.status);
       
-      if (photoResponse.ok) {
-        const photoBuffer = await photoResponse.arrayBuffer();
-        const photoBase64 = Buffer.from(photoBuffer).toString('base64');
-        const contentType = photoResponse.headers.get('content-type') || 'image/jpeg';
-        profilePhoto = `data:${contentType};base64,${photoBase64}`;
-        console.log('✅ User profile photo fetched successfully, size:', photoBase64.length, 'bytes');
-        console.log('📸 Content type:', contentType);
+      if (photoMetaResponse.ok) {
+        // Photo exists, now fetch the actual photo
+        const photoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+          headers: {
+            'Authorization': `Bearer ${tokens.access_token}`,
+          },
+        });
+        
+        console.log('📸 Photo response status:', photoResponse.status);
+        console.log('📸 Photo response headers:', Object.fromEntries(photoResponse.headers.entries()));
+        
+        if (photoResponse.ok) {
+          const photoBuffer = await photoResponse.arrayBuffer();
+          const photoBase64 = Buffer.from(photoBuffer).toString('base64');
+          const contentType = photoResponse.headers.get('content-type') || 'image/jpeg';
+          profilePhoto = `data:${contentType};base64,${photoBase64}`;
+          console.log('✅ User profile photo fetched successfully, size:', photoBase64.length, 'bytes');
+          console.log('📸 Content type:', contentType);
+        } else {
+          console.log('⚠️ Photo fetch failed, status:', photoResponse.status);
+          const errorText = await photoResponse.text();
+          console.log('📸 Photo error response:', errorText);
+        }
       } else {
-        console.log('⚠️ No profile photo available, status:', photoResponse.status);
-        console.log('📸 Photo response text:', await photoResponse.text());
+        console.log('⚠️ No profile photo metadata available, status:', photoMetaResponse.status);
+        const errorText = await photoMetaResponse.text();
+        console.log('📸 Photo metadata error:', errorText);
       }
     } catch (error) {
       console.log('⚠️ Error fetching profile photo:', error.message);

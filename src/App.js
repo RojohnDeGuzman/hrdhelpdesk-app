@@ -1038,29 +1038,11 @@ const MainAppContent = () => {
 function App() {
   const { isAuthenticated, isLoading, authCheckFailed } = useOAuth();
 
-  // Show loading while checking authentication status (with timeout)
+  // Show OAuth login page while checking authentication status
   if (isLoading && !authCheckFailed) {
     return (
       <ThemeProvider>
-        <div className="app-loading">
-          <div className="loading-spinner">
-            <img 
-              src="/castologobg.png" 
-              alt="Casto Travel Logo" 
-              className="loading-logo"
-              onError={(e) => {
-                console.error('Loading logo failed to load:', e.target.src);
-                if (e.target.src.includes('castologobg.png')) {
-                  e.target.src = '/castologobg1.png';
-                } else {
-                  e.target.style.display = 'none';
-                }
-              }}
-            />
-            <div className="spinner"></div>
-            <p>Loading...</p>
-          </div>
-        </div>
+        <OAuthLoginPage />
       </ThemeProvider>
     );
   }
