@@ -147,11 +147,11 @@ module.exports = async (req, res) => {
       console.log('📸 Profile photo stored with session token');
     }
     
-    // Set session cookie
+    // Set session cookie with proper attributes for Vercel
     res.setHeader('Set-Cookie', [
-      `hrd_session=${sessionToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`,
-      `hrd_user_email=${encodeURIComponent(userSession.email)}; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`,
-      `hrd_user_name=${encodeURIComponent(userSession.name)}; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`
+      `hrd_session=${sessionToken}; HttpOnly; Secure; SameSite=None; Max-Age=86400; Path=/`,
+      `hrd_user_email=${encodeURIComponent(userSession.email)}; HttpOnly; Secure; SameSite=None; Max-Age=86400; Path=/`,
+      `hrd_user_name=${encodeURIComponent(userSession.name)}; HttpOnly; Secure; SameSite=None; Max-Age=86400; Path=/`
     ]);
     
     // Redirect to main app

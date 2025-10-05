@@ -35,11 +35,12 @@ module.exports = async (req, res) => {
       delete global.userPhotos[sessionToken];
     }
     
-    // Clear session cookies
+    // Clear session cookies with proper attributes for Vercel
     res.setHeader('Set-Cookie', [
-      'hrd_session=; HttpOnly; Secure; SameSite=Strict; Max-Age=0',
-      'hrd_user_email=; HttpOnly; Secure; SameSite=Strict; Max-Age=0',
-      'hrd_user_name=; HttpOnly; Secure; SameSite=Strict; Max-Age=0'
+      'hrd_session=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/',
+      'hrd_user_email=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/',
+      'hrd_user_name=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/',
+      'oauth_state=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/'
     ]);
     
     res.json({
