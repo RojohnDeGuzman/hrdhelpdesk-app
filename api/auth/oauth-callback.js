@@ -99,6 +99,10 @@ module.exports = async (req, res) => {
     
     // Get user profile photo from Microsoft Graph
     console.log('📸 Fetching user profile photo...');
+    console.log('📸 Access token available:', !!tokens.access_token);
+    console.log('📸 User ID:', profile.id);
+    console.log('📸 User email:', profile.mail || profile.userPrincipalName);
+    
     let profilePhoto = null;
     try {
       // First try to get photo metadata to check if photo exists
@@ -109,8 +113,12 @@ module.exports = async (req, res) => {
       });
       
       console.log('📸 Photo metadata response status:', photoMetaResponse.status);
+      console.log('📸 Photo metadata response headers:', Object.fromEntries(photoMetaResponse.headers.entries()));
       
       if (photoMetaResponse.ok) {
+        const photoMeta = await photoMetaResponse.json();
+        console.log('📸 Photo metadata:', photoMeta);
+        
         // Photo exists, now fetch the actual photo
         const photoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
           headers: {

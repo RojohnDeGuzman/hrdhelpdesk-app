@@ -97,7 +97,6 @@ export const OAuthProvider = ({ children }) => {
   const logout = async () => {
     console.log('🚪 Starting logout process...');
     setIsLoggingOut(true);
-    setIsLoading(true); // Show loading screen during logout
     
     try {
       const oauthUrl = process.env.NODE_ENV === 'production' 
@@ -114,21 +113,17 @@ export const OAuthProvider = ({ children }) => {
       const data = await response.json();
       console.log('🚪 Logout response data:', data);
       
-      // Add a small delay to show the loading screen
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
     } catch (error) {
       console.error('Logout error:', error);
-      // Still add delay even if logout fails
-      await new Promise(resolve => setTimeout(resolve, 1500));
     } finally {
-      // Clear local state
+      // Clear local state immediately
       console.log('🚪 Clearing local state...');
       setIsAuthenticated(false);
       setUserEmail('');
       setUserName('');
       setUserPhoto(null);
       setAuthCheckFailed(false);
+      setIsLoggingOut(false);
       
       // Clear cookies manually as backup
       console.log('🚪 Clearing cookies manually...');
@@ -137,15 +132,9 @@ export const OAuthProvider = ({ children }) => {
       document.cookie = 'hrd_user_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       document.cookie = 'oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       
-      // Set loading to false and then reload
-      setIsLoading(false);
-      setIsLoggingOut(false);
-      
-      // Force reload to clear any cached state
-      console.log('🚪 Reloading page...');
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
+      // Redirect to login page without reload to avoid splash screen
+      console.log('🚪 Redirecting to login...');
+      window.location.href = '/';
     }
   };
 
