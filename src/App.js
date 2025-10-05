@@ -1036,10 +1036,10 @@ const MainAppContent = () => {
 
 // Main App Component with OAuth Authentication
 function App() {
-  const { isAuthenticated, isLoading } = useOAuth();
+  const { isAuthenticated, isLoading, authCheckFailed } = useOAuth();
 
-  // Show loading while checking authentication status
-  if (isLoading) {
+  // Show loading while checking authentication status (with timeout)
+  if (isLoading && !authCheckFailed) {
     return (
       <ThemeProvider>
         <div className="app-loading">
@@ -1052,8 +1052,8 @@ function App() {
     );
   }
 
-  // Show login page if not authenticated
-  if (!isAuthenticated) {
+  // Show login page if not authenticated or auth check failed
+  if (!isAuthenticated || authCheckFailed) {
     return (
       <ThemeProvider>
         <OAuthLoginPage />

@@ -17,6 +17,7 @@ export const OAuthProvider = ({ children }) => {
   const [userPhoto, setUserPhoto] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [authCheckFailed, setAuthCheckFailed] = useState(false);
 
   // Check authentication status on app load
   useEffect(() => {
@@ -34,11 +35,18 @@ export const OAuthProvider = ({ children }) => {
           : 'http://localhost:5001/api/auth/oauth-verify';
           
         console.log('🔍 Checking auth status at:', oauthUrl);
+        
+        // Add timeout to prevent infinite loading
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
         const response = await fetch(oauthUrl, {
           method: 'GET',
-          credentials: 'include'
+          credentials: 'include',
+          signal: controller.signal
         });
         
+        clearTimeout(timeoutId);
         console.log('🔍 Auth check response:', response.status, response.statusText);
 
         if (response.ok) {
@@ -52,9 +60,17 @@ export const OAuthProvider = ({ children }) => {
           }
         } else {
           console.log('🔍 Auth check failed:', response.status, response.statusText);
+          // If 401, user is not authenticated - this is expected
+          if (response.status === 401) {
+            console.log('🔍 User not authenticated - showing login page');
+          }
         }
       } catch (error) {
         console.error('Error checking auth status:', error);
+        if (error.name === 'AbortError') {
+          console.log('🔍 Auth check timed out - showing login page');
+        }
+        setAuthCheckFailed(true);
       } finally {
         setIsLoading(false);
       }
@@ -104,6 +120,7 @@ export const OAuthProvider = ({ children }) => {
     userName,
     userPhoto,
     isLoading,
+    authCheckFailed,
     login,
     logout
   };
