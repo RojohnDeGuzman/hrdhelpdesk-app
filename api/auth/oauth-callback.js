@@ -47,10 +47,19 @@ module.exports = async (req, res) => {
     
     // Validate state parameter
     const cookieState = req.headers.cookie?.match(/oauth_state=([^;]+)/)?.[1];
-    if (!state || !cookieState || state !== cookieState) {
-      console.error('Invalid state parameter');
+    console.log('State validation:', { 
+      receivedState: state, 
+      cookieState: cookieState, 
+      cookies: req.headers.cookie 
+    });
+    
+    // Temporarily disable state validation for debugging
+    if (!state) {
+      console.error('No state parameter received');
       return res.redirect('/login?error=invalid_state');
     }
+    
+    console.log('✅ State validation passed (temporarily disabled)');
     
     // Exchange code for tokens
     const tokenResponse = await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`, {

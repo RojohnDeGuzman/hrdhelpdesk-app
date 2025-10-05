@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
     const state = crypto.randomBytes(32).toString('hex');
     
     // Store state in session/cookie for validation
-    res.setHeader('Set-Cookie', `oauth_state=${state}; HttpOnly; Secure; SameSite=Strict; Max-Age=600`);
+    res.setHeader('Set-Cookie', `oauth_state=${state}; HttpOnly; Secure; SameSite=None; Max-Age=600; Path=/`);
     
     // Microsoft OAuth URL - use tenant-specific endpoint
     const authUrl = new URL(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize`);
