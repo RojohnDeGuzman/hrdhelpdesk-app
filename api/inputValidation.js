@@ -61,7 +61,7 @@ function validateFormData(formData) {
   const errors = [];
   
   // Required fields validation
-  const requiredFields = ['name', 'email', 'subject'];
+  const requiredFields = ['name', 'email', 'title'];
   const requiredValidation = validateRequiredFields(formData, requiredFields);
   
   if (!requiredValidation.isValid) {
