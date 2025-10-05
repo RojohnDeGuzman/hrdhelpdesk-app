@@ -108,7 +108,10 @@ module.exports = async (req, res) => {
     
     let profilePhoto = null;
     try {
-      // First try to get photo metadata to check if photo exists
+      // Try multiple approaches to get the profile photo
+      console.log('📸 Attempting to fetch profile photo...');
+      
+      // Method 1: Try to get photo metadata first
       const photoMetaResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo', {
         headers: {
           'Authorization': `Bearer ${tokens.access_token}`,
@@ -117,7 +120,6 @@ module.exports = async (req, res) => {
       
       console.log('📸 Photo metadata response status:', photoMetaResponse.status);
       console.log('📸 Photo metadata response headers:', Object.fromEntries(photoMetaResponse.headers.entries()));
-      console.log('📸 Photo metadata response URL:', photoMetaResponse.url);
       
       if (photoMetaResponse.ok) {
         const photoMeta = await photoMetaResponse.json();
@@ -132,7 +134,6 @@ module.exports = async (req, res) => {
         
         console.log('📸 Photo response status:', photoResponse.status);
         console.log('📸 Photo response headers:', Object.fromEntries(photoResponse.headers.entries()));
-        console.log('📸 Photo response URL:', photoResponse.url);
         
         if (photoResponse.ok) {
           const photoBuffer = await photoResponse.arrayBuffer();
@@ -150,6 +151,25 @@ module.exports = async (req, res) => {
         console.log('⚠️ No profile photo metadata available, status:', photoMetaResponse.status);
         const errorText = await photoMetaResponse.text();
         console.log('📸 Photo metadata error:', errorText);
+        
+        // Method 2: Try direct photo fetch without metadata check
+        console.log('📸 Trying direct photo fetch...');
+        const directPhotoResponse = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+          headers: {
+            'Authorization': `Bearer ${tokens.access_token}`,
+          },
+        });
+        
+        console.log('📸 Direct photo response status:', directPhotoResponse.status);
+        if (directPhotoResponse.ok) {
+          const photoBuffer = await directPhotoResponse.arrayBuffer();
+          const photoBase64 = Buffer.from(photoBuffer).toString('base64');
+          const contentType = directPhotoResponse.headers.get('content-type') || 'image/jpeg';
+          profilePhoto = `data:${contentType};base64,${photoBase64}`;
+          console.log('✅ Direct photo fetch successful, size:', photoBase64.length, 'bytes');
+        } else {
+          console.log('⚠️ Direct photo fetch also failed, status:', directPhotoResponse.status);
+        }
       }
     } catch (error) {
       console.log('⚠️ Error fetching profile photo:', error.message);
