@@ -4,11 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%),
-    linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
   position: relative;
   overflow: hidden;
   padding: 20px;
@@ -444,8 +440,8 @@
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 25% 25%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(255, 119, 198, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(37, 99, 235, 0.03) 0%, transparent 50%);
   animation: backgroundShift 20s ease-in-out infinite;
 }
 
@@ -456,11 +452,11 @@
 
 .login-particle {
   position: absolute;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(59, 130, 246, 0.2);
   border-radius: 50%;
   animation: float 12s ease-in-out infinite;
   backdrop-filter: blur(2px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .login-particle.particle-1 {
@@ -469,7 +465,7 @@
   top: 15%;
   left: 5%;
   animation-delay: 0s;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(59, 130, 246, 0.2);
 }
 
 .login-particle.particle-2 {
@@ -478,7 +474,7 @@
   top: 65%;
   left: 85%;
   animation-delay: 2.5s;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(37, 99, 235, 0.15);
 }
 
 .login-particle.particle-3 {
@@ -496,7 +492,7 @@
   top: 35%;
   left: 75%;
   animation-delay: 1.8s;
-  background: rgba(30, 64, 175, 0.3);
+  background: rgba(37, 99, 235, 0.2);
 }
 
 .login-particle.particle-5 {
