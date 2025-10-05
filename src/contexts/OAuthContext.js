@@ -82,9 +82,10 @@ export const OAuthProvider = ({ children }) => {
       setUserEmail('');
       setUserName('');
       setUserPhoto(null);
+      setIsLoading(false);
       
-      // Redirect to login
-      window.location.href = '/login';
+      // Redirect to login page
+      window.location.href = '/';
     }
   };
 

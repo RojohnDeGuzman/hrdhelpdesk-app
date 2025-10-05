@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
     // Check for OAuth errors
     if (error) {
       console.error('OAuth error:', error);
-      return res.redirect('/login?error=oauth_error');
+      return res.redirect('https://hrdhelpdesk-app.vercel.app/login?error=oauth_error');
     }
     
     // Validate state parameter
@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
     // Temporarily disable state validation for debugging
     if (!state) {
       console.error('No state parameter received');
-      return res.redirect('/login?error=invalid_state');
+      return res.redirect('https://hrdhelpdesk-app.vercel.app/login?error=invalid_state');
     }
     
     console.log('✅ State validation passed (temporarily disabled)');
@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
     
     if (!tokenResponse.ok) {
       console.error('Token exchange failed:', await tokenResponse.text());
-      return res.redirect('/login?error=token_exchange_failed');
+      return res.redirect('https://hrdhelpdesk-app.vercel.app/login?error=token_exchange_failed');
     }
     
     const tokens = await tokenResponse.json();
@@ -92,7 +92,7 @@ module.exports = async (req, res) => {
     
     if (!profileResponse.ok) {
       console.error('Profile fetch failed:', await profileResponse.text());
-      return res.redirect('/login?error=profile_fetch_failed');
+      return res.redirect('https://hrdhelpdesk-app.vercel.app/login?error=profile_fetch_failed');
     }
     
     const profile = await profileResponse.json();
@@ -123,7 +123,7 @@ module.exports = async (req, res) => {
     // Validate email domain
     if (!profile.mail?.endsWith('@castotravel.ph') && !profile.userPrincipalName?.endsWith('@castotravel.ph')) {
       console.error('Invalid email domain:', profile.mail || profile.userPrincipalName);
-      return res.redirect('/login?error=invalid_domain');
+      return res.redirect('https://hrdhelpdesk-app.vercel.app/login?error=invalid_domain');
     }
     
     // Generate session token
@@ -155,10 +155,10 @@ module.exports = async (req, res) => {
     ]);
     
     // Redirect to main app
-    res.redirect('/?auth=success');
+    res.redirect('https://hrdhelpdesk-app.vercel.app/?auth=success');
     
   } catch (error) {
     console.error('OAuth callback error:', error);
-    res.redirect('/login?error=callback_error');
+    res.redirect('https://hrdhelpdesk-app.vercel.app/login?error=callback_error');
   }
 };
