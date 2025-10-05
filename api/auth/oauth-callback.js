@@ -100,8 +100,11 @@ module.exports = async (req, res) => {
     // Get user profile photo from Microsoft Graph
     console.log('📸 Fetching user profile photo...');
     console.log('📸 Access token available:', !!tokens.access_token);
+    console.log('📸 Access token length:', tokens.access_token ? tokens.access_token.length : 0);
     console.log('📸 User ID:', profile.id);
     console.log('📸 User email:', profile.mail || profile.userPrincipalName);
+    console.log('📸 User display name:', profile.displayName);
+    console.log('📸 Full profile object:', JSON.stringify(profile, null, 2));
     
     let profilePhoto = null;
     try {
@@ -114,6 +117,7 @@ module.exports = async (req, res) => {
       
       console.log('📸 Photo metadata response status:', photoMetaResponse.status);
       console.log('📸 Photo metadata response headers:', Object.fromEntries(photoMetaResponse.headers.entries()));
+      console.log('📸 Photo metadata response URL:', photoMetaResponse.url);
       
       if (photoMetaResponse.ok) {
         const photoMeta = await photoMetaResponse.json();
@@ -128,6 +132,7 @@ module.exports = async (req, res) => {
         
         console.log('📸 Photo response status:', photoResponse.status);
         console.log('📸 Photo response headers:', Object.fromEntries(photoResponse.headers.entries()));
+        console.log('📸 Photo response URL:', photoResponse.url);
         
         if (photoResponse.ok) {
           const photoBuffer = await photoResponse.arrayBuffer();
@@ -175,7 +180,11 @@ module.exports = async (req, res) => {
       // Store photo in memory (in production, use Redis or database)
       global.userPhotos = global.userPhotos || {};
       global.userPhotos[sessionToken] = profilePhoto;
-      console.log('📸 Profile photo stored with session token');
+      console.log('📸 Profile photo stored with session token:', sessionToken);
+      console.log('📸 Profile photo data length:', profilePhoto.length);
+      console.log('📸 Profile photo data preview:', profilePhoto.substring(0, 100) + '...');
+    } else {
+      console.log('📸 No profile photo to store');
     }
     
     // Set session cookie with proper attributes for Vercel
