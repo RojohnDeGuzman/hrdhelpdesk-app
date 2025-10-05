@@ -4,56 +4,60 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
   position: relative;
   overflow: hidden;
-  padding: 20px;
+  padding: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   z-index: 1;
 }
 
 .login-container {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(30px);
-  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(40px);
+  border-radius: 24px;
   box-shadow: 
-    0 32px 64px rgba(0, 0, 0, 0.12),
-    0 16px 32px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  padding: 48px;
-  width: 100%;
-  max-width: 480px;
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 40px;
+  max-width: 420px;
+  width: 90%;
+  max-height: 90vh;
   position: relative;
   z-index: 10;
-  border: 1px solid rgba(255, 255, 255, 0.2);
   isolation: isolate;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .login-container:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow: 
-    0 40px 80px rgba(0, 0, 0, 0.15),
-    0 20px 40px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 35px 70px -12px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .login-header {
   text-align: center;
-  margin-bottom: 36px;
+  margin-bottom: 32px;
 }
 
 .login-logo-image {
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   object-fit: contain;
-  margin: 0 auto 32px;
+  margin: 0 auto 24px;
   display: block;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.2));
   transition: all 0.3s ease;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
   backdrop-filter: blur(10px);
 }
 
@@ -63,24 +67,24 @@
 }
 
 .login-title {
-  font-size: 32px;
-  font-weight: 900;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin: 0 0 12px 0;
-  letter-spacing: -1px;
-  text-shadow: none;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
 .login-subtitle {
-  font-size: 16px;
+  font-size: 15px;
   color: #64748b;
-  margin: 0 auto 8px;
-  line-height: 1.6;
-  max-width: 320px;
-  font-weight: 600;
+  margin: 0 auto 24px;
+  line-height: 1.5;
+  max-width: 300px;
+  font-weight: 500;
   text-shadow: none;
 }
 
@@ -634,6 +638,22 @@
 */
 
 /* Responsive Design */
+@media (max-height: 800px) {
+  .login-container {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .login-logo-image {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .login-header {
+    margin-bottom: 24px;
+  }
+}
+
 @media (max-width: 640px) {
   .login-page {
     padding: 12px;
@@ -650,17 +670,17 @@
   }
 
   .login-logo-image {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
     margin-bottom: 16px;
   }
 
   .login-title {
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .login-subtitle {
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .form-label {
@@ -704,15 +724,17 @@
 
 @media (max-width: 480px) {
   .login-container {
-    padding: 20px 16px;
+    padding: 24px 20px;
+    max-height: 95vh;
+    width: 95%;
   }
 
   .login-title {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .login-subtitle {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .form-label {
@@ -811,18 +833,18 @@
 /* Modern Microsoft Login Button */
 .microsoft-login-button {
   width: 100%;
-  padding: 20px 32px;
+  padding: 18px 28px;
   background: linear-gradient(135deg, #0078d4 0%, #106ebe 50%, #005a9e 100%);
   color: white;
   border: none;
-  border-radius: 16px;
-  font-size: 18px;
-  font-weight: 700;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 
     0 8px 24px rgba(0, 120, 212, 0.3),
