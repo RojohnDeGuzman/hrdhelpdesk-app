@@ -31,17 +31,24 @@ module.exports = async (req, res) => {
   try {
     // Get session token to clear photo from memory
     const sessionToken = req.headers.cookie?.match(/hrd_session=([^;]+)/)?.[1];
+    console.log('🚪 Logout - Session token found:', sessionToken ? 'Yes' : 'No');
+    console.log('🚪 Logout - All cookies:', req.headers.cookie);
+    
     if (sessionToken && global.userPhotos) {
       delete global.userPhotos[sessionToken];
+      console.log('🚪 Logout - Cleared user photo from memory');
     }
     
     // Clear session cookies with proper attributes for Vercel
-    res.setHeader('Set-Cookie', [
+    const clearCookies = [
       'hrd_session=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/',
       'hrd_user_email=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/',
       'hrd_user_name=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/',
       'oauth_state=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/'
-    ]);
+    ];
+    
+    console.log('🚪 Logout - Setting clear cookies:', clearCookies);
+    res.setHeader('Set-Cookie', clearCookies);
     
     res.json({
       success: true,

@@ -105,6 +105,8 @@ export const OAuthProvider = ({ children }) => {
       });
       
       console.log('🚪 Logout response:', response.status, response.statusText);
+      const data = await response.json();
+      console.log('🚪 Logout response data:', data);
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -116,6 +118,13 @@ export const OAuthProvider = ({ children }) => {
       setUserPhoto(null);
       setIsLoading(false);
       setAuthCheckFailed(false);
+      
+      // Clear cookies manually as backup
+      console.log('🚪 Clearing cookies manually...');
+      document.cookie = 'hrd_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'hrd_user_email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'hrd_user_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       
       // Force reload to clear any cached state
       console.log('🚪 Reloading page...');

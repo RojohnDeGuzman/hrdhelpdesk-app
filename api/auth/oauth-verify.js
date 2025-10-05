@@ -34,7 +34,12 @@ module.exports = async (req, res) => {
     const userEmail = req.headers.cookie?.match(/hrd_user_email=([^;]+)/)?.[1];
     const userName = req.headers.cookie?.match(/hrd_user_name=([^;]+)/)?.[1];
     
+    console.log('🔍 Verify - All cookies:', req.headers.cookie);
+    console.log('🔍 Verify - Session token:', sessionToken ? 'Found' : 'Not found');
+    console.log('🔍 Verify - User email:', userEmail ? 'Found' : 'Not found');
+    
     if (!sessionToken || !userEmail) {
+      console.log('🔍 Verify - Authentication failed: missing session or email');
       return res.status(401).json({
         success: false,
         message: 'Not authenticated'
