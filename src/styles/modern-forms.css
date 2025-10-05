@@ -1682,56 +1682,30 @@
   white-space: pre-line;
 }
 
-/* Success modal message override - dark theme */
-[data-theme="dark"] .error-modal.success .error-modal-message {
+/* Success modal message - popup style */
+.error-modal.success .error-modal-message {
   color: #ffffff !important;
-  font-size: 16px !important;
-  line-height: 1.6;
-  background: rgba(0, 0, 0, 0.3) !important;
-  padding: 20px !important;
-  border-radius: 12px !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  backdrop-filter: blur(8px);
-  margin: 16px 0 !important;
+  font-size: 14px !important;
+  line-height: 1.5;
+  background: rgba(255, 255, 255, 0.1) !important;
+  padding: 16px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(4px);
+  margin: 12px 0 !important;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-  font-weight: 600;
-}
-
-/* Success modal message override - light theme */
-[data-theme="light"] .error-modal.success .error-modal-message {
-  color: #1f2937 !important;
-  font-size: 16px !important;
-  line-height: 1.6;
-  background: rgba(255, 255, 255, 0.8) !important;
-  padding: 20px !important;
-  border-radius: 12px !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  backdrop-filter: blur(8px);
-  margin: 16px 0 !important;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  text-shadow: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   font-weight: 500;
 }
 
-/* Ensure all success modal text is white in dark theme only */
-[data-theme="dark"] .error-modal.success .error-modal-body {
+/* Success modal body - popup style */
+.error-modal.success .error-modal-body {
   color: #ffffff !important;
 }
 
-[data-theme="dark"] .error-modal.success .error-modal-body p {
+.error-modal.success .error-modal-body p {
   color: #ffffff !important;
-}
-
-/* Light theme success modal text */
-[data-theme="light"] .error-modal.success .error-modal-body {
-  color: #1f2937 !important;
-}
-
-[data-theme="light"] .error-modal.success .error-modal-body p {
-  color: #1f2937 !important;
 }
 
 .error-modal-footer {
@@ -1739,6 +1713,12 @@
   display: flex;
   justify-content: flex-end;
   background-color: #f9fafb;
+}
+
+/* Success modal footer - popup style */
+.error-modal.success .error-modal-footer {
+  padding: 12px 20px 20px 20px !important;
+  background-color: transparent !important;
 }
 
 .error-modal-button {
@@ -1765,43 +1745,44 @@
   box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
 }
 
-/* Success modal variant */
+/* Success modal variant - popup style */
 .error-modal.success {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
-  border: 2px solid rgba(59, 130, 246, 0.5) !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
+  border: 2px solid rgba(16, 185, 129, 0.3) !important;
   box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.7),
-    0 0 0 1px rgba(59, 130, 246, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  max-width: min(500px, 90vw) !important;
-  width: 90% !important;
+    0 10px 25px -5px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(16, 185, 129, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  max-width: 400px !important;
+  width: auto !important;
   margin: 0;
+  border-radius: 16px !important;
 }
 
-/* Responsive design for success modal */
+/* Responsive design for success modal popup */
 @media (max-width: 768px) {
   .error-modal.success {
-    max-width: 95vw !important;
-    width: 95% !important;
+    max-width: 350px !important;
+    width: auto !important;
     margin: 10px;
   }
   
   .error-modal.success .error-modal-header {
-    padding: 16px 16px 12px 16px !important;
+    padding: 16px 16px 10px 16px !important;
   }
   
   .error-modal.success .error-modal-title {
-    font-size: 20px !important;
+    font-size: 18px !important;
   }
   
   .error-modal.success .error-modal-message {
-    font-size: 14px !important;
-    padding: 16px !important;
+    font-size: 13px !important;
+    padding: 14px !important;
   }
   
   .error-modal.success .error-modal-button {
-    padding: 12px 24px !important;
-    font-size: 14px !important;
+    padding: 10px 20px !important;
+    font-size: 13px !important;
   }
 }
 
@@ -1811,34 +1792,35 @@
   }
   
   .error-modal.success {
-    max-width: 98vw !important;
-    width: 98% !important;
+    max-width: 320px !important;
+    width: auto !important;
     margin: 5px;
   }
   
   .error-modal.success .error-modal-header {
-    padding: 12px 12px 8px 12px !important;
+    padding: 14px 14px 8px 14px !important;
   }
   
   .error-modal.success .error-modal-title {
-    font-size: 18px !important;
+    font-size: 16px !important;
   }
   
   .error-modal.success .error-modal-message {
-    font-size: 13px !important;
+    font-size: 12px !important;
     padding: 12px !important;
   }
   
   .error-modal.success .error-modal-button {
-    padding: 10px 20px !important;
-    font-size: 13px !important;
+    padding: 8px 16px !important;
+    font-size: 12px !important;
   }
 }
 
 .error-modal.success .error-modal-header {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%) !important;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.2) !important;
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(4px);
+  padding: 20px 20px 12px 20px !important;
 }
 
 .error-modal.success .error-modal-icon {
@@ -1847,20 +1829,12 @@
   text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
 }
 
-/* Success modal title - dark theme */
-[data-theme="dark"] .error-modal.success .error-modal-title {
+/* Success modal title - popup style */
+.error-modal.success .error-modal-title {
   color: #ffffff !important;
-  font-size: 24px !important;
-  font-weight: 700 !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
-}
-
-/* Success modal title - light theme */
-[data-theme="light"] .error-modal.success .error-modal-title {
-  color: #1f2937 !important;
-  font-size: 24px !important;
-  font-weight: 700 !important;
-  text-shadow: none;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .error-modal.success .error-modal-message {
