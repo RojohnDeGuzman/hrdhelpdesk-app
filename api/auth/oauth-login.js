@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
     authUrl.searchParams.set('client_id', CLIENT_ID);
     authUrl.searchParams.set('response_type', 'code');
     authUrl.searchParams.set('redirect_uri', REDIRECT_URI);
-    authUrl.searchParams.set('scope', 'openid profile email');
+    authUrl.searchParams.set('scope', 'openid profile email User.Read');
     authUrl.searchParams.set('state', state);
     authUrl.searchParams.set('response_mode', 'query');
     
