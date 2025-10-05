@@ -18,6 +18,14 @@ const emailConfig = {
   socketTimeout: 10000      // 10 seconds
 };
 
+// Log email configuration (without password)
+console.log('🔧 Email Config:', {
+  host: emailConfig.host,
+  port: emailConfig.port,
+  user: emailConfig.auth.user,
+  hasPassword: !!emailConfig.auth.pass && emailConfig.auth.pass !== 'your-password-here'
+});
+
 class EmailServiceV2 {
   constructor() {
     console.log('🔧 EmailServiceV2 - Using email: hrd-helpdesk@castotravel.ph');
@@ -112,10 +120,17 @@ class EmailServiceV2 {
 
     } catch (error) {
       console.error('❌ Email Service - Error sending email:', error);
+      console.error('❌ Email Service - Error details:', {
+        message: error.message,
+        code: error.code,
+        response: error.response,
+        stack: error.stack
+      });
       return {
         success: false,
-        message: 'Failed to send email',
-        error: error.message
+        message: `Failed to send email: ${error.message}`,
+        error: error.message,
+        code: error.code
       };
     }
   }

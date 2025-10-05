@@ -195,10 +195,16 @@ module.exports = async (req, res) => {
 
     } catch (error) {
       console.error('❌ API - Error processing request:', error);
+      console.error('❌ API - Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
       return res.status(500).json({
         success: false,
-        message: 'Internal server error. Please try again later.',
-        error: error.message
+        message: `Internal server error: ${error.message}`,
+        error: error.message,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
     });
