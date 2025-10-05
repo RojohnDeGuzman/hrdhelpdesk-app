@@ -1596,6 +1596,8 @@
   justify-content: center;
   z-index: 10000;
   animation: fadeIn 0.3s ease-out;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .error-modal {
@@ -1604,10 +1606,13 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   max-width: 500px;
   width: 90%;
+  max-width: min(500px, 90vw);
   max-height: 80vh;
   overflow: hidden;
   animation: slideUp 0.3s ease-out;
   border: 1px solid #e5e7eb;
+  position: relative;
+  z-index: 10001;
 }
 
 .error-modal-header {
@@ -1661,6 +1666,21 @@
   white-space: pre-line;
 }
 
+/* Success modal message override */
+.error-modal.success .error-modal-message {
+  color: #e2e8f0 !important;
+  font-size: 16px !important;
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.05) !important;
+  padding: 20px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(8px);
+  margin: 16px 0 !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 .error-modal-footer {
   padding: 16px 24px 24px 24px;
   display: flex;
@@ -1700,6 +1720,66 @@
     0 25px 50px -12px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(59, 130, 246, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  max-width: min(500px, 90vw) !important;
+  width: 90% !important;
+  margin: 0;
+}
+
+/* Responsive design for success modal */
+@media (max-width: 768px) {
+  .error-modal.success {
+    max-width: 95vw !important;
+    width: 95% !important;
+    margin: 10px;
+  }
+  
+  .error-modal.success .error-modal-header {
+    padding: 16px 16px 12px 16px !important;
+  }
+  
+  .error-modal.success .error-modal-title {
+    font-size: 20px !important;
+  }
+  
+  .error-modal.success .error-modal-message {
+    font-size: 14px !important;
+    padding: 16px !important;
+  }
+  
+  .error-modal.success .error-modal-button {
+    padding: 12px 24px !important;
+    font-size: 14px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .error-modal-overlay {
+    padding: 10px;
+  }
+  
+  .error-modal.success {
+    max-width: 98vw !important;
+    width: 98% !important;
+    margin: 5px;
+  }
+  
+  .error-modal.success .error-modal-header {
+    padding: 12px 12px 8px 12px !important;
+  }
+  
+  .error-modal.success .error-modal-title {
+    font-size: 18px !important;
+  }
+  
+  .error-modal.success .error-modal-message {
+    font-size: 13px !important;
+    padding: 12px !important;
+  }
+  
+  .error-modal.success .error-modal-button {
+    padding: 10px 20px !important;
+    font-size: 13px !important;
+  }
 }
 
 .error-modal.success .error-modal-header {
