@@ -10,7 +10,7 @@ hr-staff-ui/build/
 
 # Large media files (keep essential ones)
 public/forms/
-public/*.pdf
+# public/*.pdf
 # Keep essential images for the app to work
 # public/*.gif
 # public/*.jpg  
