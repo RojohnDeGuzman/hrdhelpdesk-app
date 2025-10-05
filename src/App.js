@@ -1044,6 +1044,19 @@ function App() {
       <ThemeProvider>
         <div className="app-loading">
           <div className="loading-spinner">
+            <img 
+              src="/castologobg1.png" 
+              alt="Casto Travel Logo" 
+              className="loading-logo"
+              onError={(e) => {
+                console.error('Loading logo failed to load:', e.target.src);
+                if (e.target.src.includes('castologobg1.png')) {
+                  e.target.src = '/castologobg.png';
+                } else {
+                  e.target.style.display = 'none';
+                }
+              }}
+            />
             <div className="spinner"></div>
             <p>Loading...</p>
           </div>
