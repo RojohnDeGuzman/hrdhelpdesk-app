@@ -47,18 +47,19 @@
 }
 
 .loading-logo-image {
-  width: 120px;
-  height: 120px;
+  width: 160px;
+  height: 160px;
   object-fit: contain;
   animation: logoFloat 3s ease-in-out infinite;
   will-change: transform;
-  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.4));
   transition: all 0.3s ease;
   border-radius: 0;
   display: block;
   margin: 0 auto;
   position: relative;
   z-index: 2;
+  background: transparent;
 }
 
 .loading-logo-image:hover {
@@ -68,13 +69,14 @@
 
 .logo-ring {
   position: absolute;
-  top: -8px;
-  left: -8px;
-  right: -8px;
-  bottom: -8px;
-  border: 2px solid rgba(59, 130, 246, 0.3);
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  bottom: -12px;
+  border: 3px solid rgba(59, 130, 246, 0.4);
   border-radius: 50%;
   animation: logoRing 2s ease-in-out infinite;
+  z-index: 1;
 }
 
 .loading-text {
@@ -286,8 +288,8 @@
 /* Responsive design */
 @media (max-width: 768px) {
   .loading-logo-image {
-    width: 100px;
-    height: 100px;
+    width: 140px;
+    height: 140px;
   }
   
   .loading-title {
@@ -305,8 +307,8 @@
 
 @media (max-width: 480px) {
   .loading-logo-image {
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
   }
   
   .loading-title {
