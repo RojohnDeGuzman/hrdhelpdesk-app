@@ -1687,16 +1687,16 @@
   color: #ffffff !important;
   font-size: 16px !important;
   line-height: 1.6;
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
   padding: 20px !important;
   border-radius: 12px !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
   backdrop-filter: blur(8px);
   margin: 16px 0 !important;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: 600;
 }
 
 .error-modal-footer {
@@ -1732,11 +1732,11 @@
 
 /* Success modal variant */
 .error-modal.success {
-  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%) !important;
-  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
+  border: 2px solid rgba(59, 130, 246, 0.5) !important;
   box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(59, 130, 246, 0.1),
+    0 25px 50px -12px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(59, 130, 246, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   max-width: min(500px, 90vw) !important;
   width: 90% !important;
@@ -1816,7 +1816,7 @@
   color: #ffffff !important;
   font-size: 24px !important;
   font-weight: 700 !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 .error-modal.success .error-modal-message {
