@@ -55,9 +55,6 @@
   display: block;
   filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.1));
   transition: all 0.3s ease;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 12px;
 }
 
 .login-logo-image:hover {
