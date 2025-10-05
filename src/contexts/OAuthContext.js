@@ -35,10 +35,12 @@ export const OAuthProvider = ({ children }) => {
           : 'http://localhost:5001/api/auth/oauth-verify';
           
         console.log('🔍 Checking auth status at:', oauthUrl);
+        console.log('🔍 Environment:', process.env.NODE_ENV);
+        console.log('🔍 Current URL:', window.location.href);
         
         // Add timeout to prevent infinite loading
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
         
         const response = await fetch(oauthUrl, {
           method: 'GET',
