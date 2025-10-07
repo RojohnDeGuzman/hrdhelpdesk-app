@@ -23,7 +23,8 @@
   padding: 40px;
   max-width: 420px;
   width: 90%;
-  max-height: 90vh;
+  min-height: 60vh;
+  max-height: 85vh;
   position: relative;
   z-index: 10;
   isolation: isolate;
@@ -31,6 +32,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .login-container:hover {
@@ -631,11 +633,57 @@
 }
 */
 
+/* Tablet and Landscape Mobile */
+@media (max-width: 768px) and (min-height: 600px) {
+  .login-container {
+    min-height: 50vh;
+    max-height: 75vh;
+  }
+  
+  .login-logo-image {
+    width: 170px;
+    height: 170px;
+  }
+}
+
+/* Small Mobile Landscape */
+@media (max-height: 500px) {
+  .login-container {
+    min-height: 45vh;
+    max-height: 95vh;
+    padding: 20px;
+  }
+  
+  .login-logo-image {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 12px;
+  }
+  
+  .login-header {
+    margin-bottom: 16px;
+  }
+  
+  .login-title {
+    font-size: 20px;
+  }
+  
+  .login-description {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+  }
+  
+  .microsoft-login-button {
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+}
+
 /* Responsive Design */
 @media (max-height: 800px) {
   .login-container {
-    max-height: 90vh;
-    overflow-y: auto;
+    min-height: 50vh;
+    max-height: 80vh;
   }
   
   .login-logo-image {
@@ -657,6 +705,8 @@
     padding: 24px 20px;
     border-radius: 16px;
     max-width: 100%;
+    min-height: 55vh;
+    max-height: 90vh;
   }
 
   .login-header {
@@ -718,7 +768,8 @@
 
 @media (max-width: 480px) {
   .login-container {
-    padding: 24px 20px;
+    padding: 20px 16px;
+    min-height: 60vh;
     max-height: 95vh;
     width: 95%;
   }
