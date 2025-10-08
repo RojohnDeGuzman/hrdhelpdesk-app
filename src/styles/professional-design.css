@@ -1043,7 +1043,7 @@ body {
   animation: card-icon-toast 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   filter: 
     drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))
-    drop-shadow(0 0 25px rgba(255, 255, 255, 0.4));
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.15));
 }
 
 @keyframes card-icon-toast {
@@ -1086,7 +1086,7 @@ body {
     transform: translateZ(36px) translateY(-10px) scale(1.36) rotateY(-8deg) rotateX(6deg) rotateZ(-3.5deg);
     filter: 
       drop-shadow(0 12px 24px rgba(0, 0, 0, 0.32))
-      drop-shadow(0 0 20px rgba(255, 255, 255, 0.3))
+      drop-shadow(0 0 8px rgba(255, 255, 255, 0.12))
       brightness(1.25)
       saturate(1.18);
   }
@@ -1094,7 +1094,7 @@ body {
     transform: translateZ(40px) translateY(-12px) scale(1.4) rotateY(-12deg) rotateX(8deg) rotateZ(-4deg);
     filter: 
       drop-shadow(0 14px 28px rgba(0, 0, 0, 0.35))
-      drop-shadow(0 0 25px rgba(255, 255, 255, 0.4))
+      drop-shadow(0 0 10px rgba(255, 255, 255, 0.15))
       brightness(1.3)
       saturate(1.2);
   }
@@ -1102,7 +1102,7 @@ body {
     transform: translateZ(38px) translateY(-11px) scale(1.38) rotateY(10deg) rotateX(-6deg) rotateZ(3.5deg);
     filter: 
       drop-shadow(0 13px 26px rgba(0, 0, 0, 0.33))
-      drop-shadow(0 0 23px rgba(255, 255, 255, 0.38))
+      drop-shadow(0 0 9px rgba(255, 255, 255, 0.14))
       brightness(1.28)
       saturate(1.19);
   }
@@ -1110,7 +1110,7 @@ body {
     transform: translateZ(36px) translateY(-10px) scale(1.36) rotateY(8deg) rotateX(-4deg) rotateZ(3deg);
     filter: 
       drop-shadow(0 12px 24px rgba(0, 0, 0, 0.32))
-      drop-shadow(0 0 22px rgba(255, 255, 255, 0.36))
+      drop-shadow(0 0 8px rgba(255, 255, 255, 0.13))
       brightness(1.25)
       saturate(1.17);
   }
@@ -1118,7 +1118,7 @@ body {
     transform: translateZ(34px) translateY(-9px) scale(1.34) rotateY(-3deg) rotateX(2.5deg) rotateZ(-1.5deg);
     filter: 
       drop-shadow(0 11px 22px rgba(0, 0, 0, 0.3))
-      drop-shadow(0 0 20px rgba(255, 255, 255, 0.34))
+      drop-shadow(0 0 7px rgba(255, 255, 255, 0.12))
       brightness(1.22)
       saturate(1.15);
   }
@@ -1126,7 +1126,7 @@ body {
     transform: translateZ(33px) translateY(-8px) scale(1.33) rotateY(-5deg) rotateX(3deg) rotateZ(-2deg);
     filter: 
       drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))
-      drop-shadow(0 0 20px rgba(255, 255, 255, 0.3))
+      drop-shadow(0 0 8px rgba(255, 255, 255, 0.12))
       brightness(1.2)
       saturate(1.13);
   }
@@ -1134,7 +1134,7 @@ body {
     transform: translateZ(32px) translateY(-7px) scale(1.32) rotateY(1deg) rotateX(-1.5deg) rotateZ(0.5deg);
     filter: 
       drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))
-      drop-shadow(0 0 22px rgba(255, 255, 255, 0.32))
+      drop-shadow(0 0 8px rgba(255, 255, 255, 0.13))
       brightness(1.17)
       saturate(1.11);
   }
@@ -1142,7 +1142,7 @@ body {
     transform: translateZ(31px) translateY(-6px) scale(1.31) rotateY(2deg) rotateX(-2deg) rotateZ(1deg);
     filter: 
       drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))
-      drop-shadow(0 0 20px rgba(255, 255, 255, 0.3))
+      drop-shadow(0 0 8px rgba(255, 255, 255, 0.12))
       brightness(1.15)
       saturate(1.1);
   }
@@ -1150,7 +1150,7 @@ body {
     transform: translateZ(30px) translateY(-6px) scale(1.3) rotateY(-1deg) rotateX(1deg) rotateZ(-0.5deg);
     filter: 
       drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))
-      drop-shadow(0 0 23px rgba(255, 255, 255, 0.35))
+      drop-shadow(0 0 8px rgba(255, 255, 255, 0.14))
       brightness(1.18)
       saturate(1.12);
   }
@@ -1158,7 +1158,7 @@ body {
     transform: translateZ(30px) translateY(-6px) scale(1.3) rotateY(0deg) rotateX(0deg) rotateZ(0deg);
     filter: 
       drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))
-      drop-shadow(0 0 25px rgba(255, 255, 255, 0.4))
+      drop-shadow(0 0 8px rgba(255, 255, 255, 0.15))
       brightness(1.2)
       saturate(1.15);
   }
@@ -1216,7 +1216,8 @@ body {
 
 /* Accessibility - Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
-  .service-card-icon {
+  .service-card-icon,
+  .service-card-title {
     animation: none !important;
     transition: transform 0.2s ease, filter 0.2s ease;
   }
@@ -1226,11 +1227,17 @@ body {
     transform: scale(1.1);
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
   }
+  
+  .professional-service-card:hover .service-card-title {
+    animation: none !important;
+    transform: scale(1.03);
+  }
 }
 
 /* Optimize for touch devices */
 @media (hover: none) and (pointer: coarse) {
-  .professional-service-card:active .service-card-icon {
+  .professional-service-card:active .service-card-icon,
+  .professional-service-card:active .service-card-title {
     animation-duration: 0.4s;
   }
 }
@@ -1245,6 +1252,121 @@ body {
   word-wrap: break-word;
   hyphens: auto;
   overflow-wrap: break-word;
+  
+  /* 3D Toast Animation Setup for Title */
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  
+  /* GPU Acceleration */
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Optimize performance */
+  isolation: isolate;
+}
+
+/* 3D Toast Animation for Service Card Title */
+.professional-service-card:hover .service-card-title {
+  animation: card-title-toast 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes card-title-toast {
+  0% {
+    transform: translateZ(0px) translateX(0px) scale(1);
+    opacity: 1;
+  }
+  8% {
+    transform: translateZ(4px) translateX(2px) scale(1.02);
+    opacity: 1;
+  }
+  15% {
+    transform: translateZ(8px) translateX(4px) scale(1.04);
+    opacity: 1;
+  }
+  23% {
+    transform: translateZ(12px) translateX(6px) scale(1.06);
+    opacity: 1;
+  }
+  30% {
+    transform: translateZ(15px) translateX(8px) scale(1.08);
+    opacity: 1;
+  }
+  38% {
+    transform: translateZ(17px) translateX(9px) scale(1.09);
+    opacity: 1;
+  }
+  45% {
+    transform: translateZ(18px) translateX(10px) scale(1.1);
+    opacity: 1;
+  }
+  53% {
+    transform: translateZ(17px) translateX(9px) scale(1.09);
+    opacity: 1;
+  }
+  60% {
+    transform: translateZ(16px) translateX(9px) scale(1.09);
+    opacity: 1;
+  }
+  68% {
+    transform: translateZ(16px) translateX(8px) scale(1.08);
+    opacity: 1;
+  }
+  75% {
+    transform: translateZ(15px) translateX(8px) scale(1.08);
+    opacity: 1;
+  }
+  83% {
+    transform: translateZ(15px) translateX(8px) scale(1.08);
+    opacity: 1;
+  }
+  90% {
+    transform: translateZ(15px) translateX(8px) scale(1.08);
+    opacity: 1;
+  }
+  95% {
+    transform: translateZ(15px) translateX(8px) scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: translateZ(15px) translateX(8px) scale(1.08);
+    opacity: 1;
+  }
+}
+
+/* Smooth exit animation for title */
+.service-card-title {
+  animation: card-title-exit 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes card-title-exit {
+  0% {
+    transform: translateZ(15px) translateX(8px) scale(1.08);
+    opacity: 1;
+  }
+  20% {
+    transform: translateZ(12px) translateX(6px) scale(1.06);
+    opacity: 1;
+  }
+  40% {
+    transform: translateZ(9px) translateX(5px) scale(1.04);
+    opacity: 1;
+  }
+  60% {
+    transform: translateZ(6px) translateX(3px) scale(1.02);
+    opacity: 1;
+  }
+  80% {
+    transform: translateZ(2px) translateX(1px) scale(1.01);
+    opacity: 1;
+  }
+  100% {
+    transform: translateZ(0px) translateX(0px) scale(1);
+    opacity: 1;
+  }
 }
 
 .service-card-description {
