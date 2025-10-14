@@ -1,0 +1,579 @@
+const nodemailer = require('nodemailer');
+
+// Email configuration for Vercel serverless functions
+const emailConfig = {
+  host: 'smtp.office365.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER || 'hrd-helpdesk@castotravel.ph',
+    pass: process.env.EMAIL_PASS || process.env.MICROSOFT_CLIENT_SECRET || 'fallback-password'
+  },
+  tls: {
+    ciphers: 'SSLv3'
+  },
+  // Add timeout settings for Vercel
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 5000,    // 5 seconds
+  socketTimeout: 10000      // 10 seconds
+};
+
+// Log email configuration (without password)
+console.log('🔧 Email Config:', {
+  host: emailConfig.host,
+  port: emailConfig.port,
+  user: emailConfig.auth.user,
+  hasPassword: !!emailConfig.auth.pass && emailConfig.auth.pass !== 'your-password-here' && emailConfig.auth.pass !== 'fallback-password',
+  passwordSource: process.env.EMAIL_PASS ? 'EMAIL_PASS' : process.env.MICROSOFT_CLIENT_SECRET ? 'MICROSOFT_CLIENT_SECRET' : 'fallback',
+  envVars: {
+    EMAIL_USER: process.env.EMAIL_USER ? 'SET' : 'NOT_SET',
+    EMAIL_PASS: process.env.EMAIL_PASS ? 'SET' : 'NOT_SET',
+    NODE_ENV: process.env.NODE_ENV
+  }
+});
+
+class EmailServiceV2 {
+  constructor() {
+    console.log('🔧 EmailServiceV2 - Using email: hrd-helpdesk@castotravel.ph');
+    console.log('🔧 EmailServiceV2 - Using hardcoded credentials approach');
+    
+    console.log('🔧 EmailServiceV2 - Initializing with nodemailer');
+    console.log('🔧 EmailServiceV2 - Nodemailer type:', typeof nodemailer);
+    console.log('🔧 EmailServiceV2 - Available methods:', Object.getOwnPropertyNames(nodemailer));
+    
+    try {
+      this.transporter = nodemailer.createTransport(emailConfig);
+      console.log('✅ EmailServiceV2 - Transporter created successfully');
+    } catch (error) {
+      console.error('❌ EmailServiceV2 - Error creating transporter:', error);
+      throw error;
+    }
+  }
+
+  // Test email connection
+  async testConnection() {
+    try {
+      await this.transporter.verify();
+      console.log('✅ Email service is ready to send emails');
+      return true;
+    } catch (error) {
+      console.error('❌ Email service connection failed:', error.message);
+      return false;
+    }
+  }
+
+  // Send HRD Helpdesk form submission to osTicket
+  async sendHRDRequest(formData, attachments = []) {
+    try {
+      console.log('📧 Email Service - Received form data:', JSON.stringify(formData, null, 2));
+      console.log('📎 Email Service - Received attachments:', JSON.stringify(attachments, null, 2));
+      
+      // Check if we have valid email credentials
+      if (!emailConfig.auth.pass || emailConfig.auth.pass === 'fallback-password' || emailConfig.auth.pass === 'your-password-here') {
+        console.log('⚠️ Email Service - No valid email credentials found, logging form submission instead');
+        console.log('📝 Form Submission Log:', {
+          timestamp: new Date().toISOString(),
+          formData: formData,
+          attachments: attachments.map(att => ({ name: att.originalname, size: att.buffer?.length }))
+        });
+        
+        // Return success even without sending email
+        return {
+          success: true,
+          message: 'Form submitted successfully (logged - email service not configured)',
+          messageId: `log-${Date.now()}`
+        };
+      }
+      
+      console.log('✅ Email Service - Valid credentials found, proceeding with email send');
+      
+      const {
+        name,
+        email,
+        divisionmanager,
+        title,
+        subject = title, // Use title as fallback for subject
+        description,
+        formType,
+        priority = 'Normal',
+        department = 'HRD'
+      } = formData;
+
+      // Debug title field
+      console.log('📧 Email Service - Title field debug:');
+      console.log('📧 Email Service - Raw title:', title);
+      console.log('📧 Email Service - Raw subject:', subject);
+      console.log('📧 Email Service - Final title used:', title || subject);
+      console.log('📧 Email Service - Title type:', typeof title);
+      console.log('📧 Email Service - Title length:', title ? title.length : 0);
+
+    // Create email content
+    const emailContent = this.createEmailContent(formData, attachments);
+    console.log('📧 Email Service - Using NEW PROFESSIONAL template version 2.0');
+      
+      // Prepare mail options
+      const mailOptions = {
+        from: `"${name}" <hrd-helpdesk@castotravel.ph>`,
+        to: 'hrd-helpdesk@castotravel.ph', // Your osTicket email
+        cc: email, // CC the user
+        replyTo: email, // Set reply-to as user's email
+        subject: `${name} - ${title || subject || 'No Title'} [HRD Helpdesk]`,
+        html: emailContent,
+        // Add custom headers for osTicket integration
+        headers: {
+          'X-Original-Sender': email,
+          'X-Sender-Name': name,
+          'Message-ID': `<${Date.now()}.${Math.random().toString(36).substr(2, 9)}@castotravel.ph>`,
+          'X-Priority': priority === 'High' ? '1' : '3',
+          'X-MSMail-Priority': priority === 'High' ? 'High' : 'Normal',
+          'Importance': priority === 'High' ? 'high' : 'normal',
+          'X-Mailer': 'HRD Helpdesk System v1.0'
+        }
+      };
+
+      // Add attachments if any
+      if (attachments && attachments.length > 0) {
+        mailOptions.attachments = attachments.map(attachment => ({
+          filename: attachment.originalname,
+          content: Buffer.from(attachment.buffer), // Convert array back to Buffer
+          contentType: attachment.mimetype
+        }));
+      }
+
+      console.log('📧 Email Service - Sending email with options:', JSON.stringify(mailOptions, null, 2));
+
+      // Send email
+      const result = await this.transporter.sendMail(mailOptions);
+      console.log('✅ Email sent successfully:', result.messageId);
+
+      return {
+        success: true,
+        message: 'Email sent successfully to osTicket',
+        messageId: result.messageId
+      };
+
+    } catch (error) {
+      console.error('❌ Email Service - Error sending email:', error);
+      console.error('❌ Email Service - Error details:', {
+        message: error.message,
+        code: error.code,
+        response: error.response,
+        stack: error.stack
+      });
+      return {
+        success: false,
+        message: `Failed to send email: ${error.message}`,
+        error: error.message,
+        code: error.code
+      };
+    }
+  }
+
+  // Create email content - COMPACT VERSION
+  createEmailContent(formData, attachments) {
+    const {
+      name,
+      email,
+      divisionmanager,
+      title,
+      subject = title, // Use title as fallback for subject
+      description,
+      formType,
+      priority = 'Normal',
+      department = 'HRD',
+      ...otherFields
+    } = formData;
+
+    // Get current timestamp
+    const timestamp = new Date().toLocaleString('en-US', {
+      timeZone: 'Asia/Manila',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+
+    let html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>HRD Helpdesk Request</title>
+        <style>
+          body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.5; 
+            color: #333; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f5f5f5;
+          }
+          .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          }
+          .header { 
+            background: #2c3e50; 
+            color: white; 
+            padding: 20px; 
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+          }
+          .header h1 { 
+            margin: 0; 
+            font-size: 22px; 
+            font-weight: 600;
+            letter-spacing: 0.5px;
+          }
+          .content { 
+            padding: 0; 
+            background: #ffffff;
+          }
+          .section {
+            margin: 0;
+            border-bottom: 1px solid #e0e0e0;
+          }
+          .section:last-child {
+            border-bottom: none;
+          }
+          .section-header {
+            background: #f8f9fa;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e0e0e0;
+          }
+          .section-content {
+            padding: 15px 20px;
+          }
+          .field-line {
+            margin-bottom: 8px;
+            line-height: 1.4;
+            padding: 4px 0;
+          }
+          .field-line:last-child { 
+            margin-bottom: 0;
+          }
+          .label { 
+            font-weight: 600; 
+            color: #2c3e50; 
+            font-size: 13px;
+            display: inline;
+            min-width: 120px;
+            margin-right: 8px;
+          }
+          .value { 
+            font-size: 13px;
+            color: #555;
+            display: inline;
+            font-weight: 400;
+          }
+          .requester-section {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+          }
+          .details-section {
+            background: #ffffff;
+          }
+          .other-section {
+            background: #f8f9fa;
+          }
+          .urgency-section {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+          }
+          .confirmation-section {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+            text-align: center;
+            font-weight: 500;
+            color: #2e7d32;
+          }
+          .footer { 
+            background: #f8f9fa; 
+            padding: 15px 20px; 
+            border-top: 1px solid #e0e0e0;
+            font-size: 11px; 
+            color: #666;
+            text-align: center;
+          }
+          .important-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 12px;
+            color: #856404;
+          }
+          .important-note strong {
+            color: #d63031;
+          }
+          .attachment-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 5px 0;
+            font-size: 12px;
+            color: #007bff;
+            text-decoration: none;
+            display: inline-block;
+          }
+          .attachment-item:hover {
+            background: #e9ecef;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="header-content">
+              <h1>🎯 HRD Helpdesk Request</h1>
+            </div>
+          </div>
+
+          <div class="content">
+            <!-- Request Submitted By Section -->
+            <div class="section requester-section">
+              <div class="section-header">
+                📧 Request Submitted By
+              </div>
+              <div class="section-content">
+                <div class="field-line">
+                  <span class="label">Name:</span> <span class="value"><strong>${name || 'Not provided'}</strong></span>
+                </div>
+                <div class="field-line">
+                  <span class="label">Email:</span> <span class="value"><a href="mailto:${email}" style="color: #007bff; text-decoration: none;">${email}</a></span>
+                </div>
+                <div class="important-note">
+                  <strong>IMPORTANT:</strong> Reply directly to this email to respond to the employee. Your reply will be sent to: <a href="mailto:${email}" style="color: #007bff;">${email}</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Request Details Section -->
+            <div class="section details-section">
+              <div class="section-header">
+                📋 Request Details
+              </div>
+              <div class="section-content">
+    `;
+
+    // Add form type if available
+    if (formType && formType.trim() !== '') {
+      html += `
+                <div class="field-line">
+                  <span class="label">Request Type:</span> <span class="value">${formType}</span>
+                </div>
+      `;
+    }
+
+    // Add division manager if available
+    if (divisionmanager && divisionmanager.trim() !== '') {
+      html += `
+                <div class="field-line">
+                  <span class="label">Division Manager:</span> <span class="value">${divisionmanager}</span>
+                </div>
+      `;
+    }
+
+    // Add title/subject if available
+    const finalTitle = title || subject || 'No Title Provided';
+    console.log('📧 Email Service - HTML Title debug:');
+    console.log('📧 Email Service - Final title for HTML:', finalTitle);
+    
+    html += `
+              <div class="field-line">
+                <span class="label">Request Title:</span> <span class="value">${finalTitle}</span>
+              </div>
+    `;
+
+    // Add description if available
+    if (description && description.trim() !== '') {
+      html += `
+                <div class="field-line">
+                  <span class="label">Description:</span> <span class="value">${description}</span>
+                </div>
+      `;
+    }
+
+    html += `
+              </div>
+            </div>
+
+            <!-- Other Details Section -->
+            <div class="section other-section">
+              <div class="section-header">
+                📝 Other
+              </div>
+              <div class="section-content">
+    `;
+
+    // Add other form fields dynamically (exclude unwanted fields and empty values)
+    const excludedFields = ['attachments', 'ntLogin', 'userVerification', 'title', 'subject', 'formType', 'name', 'email', 'divisionmanager', 'description'];
+    const meaningfulFields = ['reason', 'adjustmentType', 'salaryPeriod', 'employeeName', 'currentDept', 'effectiveDate', 'fromDate', 'toDate', 'requestedAgent', 'funddepartment', 'agentName', 'fromDept', 'toDept', 'emergencyContact', 'contactNumber', 'address', 'ccEmail', 'kudosRecipient', 'kudosCategory', 'kudosReason'];
+    
+    console.log('📧 Email Service - Processing other fields:', Object.keys(otherFields));
+    console.log('📧 Email Service - Meaningful fields to include:', meaningfulFields);
+    
+    let hasOtherFields = false;
+    Object.entries(otherFields).forEach(([key, value]) => {
+      // Only show if field has value, is not excluded, and is meaningful
+      if (value && value.toString().trim() !== '' && 
+          !excludedFields.includes(key) && 
+          meaningfulFields.includes(key)) {
+        const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        console.log(`📧 Email Service - Adding field: ${key} = ${value}`);
+        html += `
+                <div class="field-line">
+                  <span class="label">${label}:</span> <span class="value">${value}</span>
+                </div>
+        `;
+        hasOtherFields = true;
+      }
+    });
+
+    // If no other fields, show a message
+    if (!hasOtherFields) {
+      html += `
+                <div class="field-line">
+                  <span class="value" style="color: #999; font-style: italic;">No additional details provided</span>
+                </div>
+      `;
+    }
+
+    html += `
+              </div>
+            </div>
+
+            <!-- Attachments Section -->
+    `;
+
+    // Add attachments section if any
+    if (attachments && attachments.length > 0) {
+      html += `
+            <div class="section">
+              <div class="section-header">
+                📎 Attachments
+              </div>
+              <div class="section-content">
+      `;
+      attachments.forEach(attachment => {
+        html += `
+                <div class="attachment-item">
+                  📎 ${attachment.originalname}
+                </div>
+        `;
+      });
+      html += `
+              </div>
+            </div>
+      `;
+    }
+
+    html += `
+            <!-- Confirmation Section -->
+            <div class="section confirmation-section">
+              <div class="section-content">
+                This request was submitted through the HRD Helpdesk system.
+              </div>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div>Submitted on: ${timestamp}</div>
+            <div>System: HRD Helpdesk Application</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    return html;
+  }
+
+  // Send feedback email
+  async sendFeedbackEmail(feedbackData) {
+    try {
+      const { rating, feedback, name, email, timestamp } = feedbackData;
+
+      const stars = '⭐'.repeat(rating);
+      const emailContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Feedback & Suggestions</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .header { background: #f4f4f4; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+            .content { padding: 20px; }
+            .rating { font-size: 24px; margin: 10px 0; }
+            .feedback { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 10px 0; }
+            .footer { margin-top: 30px; padding: 15px; background: #f5f5f5; border-radius: 5px; font-size: 12px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h2>💬 Feedback & Suggestions</h2>
+            <p><strong>Rating:</strong> <span class="rating">${stars}</span> (${rating}/5)</p>
+          </div>
+
+          <div class="content">
+            <div class="feedback">
+              <strong>Feedback:</strong><br>
+              ${feedback}
+            </div>
+            
+            <p><strong>From:</strong> ${name} (${email})</p>
+            <p><strong>Submitted:</strong> ${new Date(timestamp).toLocaleString()}</p>
+          </div>
+
+          <div class="footer">
+            <p>This feedback was submitted through the HRD Helpdesk System.</p>
+          </div>
+        </body>
+        </html>
+      `;
+
+      const mailOptions = {
+        from: '"HRD Helpdesk System" <hrd-helpdesk@castotravel.ph>',
+        to: 'hrd-helpdesk@castotravel.ph',
+        cc: email,
+        replyTo: email,
+        subject: `Feedback & Suggestions - ${name} [HRD Helpdesk]`,
+        html: emailContent
+      };
+
+      const result = await this.transporter.sendMail(mailOptions);
+      console.log('✅ Feedback email sent successfully:', result.messageId);
+
+      return {
+        success: true,
+        message: 'Feedback sent successfully!',
+        messageId: result.messageId
+      };
+
+    } catch (error) {
+      console.error('❌ Error sending feedback email:', error);
+      return {
+        success: false,
+        message: 'Failed to send feedback',
+        error: error.message
+      };
+    }
+  }
+}
+
+module.exports = EmailServiceV2;

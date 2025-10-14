@@ -1,0 +1,212 @@
+const EmailServiceV2 = require('./emailServiceV2');
+const { validateFile } = require('./fileValidation');
+const { validateFormData, sanitizeFormData } = require('./inputValidation');
+const rateLimiter = require('./rateLimiter');
+const authenticateRequest = require('./auth-middleware');
+
+// Initialize email service
+const emailService = new EmailServiceV2();
+
+
+// Helper function to parse multipart form data
+function parseMultipartFormData(body, boundary) {
+  const parts = body.split(`--${boundary}`);
+  const fields = {};
+  const files = [];
+
+  for (let i = 1; i < parts.length - 1; i++) {
+    const part = parts[i];
+    const headerEnd = part.indexOf('\r\n\r\n');
+    if (headerEnd === -1) continue;
+
+    const headers = part.substring(0, headerEnd);
+    const content = part.substring(headerEnd + 4);
+
+    // Check if this is a file upload
+    if (headers.includes('filename=')) {
+      const filenameMatch = headers.match(/filename="([^"]+)"/);
+      const contentTypeMatch = headers.match(/Content-Type: ([^\r\n]+)/);
+      const nameMatch = headers.match(/name="([^"]+)"/);
+      
+      if (filenameMatch && nameMatch) {
+        files.push({
+          fieldname: nameMatch[1],
+          originalname: filenameMatch[1],
+          mimetype: contentTypeMatch ? contentTypeMatch[1] : 'application/octet-stream',
+          buffer: Buffer.from(content, 'binary')
+        });
+      }
+    } else {
+      // Regular form field
+      const nameMatch = headers.match(/name="([^"]+)"/);
+      if (nameMatch) {
+        fields[nameMatch[1]] = content.trim();
+      }
+    }
+  }
+
+  return { fields, files };
+}
+
+// Apply rate limiting
+const limiter = rateLimiter({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  maxRequests: 10, // 10 requests per 15 minutes per IP
+  message: 'Too many form submissions. Please try again later.'
+});
+
+module.exports = async (req, res) => {
+  // Apply authentication middleware
+  authenticateRequest(req, res, () => {
+    // Apply rate limiting
+    limiter(req, res, async () => {
+    // Set CORS headers - restrict to your domain only
+    const allowedOrigins = [
+      'https://hrdhelpdesk-app.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:3001'
+    ];
+    
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+      return res.status(405).json({ 
+        success: false, 
+        message: 'Method not allowed. Only POST requests are supported.' 
+      });
+    }
+
+    try {
+      // Log only essential information for debugging
+      console.log('📧 API - Received email request:', {
+        method: req.method,
+        contentType: req.headers['content-type'],
+        bodyKeys: Object.keys(req.body || {}),
+        hasAttachments: req.body && req.body.attachments
+      });
+
+
+      let formData = {};
+      let attachments = [];
+
+      // Check if it's multipart form data
+      if (req.headers['content-type'] && req.headers['content-type'].includes('multipart/form-data')) {
+        console.log('📎 Processing multipart form data');
+        const boundary = req.headers['content-type'].split('boundary=')[1];
+        const { fields, files } = parseMultipartFormData(req.body, boundary);
+        formData = fields;
+        attachments = files;
+        console.log('📎 Parsed multipart data:', { fields: formData, files: attachments });
+      } else {
+        console.log('📄 Processing JSON form data');
+        // Regular JSON data with attachments
+        formData = { ...req.body };
+        attachments = req.body.attachments || [];
+        delete formData.attachments; // Remove attachments from form data
+        console.log('📄 JSON data:', { fields: formData, files: attachments });
+      }
+
+      // Log form data for debugging
+      console.log('📝 Raw form data:', formData);
+      console.log('📝 Raw form data keys:', Object.keys(formData));
+      console.log('📝 Raw form data values:', Object.values(formData));
+      
+      // Add user verification info (simplified)
+      const timestamp = new Date().toISOString();
+      
+      // Add verification info to form data
+      formData.userVerification = {
+        timestamp: timestamp
+      };
+      
+      // Sanitize form data
+      const sanitizedFormData = sanitizeFormData(formData);
+      console.log('🧹 Sanitized form data:', sanitizedFormData);
+      console.log('🧹 Sanitized form data keys:', Object.keys(sanitizedFormData));
+      
+      // Validate form data
+      const validation = validateFormData(sanitizedFormData);
+      if (!validation.isValid) {
+        console.log('❌ Form validation failed:', validation.errors);
+        console.log('📝 Form data received:', sanitizedFormData);
+        return res.status(400).json({
+          success: false,
+          message: `Validation failed: ${validation.errors.join(', ')}`,
+          errors: validation.errors
+        });
+      }
+
+      // Validate all attachments
+      console.log('📎 Processing attachments:', attachments.length, 'files');
+      for (let i = 0; i < attachments.length; i++) {
+        const attachment = attachments[i];
+        console.log(`📎 Attachment ${i + 1}:`, {
+          name: attachment.originalname,
+          type: attachment.mimetype,
+          size: attachment.buffer ? attachment.buffer.length : 'No buffer',
+          hasBuffer: !!attachment.buffer
+        });
+        
+        const validation = validateFile(attachment, 'general');
+        if (!validation.isValid) {
+          console.log('❌ Attachment validation failed:', validation.errors);
+          return res.status(400).json({
+            success: false,
+            message: `File validation failed: ${validation.errors.join(', ')}`
+          });
+        }
+      }
+
+      // Send the email directly (connection test removed to prevent timeout)
+      // Add timeout wrapper to prevent Vercel timeout
+      const emailPromise = emailService.sendHRDRequest(sanitizedFormData, attachments);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Email sending timeout')), 25000) // 25 second timeout
+      );
+      
+      const result = await Promise.race([emailPromise, timeoutPromise]);
+
+      if (result.success) {
+        console.log('✅ API - Email sent successfully');
+        return res.status(200).json({
+          success: true,
+          message: 'Email sent successfully'
+        });
+      } else {
+        console.error('❌ API - Failed to send email');
+        return res.status(500).json({
+          success: false,
+          message: 'Failed to send email. Please try again later.'
+        });
+      }
+
+    } catch (error) {
+      console.error('❌ API - Error processing request:', error);
+      console.error('❌ API - Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
+      return res.status(500).json({
+        success: false,
+        message: `Internal server error: ${error.message}`,
+        error: error.message,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      });
+    }
+    });
+  });
+}

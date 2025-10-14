@@ -1,0 +1,75 @@
+[1mdiff --git a/api/auth/oauth-logout.js b/api/auth/oauth-logout.js[m
+[1mindex 852239c..c2952b2 100644[m
+[1m--- a/api/auth/oauth-logout.js[m
+[1m+++ b/api/auth/oauth-logout.js[m
+[36m@@ -31,17 +31,24 @@[m [mmodule.exports = async (req, res) => {[m
+   try {[m
+     // Get session token to clear photo from memory[m
+     const sessionToken = req.headers.cookie?.match(/hrd_session=([^;]+)/)?.[1];[m
+[32m+[m[32m    console.log('🚪 Logout - Session token found:', sessionToken ? 'Yes' : 'No');[m
+[32m+[m[32m    console.log('🚪 Logout - All cookies:', req.headers.cookie);[m
+[32m+[m[41m    [m
+     if (sessionToken && global.userPhotos) {[m
+       delete global.userPhotos[sessionToken];[m
+[32m+[m[32m      console.log('🚪 Logout - Cleared user photo from memory');[m
+     }[m
+     [m
+     // Clear session cookies with proper attributes for Vercel[m
+[31m-    res.setHeader('Set-Cookie', [[m
+[32m+[m[32m    const clearCookies = [[m
+       'hrd_session=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/',[m
+       'hrd_user_email=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/',[m
+       'hrd_user_name=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/',[m
+       'oauth_state=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/'[m
+[31m-    ]);[m
+[32m+[m[32m    ];[m
+[32m+[m[41m    [m
+[32m+[m[32m    console.log('🚪 Logout - Setting clear cookies:', clearCookies);[m
+[32m+[m[32m    res.setHeader('Set-Cookie', clearCookies);[m
+     [m
+     res.json({[m
+       success: true,[m
+[1mdiff --git a/api/auth/oauth-verify.js b/api/auth/oauth-verify.js[m
+[1mindex 67cfc2a..3be889b 100644[m
+[1m--- a/api/auth/oauth-verify.js[m
+[1m+++ b/api/auth/oauth-verify.js[m
+[36m@@ -34,7 +34,12 @@[m [mmodule.exports = async (req, res) => {[m
+     const userEmail = req.headers.cookie?.match(/hrd_user_email=([^;]+)/)?.[1];[m
+     const userName = req.headers.cookie?.match(/hrd_user_name=([^;]+)/)?.[1];[m
+     [m
+[32m+[m[32m    console.log('🔍 Verify - All cookies:', req.headers.cookie);[m
+[32m+[m[32m    console.log('🔍 Verify - Session token:', sessionToken ? 'Found' : 'Not found');[m
+[32m+[m[32m    console.log('🔍 Verify - User email:', userEmail ? 'Found' : 'Not found');[m
+[32m+[m[41m    [m
+     if (!sessionToken || !userEmail) {[m
+[32m+[m[32m      console.log('🔍 Verify - Authentication failed: missing session or email');[m
+       return res.status(401).json({[m
+         success: false,[m
+         message: 'Not authenticated'[m
+[1mdiff --git a/src/contexts/OAuthContext.js b/src/contexts/OAuthContext.js[m
+[1mindex 59ed4ff..a527f92 100644[m
+[1m--- a/src/contexts/OAuthContext.js[m
+[1m+++ b/src/contexts/OAuthContext.js[m
+[36m@@ -105,6 +105,8 @@[m [mexport const OAuthProvider = ({ children }) => {[m
+       });[m
+       [m
+       console.log('🚪 Logout response:', response.status, response.statusText);[m
+[32m+[m[32m      const data = await response.json();[m
+[32m+[m[32m      console.log('🚪 Logout response data:', data);[m
+     } catch (error) {[m
+       console.error('Logout error:', error);[m
+     } finally {[m
+[36m@@ -117,6 +119,13 @@[m [mexport const OAuthProvider = ({ children }) => {[m
+       setIsLoading(false);[m
+       setAuthCheckFailed(false);[m
+       [m
+[32m+[m[32m      // Clear cookies manually as backup[m
+[32m+[m[32m      console.log('🚪 Clearing cookies manually...');[m
+[32m+[m[32m      document.cookie = 'hrd_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';[m
+[32m+[m[32m      document.cookie = 'hrd_user_email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';[m
+[32m+[m[32m      document.cookie = 'hrd_user_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';[m
+[32m+[m[32m      document.cookie = 'oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';[m
+[32m+[m[41m      [m
+       // Force reload to clear any cached state[m
+       console.log('🚪 Reloading page...');[m
+       window.location.reload();[m

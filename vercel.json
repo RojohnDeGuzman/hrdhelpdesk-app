@@ -1,0 +1,52 @@
+{
+  "functions": {
+    "api/send-email.js": {
+      "maxDuration": 30
+    },
+    "api/send-feedback.js": {
+      "maxDuration": 30
+    },
+    "api/auth/oauth-login.js": {
+      "maxDuration": 10
+    },
+    "api/auth/oauth-callback.js": {
+      "maxDuration": 30
+    },
+    "api/auth/oauth-logout.js": {
+      "maxDuration": 10
+    },
+    "api/auth/oauth-verify.js": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "hrdhelpdesk-app-git-main-rojohn-michael-de-guzmans-projects.vercel.app"
+        }
+      ],
+      "destination": "https://hrdhelpdesk-app.vercel.app/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "hrdhelpdesk-daltpmhob-rojohn-michael-de-guzmans-projects.vercel.app"
+        }
+      ],
+      "destination": "https://hrdhelpdesk-app.vercel.app/$1",
+      "permanent": true
+    }
+  ]
+}
