@@ -422,7 +422,25 @@ class EmailServiceV2 {
 
     // Add other form fields dynamically (exclude unwanted fields and empty values)
     const excludedFields = ['attachments', 'ntLogin', 'userVerification', 'title', 'subject', 'formType', 'name', 'email', 'divisionmanager', 'description'];
-    const meaningfulFields = ['reason', 'adjustmentType', 'salaryPeriod', 'employeeName', 'currentDept', 'effectiveDate', 'fromDate', 'toDate', 'requestedAgent', 'funddepartment', 'agentName', 'fromDept', 'toDept', 'emergencyContact', 'contactNumber', 'address', 'ccEmail', 'kudosRecipient', 'kudosCategory', 'kudosReason'];
+    const meaningfulFields = [
+      'actualHours', 'address', 'adjustmentType', 'agentName', 'applicationDate', 'assessmentType', 'assistanceType', 'attachment',
+      'beneficiaryName', 'beneficiaryType', 'benefitDetails', 'benefitType', 'ccEmail', 'certificateType', 'certificationName', 
+      'certificationProvider', 'changeType', 'childAge', 'concernType', 'conflictType', 'contactNumber', 'contributionAmount', 
+      'contributionPeriod', 'contributionType', 'correctedHours', 'correctionReason', 'coverageType', 'currentContribution', 
+      'currentDept', 'currentSchedule', 'department', 'document', 'documentType', 'effectiveDate', 'emergencyContact', 
+      'employeeId', 'employeeName', 'endDate', 'equipmentIssue', 'equipmentSpecs', 'equipmentType', 'errorType', 'eventDate', 
+      'eventLocation', 'eventName', 'exitInterviewDate', 'exitInterviewTime', 'expectedCompletion', 'expectedHours', 'facilityType', 
+      'feedbackType', 'fromDate', 'fromDept', 'funddepartment', 'incidentDate', 'incidentType', 'insuranceType', 'involvedParties', 
+      'issueSeverity', 'kudosCategory', 'kudosReason', 'kudosRecipient', 'lastWorkingDay', 'leaveType', 'loanAmount', 'loanPurpose', 
+      'loanType', 'location', 'maturityDate', 'medicalCertType', 'message', 'newApprover', 'newContribution', 'originalHours', 
+      'overtimeDate', 'overtimeHours', 'payslipPeriod', 'period', 'phoneNumber', 'picture', 'policyName', 'policySection', 
+      'policyType', 'position', 'positionApplied', 'preferredDate', 'previousApprover', 'proposedSchedule', 'purpose', 'rating', 
+      'reason', 'recordPeriod', 'recordType', 'referralName', 'referralType', 'relationship', 'repairType', 'repaymentPeriod', 
+      'reportType', 'requestedAgent', 'requestingParty', 'resignationDate', 'reviewPeriod', 'reviewType', 'salaryPeriod', 
+      'signature', 'startDate', 'suggestionCategory', 'taxType', 'taxYear', 'timesheetPeriod', 'toDate', 'toDept', 
+      'trainingCategory', 'trainingCost', 'trainingDate', 'trainingProvider', 'trainingTitle', 'trainingType', 'urgency', 
+      'verificationType', 'violationDate', 'violationType'
+    ];
     
     console.log('📧 Email Service - Processing other fields:', Object.keys(otherFields));
     console.log('📧 Email Service - Meaningful fields to include:', meaningfulFields);
