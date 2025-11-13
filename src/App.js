@@ -292,6 +292,7 @@ const MainAppContent = () => {
       { text: "SSS Calamity and Salary Loan" },
       { text: "Pag-ibig and Salary Loan" },
       { text: "RCBC Corporate Loan" },
+      { text: "Casto Loan" },
     ],
     'Contributions': [
       { text: "SSS Contributions" },

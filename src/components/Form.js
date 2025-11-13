@@ -934,6 +934,9 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
         <EnhancedInput formData={formData} updateField={updateField} key="loanPurpose" fieldName="loanPurpose" label="Purpose of Loan" type="textarea" required placeholder="Describe the purpose of the loan" />,
         <EnhancedInput formData={formData} updateField={updateField} key="repaymentPeriod" fieldName="repaymentPeriod" label="Preferred Repayment Period" type="select" options={['6 months', '12 months', '18 months', '24 months', '36 months']} required />
       ],
+      'Casto Loan': [
+        <EnhancedInput formData={formData} updateField={updateField} key="loanAmount" fieldName="loanAmount" label="Loan Amount" type="number" required placeholder="Enter loan amount" />
+      ],
       'SSS Contributions': [
         <EnhancedInput formData={formData} updateField={updateField} key="contributionType" fieldName="contributionType" label="Contribution Type" type="select" options={['Regular Contribution', 'Voluntary Contribution', 'Self-Employed Contribution']} required />,
         <EnhancedInput formData={formData} updateField={updateField} key="contributionAmount" fieldName="contributionAmount" label="Contribution Amount" type="number" required placeholder="Enter contribution amount" />,
