@@ -3,7 +3,6 @@ import React from 'react';
 const ProfessionalSidebar = ({ onNavigate, currentPath }) => {
   const quickLinks = [
     { id: 'recruitment', label: 'Recruitment and Onboarding', icon: '👥' },
-    { id: 'offboarding', label: 'Exit and Offboarding', icon: '🚪' },
     { id: 'payroll', label: 'Payroll and Compensation Inquiries', icon: '💰' },
     { id: 'records', label: 'Employee Data and Records', icon: '📋' },
     { id: 'benefits', label: 'Benefits and Leave Management', icon: '🏥' },
@@ -12,6 +11,7 @@ const ProfessionalSidebar = ({ onNavigate, currentPath }) => {
     { id: 'transfer', label: 'Employee Reassignment Form', icon: '🔄' },
     { id: 'facilities', label: 'Equipment and Facilities Request', icon: '🏢' },
     { id: 'other', label: 'Other HR Service Request', icon: '📞' },
+    { id: 'offboarding', label: 'Exit and Offboarding', icon: '🚪' },
   ];
 
 

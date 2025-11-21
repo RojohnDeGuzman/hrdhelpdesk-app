@@ -79,7 +79,6 @@ export const DOWNLOADABLE_FORMS = [
 
 export const MAIN_BUTTONS = [
   { text: "Recruitment and Onboarding", imageSrc: "hiring.gif", category: 'recruitment' },
-  { text: "Exit and Offboarding", imageSrc: "offboarding.gif", category: 'offboarding' },
   { text: "Payroll and Compensation Inquiries", imageSrc: "payroll.gif", category: 'payroll' },
   { text: "Employee Data and Records", imageSrc: "employeerecords.gif", category: 'records' },
   { text: "Benefits and Leave Management", imageSrc: "benefits.gif", category: 'benefits' },
@@ -87,7 +86,8 @@ export const MAIN_BUTTONS = [
   { text: "Employee Relations and Grievances", imageSrc: "employeerelations.gif", category: 'relations' },
   { text: "Employee Reassignment Form", imageSrc: "transfer.gif", category: 'transfer' },
   { text: "Equipment and Facilities Request", imageSrc: "facilities.gif", category: 'facilities' },
-  { text: "Other HR Service Request", imageSrc: "otherrequest.gif", category: 'other' }
+  { text: "Other HR Service Request", imageSrc: "otherrequest.gif", category: 'other' },
+  { text: "Exit and Offboarding", imageSrc: "offboarding.gif", category: 'offboarding' }
 ];
 
 export const EMAILJS_CONFIG = {
