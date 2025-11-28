@@ -1010,7 +1010,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
         <EnhancedInput formData={formData} updateField={updateField} key="reason" fieldName="reason" label="Reason for Leave" type="textarea" required placeholder="Please provide reason for solo parent leave" />
       ],
       'Other (Special) Leave': [
-        <EnhancedInput formData={formData} updateField={updateField} key="leaveType" fieldName="leaveType" label="Leave Type" type="select" options={['Special Leave', 'Emergency Leave', 'Personal Leave', 'Other']} required />,
+        <EnhancedInput formData={formData} updateField={updateField} key="leaveType" fieldName="leaveType" label="Leave Type" type="select" options={['Special Leave', 'Emergency Leave', 'Personal Leave', 'Magna Carta Leave', 'Mental Health', 'Health Leave', 'Solo Parent Leave', 'Paternity Leave', 'Other']} required />,
         <EnhancedInput formData={formData} updateField={updateField} key="startDate" fieldName="startDate" label="Start Date" type="date" required />,
         <EnhancedInput formData={formData} updateField={updateField} key="endDate" fieldName="endDate" label="End Date" type="date" required />,
         <EnhancedInput formData={formData} updateField={updateField} key="reason" fieldName="reason" label="Reason for Special Leave" type="textarea" required placeholder="Please provide detailed reason for special leave" />
@@ -1033,12 +1033,12 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
         <EnhancedInput formData={formData} updateField={updateField} key="reason" fieldName="reason" label="Reason for Change" type="textarea" required placeholder="Please provide reason for contribution change" />
       ],
       'Requests for current leave balance status': [
-        <EnhancedInput formData={formData} updateField={updateField} key="leaveType" fieldName="leaveType" label="Leave Type" type="select" options={['Sick Leave', 'Vacation Leave', 'Personal Leave', 'All Types']} required />,
+        <EnhancedInput formData={formData} updateField={updateField} key="leaveType" fieldName="leaveType" label="Leave Type" type="select" options={['Sick Leave', 'Vacation Leave', 'Personal Leave', 'Magna Carta Leave', 'Mental Health', 'Health Leave', 'Solo Parent Leave', 'Paternity Leave', 'All Types']} required />,
         <EnhancedInput formData={formData} updateField={updateField} key="period" fieldName="period" label="Period" type="select" options={['Current Year', 'Previous Year', 'Specific Period']} required />,
         <EnhancedInput formData={formData} updateField={updateField} key="reason" fieldName="reason" label="Reason for Request" type="textarea" placeholder="Please specify why you need leave balance information" />
       ],
       'Queries about leave accrual rates': [
-        <EnhancedInput formData={formData} updateField={updateField} key="leaveType" fieldName="leaveType" label="Leave Type" type="select" options={['Sick Leave', 'Vacation Leave', 'Personal Leave', 'All Types']} required />,
+        <EnhancedInput formData={formData} updateField={updateField} key="leaveType" fieldName="leaveType" label="Leave Type" type="select" options={['Sick Leave', 'Vacation Leave', 'Personal Leave', 'Magna Carta Leave', 'Mental Health', 'Health Leave', 'Solo Parent Leave', 'Paternity Leave', 'All Types']} required />,
         <EnhancedInput formData={formData} updateField={updateField} key="reason" fieldName="reason" label="Specific Query" type="textarea" required placeholder="Please describe your leave accrual query" />
       ],
       'Incident reports for workplace disputes': [

@@ -25,8 +25,9 @@ export const LOCATIONS = [
 
 export const DIVISION_MANAGERS = [
   'Elaine Randrup (Operations)', 'April Fara Guiteng', 'Beulah Agapito', 'Jackie Sebastian',
-  'Robert Del Villar', 'Joshua Cruz', 'George Anzures (IT)',
-  'Alwin Benedicto (Finance)', 'Ma. Berdandina Galvez (HR)', 'Marjorie Esto (Training)'
+  'Marielle Guevarra', 'Robert Del Villar', 'Joshua Cruz', 'George Anzures (IT)',
+  'Alwin Benedicto (Finance)', 'Ma. Berdandina Galvez (HR)', 'Marjorie Esto (Training)',
+  'Maria Rosario Grace Lazo (Faculties Admin)'
 ];
 
 export const DOWNLOADABLE_FORMS = [
