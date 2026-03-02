@@ -64,9 +64,9 @@ const departments = ['Accounting SSD','Acendas - US Daytime','Admin','Accounting
 const EnhancedInput = ({ fieldName, label, type = "text", required = false, placeholder, options = null, formData, updateField, ...props }) => {
   const value = formData[fieldName] || '';
   
-  // Check if this is an email field that needs @castotravel.ph validation
+  const ALLOWED_EMAIL_SUFFIXES = ['@castotravel.ph', '@casto.inc'];
   const isEmailField = fieldName === 'email';
-  const isValidEmail = isEmailField ? value.endsWith('@castotravel.ph') : true;
+  const isValidEmail = isEmailField ? ALLOWED_EMAIL_SUFFIXES.some(suffix => value.toLowerCase().endsWith(suffix)) : true;
   const showEmailError = isEmailField && value && !isValidEmail;
 
   return (
@@ -112,7 +112,7 @@ const EnhancedInput = ({ fieldName, label, type = "text", required = false, plac
           <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          Please enter a valid @castotravel.ph email address
+          Please enter a valid company email (@castotravel.ph or @casto.inc)
         </div>
       )}
     </div>
@@ -383,23 +383,23 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
       });
       return;
     }
-    // Fun error messages for email validation
     const emailErrorMessages = [
       "Hold up! That's not a Casto Travel email! Did you read the instructions? 🏢",
       "Oops! Wrong email domain there. Are you sure you're using your work email? 💼",
-      "Not quite right! You need a @castotravel.ph email. Check your email address! 📧",
+      "Not quite right! You need a @castotravel.ph or @casto.inc email. Check your email address! 📧",
       "Almost there! But that's not the right email format. Read the field label! 👀",
-      "Hey! That's not a company email. Did you see the @castotravel.ph requirement? 🤔",
+      "Hey! That's not a company email. Did you see the @castotravel.ph or @casto.inc requirement? 🤔",
       "Hold on! You need to use your Casto Travel email address. Check again! 🔍"
     ];
 
-    // Validate that email is from @castotravel.ph domain
-    if (!formData.email.endsWith('@castotravel.ph')) {
+    const ALLOWED_EMAIL_SUFFIXES = ['@castotravel.ph', '@casto.inc'];
+    const hasAllowedEmail = ALLOWED_EMAIL_SUFFIXES.some(suffix => formData.email.toLowerCase().endsWith(suffix));
+    if (!hasAllowedEmail) {
       const randomMessage = emailErrorMessages[Math.floor(Math.random() * emailErrorMessages.length)];
       setErrorModal({ 
         show: true, 
         title: 'Invalid Email Domain', 
-        message: `${randomMessage}\n\nRequired: @castotravel.ph email address` 
+        message: `${randomMessage}\n\nRequired: @castotravel.ph or @casto.inc email address` 
       });
       return;
     }
@@ -1428,10 +1428,10 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
                 
                   <EnhancedInput formData={formData} updateField={updateField} 
                   fieldName="email" 
-                  label="Castotravel Email" 
+                  label="Company Email" 
                   type="email" 
                   required 
-                    placeholder="Enter your @castotravel.ph email address" 
+                    placeholder="Enter your @castotravel.ph or @casto.inc email address" 
                 />
               </div>
               

@@ -54,20 +54,21 @@ const FeedbackModal = ({ isOpen, onClose }) => {
     // Enhanced email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setErrorMessage('Please enter a valid email format (e.g., john.doe@castotravel.ph).');
+      setErrorMessage('Please enter a valid email format (e.g., john.doe@castotravel.ph or john.doe@casto.inc).');
       setSubmitStatus('error');
       return;
     }
 
-    if (!email.toLowerCase().includes('@castotravel.ph')) {
-      setErrorMessage('Please provide a valid @castotravel.ph email address. Only company email addresses are accepted.');
+    const allowedDomains = ['@castotravel.ph', '@casto.inc'];
+    if (!allowedDomains.some(d => email.toLowerCase().endsWith(d))) {
+      setErrorMessage('Please provide a valid company email (@castotravel.ph or @casto.inc). Only company email addresses are accepted.');
       setSubmitStatus('error');
       return;
     }
 
     // Check for common email mistakes
     if (email.includes('@gmail.com') || email.includes('@yahoo.com') || email.includes('@hotmail.com')) {
-      setErrorMessage('Please use your company email address (@castotravel.ph) instead of personal email.');
+      setErrorMessage('Please use your company email address (@castotravel.ph or @casto.inc) instead of personal email.');
       setSubmitStatus('error');
       return;
     }
@@ -248,7 +249,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
                 className="feedback-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={userEmail ? "Your email from your account" : "your.email@castotravel.ph"}
+                placeholder={userEmail ? "Your email from your account" : "your.email@castotravel.ph or your.email@casto.inc"}
                 disabled={isSubmitting}
                 required
               />

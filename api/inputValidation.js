@@ -15,8 +15,18 @@ function sanitizeHtml(input) {
 
 // Function to validate email format
 function validateEmail(email) {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0.9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return emailRegex.test(email);
+}
+
+// Allowed email domains (company emails only)
+const ALLOWED_EMAIL_DOMAINS = ['castotravel.ph', 'casto.inc'];
+
+// Check if email is from an allowed domain
+function isAllowedEmailDomain(email) {
+  if (!email || typeof email !== 'string') return false;
+  const lower = email.trim().toLowerCase();
+  return ALLOWED_EMAIL_DOMAINS.some(domain => lower.endsWith('@' + domain));
 }
 
 // Function to validate required domain
@@ -74,8 +84,8 @@ function validateFormData(formData) {
       errors.push('Invalid email format');
     }
     
-    if (!validateDomain(formData.email, 'castotravel.ph')) {
-      errors.push('Email must be from @castotravel.ph domain');
+    if (!isAllowedEmailDomain(formData.email)) {
+      errors.push('Email must be from @castotravel.ph or @casto.inc domain');
     }
   }
   
@@ -135,8 +145,8 @@ function validateFeedbackData(feedbackData) {
     errors.push('Valid email is required');
   }
   
-  if (feedbackData.email && !validateDomain(feedbackData.email, 'castotravel.ph')) {
-    errors.push('Email must be from @castotravel.ph domain');
+  if (feedbackData.email && !isAllowedEmailDomain(feedbackData.email)) {
+    errors.push('Email must be from @castotravel.ph or @casto.inc domain');
   }
   
   if (feedbackData.name && !validateLength(feedbackData.name, 1, 100)) {
@@ -154,6 +164,8 @@ module.exports = {
   sanitizeText,
   validateEmail,
   validateDomain,
+  isAllowedEmailDomain,
+  ALLOWED_EMAIL_DOMAINS,
   validateLength,
   validateRequiredFields,
   validateFormData,

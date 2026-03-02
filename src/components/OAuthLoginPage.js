@@ -25,7 +25,7 @@ const OAuthLoginPage = () => {
           setError('Failed to fetch user profile. Please try again.');
           break;
         case 'invalid_domain':
-          setError('Please use your @castotravel.ph email address.');
+          setError('Please use your @castotravel.ph or @casto.inc email address.');
           break;
         case 'callback_error':
           setError('Authentication callback failed. Please try again.');
@@ -94,7 +94,7 @@ const OAuthLoginPage = () => {
 
             <div className="login-description">
               <p>Sign in with your Office 365 account to access the HRD Helpdesk portal.</p>
-              <p>Use your @castotravel.ph email address.</p>
+              <p>Use your @castotravel.ph or @casto.inc email address.</p>
             </div>
 
             <button

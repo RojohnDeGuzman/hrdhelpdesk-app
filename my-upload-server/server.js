@@ -192,10 +192,12 @@ app.post('/send-feedback', authenticateRequest, async (req, res) => {
     }
 
     // Validate email domain
-    if (!email.includes('@castotravel.ph')) {
+    const allowedDomains = ['@castotravel.ph', '@casto.inc'];
+    const isAllowedDomain = email && allowedDomains.some(d => email.toLowerCase().endsWith(d));
+    if (!isAllowedDomain) {
       return res.status(400).json({ 
         success: false, 
-        message: 'Email must be from @castotravel.ph domain' 
+        message: 'Email must be from @castotravel.ph or @casto.inc domain' 
       });
     }
 

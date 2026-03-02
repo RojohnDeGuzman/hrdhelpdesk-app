@@ -177,7 +177,10 @@ module.exports = async (req, res) => {
     }
     
     // Validate email domain
-    if (!profile.mail?.endsWith('@castotravel.ph') && !profile.userPrincipalName?.endsWith('@castotravel.ph')) {
+    const allowedDomains = ['@castotravel.ph', '@casto.inc'];
+    const email = (profile.mail || profile.userPrincipalName || '').toLowerCase();
+    const isAllowedDomain = allowedDomains.some(d => email.endsWith(d));
+    if (!isAllowedDomain) {
       console.error('Invalid email domain:', profile.mail || profile.userPrincipalName);
       return res.redirect('https://hrdhelpdesk-app.vercel.app/login?error=invalid_domain');
     }

@@ -151,7 +151,9 @@ app.get('/api/auth/oauth-callback', async (req, res) => {
     
     // Validate email domain
     const userEmail = profile.mail || profile.userPrincipalName;
-    if (!userEmail?.endsWith('@castotravel.ph')) {
+    const allowedDomains = ['@castotravel.ph', '@casto.inc'];
+    const isAllowedDomain = userEmail && allowedDomains.some(d => userEmail.toLowerCase().endsWith(d));
+    if (!isAllowedDomain) {
       console.error('Invalid email domain:', userEmail);
       return res.redirect('http://localhost:3000/login?error=invalid_domain');
     }
