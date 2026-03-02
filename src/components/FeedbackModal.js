@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { getApiUrl } from '../constants/data';
-import { useTheme } from './ThemeProvider';
 import { useOAuth } from '../contexts/OAuthContext';
 
 const FeedbackModal = ({ isOpen, onClose }) => {
@@ -13,7 +12,6 @@ const FeedbackModal = ({ isOpen, onClose }) => {
   const [submitStatus, setSubmitStatus] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const { theme } = useTheme();
   const { userEmail, userName } = useOAuth();
 
   // Auto-fill name and email from OAuth context

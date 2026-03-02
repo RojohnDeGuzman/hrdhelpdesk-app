@@ -1,4 +1,10 @@
 {
+  "build": {
+    "env": {
+      "DISABLE_ESLINT_PLUGIN": "true",
+      "GENERATE_SOURCEMAP": "false"
+    }
+  },
   "functions": {
     "api/send-email.js": {
       "maxDuration": 30

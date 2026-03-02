@@ -7,31 +7,30 @@ const UnifiedLoadingScreen = ({ onComplete, isAuthenticating = false, isLoggingO
   const [loadingText, setLoadingText] = useState('Initializing...');
   const { theme } = useTheme();
 
-  const loadingMessages = isLoggingOut
-    ? [
-        'Logging Out...',
-        'Clearing Session...',
-        'Securing Data...',
-        'Finalizing Logout...',
-        'Redirecting...'
-      ]
-    : isAuthenticating 
-    ? [
-        'Verifying Authentication...',
-        'Loading HR Services...',
-        'Preparing Dashboard...',
-        'Setting up Navigation...',
-        'Almost Ready...'
-      ]
-    : [
-        'Initializing...',
-        'Loading HR Services...',
-        'Preparing Dashboard...',
-        'Setting up Navigation...',
-        'Almost Ready...'
-      ];
-
   useEffect(() => {
+    const loadingMessages = isLoggingOut
+      ? [
+          'Logging Out...',
+          'Clearing Session...',
+          'Securing Data...',
+          'Finalizing Logout...',
+          'Redirecting...'
+        ]
+      : isAuthenticating
+      ? [
+          'Verifying Authentication...',
+          'Loading HR Services...',
+          'Preparing Dashboard...',
+          'Setting up Navigation...',
+          'Almost Ready...'
+        ]
+      : [
+          'Initializing...',
+          'Loading HR Services...',
+          'Preparing Dashboard...',
+          'Setting up Navigation...',
+          'Almost Ready...'
+        ];
     let messageIndex = 0;
     
     // Set initial message based on state
@@ -73,7 +72,7 @@ const UnifiedLoadingScreen = ({ onComplete, isAuthenticating = false, isLoggingO
       clearInterval(messageInterval);
       clearTimeout(completeTimer);
     };
-  }, [onComplete, loadingMessages]);
+  }, [onComplete, isAuthenticating, isLoggingOut]);
 
   // Call onComplete when component becomes invisible
   useEffect(() => {

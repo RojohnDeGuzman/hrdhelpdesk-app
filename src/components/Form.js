@@ -1,50 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { DIVISION_MANAGERS, UPLOAD_SERVER_URL, getApiUrl } from '../constants/data';
+import { DIVISION_MANAGERS, getApiUrl } from '../constants/data';
 import { useOAuth } from '../contexts/OAuthContext';
 import axios from 'axios';
 import '../styles/modern-forms.css';
-
-// Function to detect NT login (Windows username)
-const getNTLogin = () => {
-  try {
-    // Try to get username from various sources
-    const userAgent = navigator.userAgent;
-    
-    // Check if running on Windows
-    if (userAgent.includes('Windows')) {
-      // Try to get username from environment (if available)
-      if (typeof window !== 'undefined' && window.navigator) {
-        // Try to get from various browser APIs
-        const possibleSources = [
-          // Try to get from screen resolution or other browser info
-          () => {
-            // This is a workaround - we'll use a combination of browser info
-            const screenInfo = `${window.screen.width}x${window.screen.height}`;
-            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            return `User_${screenInfo}_${timezone}`.replace(/[^a-zA-Z0-9_]/g, '');
-          },
-          // Fallback to a generic identifier
-          () => 'Windows_User'
-        ];
-        
-        for (const source of possibleSources) {
-          try {
-            const result = source();
-            if (result) return result;
-          } catch (e) {
-            continue;
-          }
-        }
-      }
-    }
-    
-    // Fallback for non-Windows or if detection fails
-    return 'Unknown_User';
-  } catch (error) {
-    console.log('NT Login detection failed:', error);
-    return 'Unknown_User';
-  }
-};
 
 // Department options for dropdowns
 const departments = ['Accounting SSD','Acendas - US Daytime','Admin','Accounting - FCTG FCM', 'Back Office - Accounting SSD',
@@ -487,18 +445,6 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
     // Only validate file uploads for forms that explicitly require them
 
     setLoading(true);
-
-    let uploadedFileUrls = {
-      attachment: null,
-      picture: null,
-      signature: null
-    };
-
-    let uploadedFileNames = {
-      attachment: null,
-      picture: null,
-      signature: null
-    };
 
     try {
       // Prepare attachments for direct email sending (Vercel serverless approach)

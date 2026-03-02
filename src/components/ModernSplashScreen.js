@@ -7,15 +7,14 @@ const ModernSplashScreen = ({ onComplete }) => {
   const [loadingText, setLoadingText] = useState('Initializing...');
   const { theme } = useTheme();
 
-  const loadingMessages = [
-    'Initializing...',
-    'Loading HR Services...',
-    'Preparing Dashboard...',
-    'Setting up Navigation...',
-    'Almost Ready...'
-  ];
-
   useEffect(() => {
+    const loadingMessages = [
+      'Initializing...',
+      'Loading HR Services...',
+      'Preparing Dashboard...',
+      'Setting up Navigation...',
+      'Almost Ready...'
+    ];
     let messageIndex = 0;
     
     // Update loading messages
@@ -54,7 +53,7 @@ const ModernSplashScreen = ({ onComplete }) => {
       clearInterval(messageInterval);
       clearTimeout(completeTimer);
     };
-  }, [onComplete, loadingMessages]);
+  }, [onComplete]);
 
   if (!isVisible) return null;
 
