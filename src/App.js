@@ -236,6 +236,7 @@ const MainAppContent = () => {
       { text: "Downloadable Forms" },
       { text: "EO Branch Referral Slip" },
       { text: "ComPsych Assistance" },
+      { text: "MHWA Questions / Clarifications / Concerns" },
     ],
   }), []);
 
@@ -537,6 +538,7 @@ const MainAppContent = () => {
       'PAG-IBIG Contributions',
       'Modified Pag-IBIG (MP2)',
       'Government Statutory Benefits',
+      'MHWA Questions / Clarifications / Concerns',
       'Request for Lounge Space'
     ];
     

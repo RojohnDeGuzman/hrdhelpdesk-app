@@ -420,6 +420,15 @@ class EmailServiceV2 {
               <div class="section-content">
     `;
 
+    // Always show description here as well, if available
+    if (description && description.trim() !== '') {
+      html += `
+                <div class="field-line">
+                  <span class="label">Description:</span> <span class="value">${description}</span>
+                </div>
+      `;
+    }
+
     // Add other form fields dynamically (exclude unwanted fields and empty values)
     const excludedFields = ['attachments', 'ntLogin', 'userVerification', 'title', 'subject', 'formType', 'name', 'email', 'divisionmanager', 'description'];
     const meaningfulFields = [
