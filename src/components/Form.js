@@ -4,6 +4,10 @@ import { useOAuth } from '../contexts/OAuthContext';
 import axios from 'axios';
 import '../styles/modern-forms.css';
 
+// Vercel serverless request payload practical limit guard
+const MAX_UPLOAD_SIZE_MB = 4;
+const MAX_UPLOAD_SIZE_BYTES = MAX_UPLOAD_SIZE_MB * 1024 * 1024;
+
 // Department options for dropdowns
 const departments = ['Accounting SSD','Acendas - US Daytime','Admin','Accounting - FCTG FCM', 'Back Office - Accounting SSD',
   'Accounting - Balboa','Blockskye - Afterhours', 'Brownell', 'Accounting - Cadence', 'Cadence - Afterhours','Cadence - US Daytime',
@@ -86,6 +90,19 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
   const [supportingDocuments, setSupportingDocuments] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorModal, setErrorModal] = useState({ show: false, message: '', title: '', type: 'error' });
+
+  const validateUploadSize = (file, fieldLabel = 'File') => {
+    if (!file || !(file instanceof File)) return false;
+    if (file.size <= MAX_UPLOAD_SIZE_BYTES) return true;
+
+    setErrorModal({
+      show: true,
+      title: 'File Too Large',
+      message: `${fieldLabel} exceeds the ${MAX_UPLOAD_SIZE_MB} MB upload limit. Please upload a smaller file.`,
+      type: 'error'
+    });
+    return false;
+  };
 
   // Auto-fill email and name when user data changes
   useEffect(() => {
@@ -447,6 +464,23 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
     setLoading(true);
 
     try {
+      // Guard large payloads that trigger 413 on serverless platform
+      if (attachment && attachment.size > MAX_UPLOAD_SIZE_BYTES) {
+        throw new Error(`Attachment exceeds ${MAX_UPLOAD_SIZE_MB} MB limit`);
+      }
+      if (picture && picture.size > MAX_UPLOAD_SIZE_BYTES) {
+        throw new Error(`Picture exceeds ${MAX_UPLOAD_SIZE_MB} MB limit`);
+      }
+      if (signature && signature.size > MAX_UPLOAD_SIZE_BYTES) {
+        throw new Error(`Signature exceeds ${MAX_UPLOAD_SIZE_MB} MB limit`);
+      }
+      if (medicalCertificate && medicalCertificate.size > MAX_UPLOAD_SIZE_BYTES) {
+        throw new Error(`Medical Certificate exceeds ${MAX_UPLOAD_SIZE_MB} MB limit`);
+      }
+      if (supportingDocuments && supportingDocuments.size > MAX_UPLOAD_SIZE_BYTES) {
+        throw new Error(`Supporting Document exceeds ${MAX_UPLOAD_SIZE_MB} MB limit`);
+      }
+
       // Prepare attachments for direct email sending (Vercel serverless approach)
       const attachments = [];
       
@@ -530,6 +564,9 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
               error.response.data.message.includes('email')) {
             errorTitle = 'Form Validation Error';
           }
+        } else if (error.response.status === 413) {
+          errorTitle = 'Attachment Too Large';
+          errorMessage = `The uploaded file is too large for server processing. Please keep each file below ${MAX_UPLOAD_SIZE_MB} MB.`;
         } else if (error.response.status === 500) {
           errorMessage = 'Server error. Please try again later.';
         } else if (error.response.status === 400) {
@@ -597,6 +634,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
       if (e.dataTransfer.files && e.dataTransfer.files[0]) {
         const droppedFile = e.dataTransfer.files[0];
         console.log('📎 File dropped:', droppedFile.name, 'Size:', droppedFile.size, 'Type:', droppedFile.type);
+        if (!validateUploadSize(droppedFile, label)) return;
         if (fieldName === 'attachment') {
           setAttachment(droppedFile);
           console.log('📎 Attachment set:', droppedFile.name);
@@ -624,6 +662,7 @@ const Form = ({ title, onBack, onSubmitSuccess }) => {
       if (e.target.files && e.target.files[0]) {
         const selectedFile = e.target.files[0];
         console.log('📎 File selected:', selectedFile.name, 'Size:', selectedFile.size, 'Type:', selectedFile.type);
+        if (!validateUploadSize(selectedFile, label)) return;
         if (fieldName === 'attachment') {
           setAttachment(selectedFile);
           console.log('📎 Attachment set:', selectedFile.name);
